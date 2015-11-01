@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458C51BE63AB600DE0CF6 /* AppDelegate.swift */; };
-		994458C81BE63AB700DE0CF6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458C71BE63AB700DE0CF6 /* ViewController.swift */; };
+		994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */; };
 		994458CB1BE63AB700DE0CF6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 994458C91BE63AB700DE0CF6 /* Main.storyboard */; };
 		994458CD1BE63AB700DE0CF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 994458CC1BE63AB700DE0CF6 /* Assets.xcassets */; };
 		994458D01BE63AB700DE0CF6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 994458CE1BE63AB700DE0CF6 /* LaunchScreen.storyboard */; };
-		994458DB1BE63AB700DE0CF6 /* NFYUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458DA1BE63AB700DE0CF6 /* NFYUTests.swift */; };
+		994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,14 +28,14 @@
 /* Begin PBXFileReference section */
 		994458C21BE63AB600DE0CF6 /* NFYU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NFYU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		994458C51BE63AB600DE0CF6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		994458C71BE63AB700DE0CF6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
 		994458CA1BE63AB700DE0CF6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		994458CC1BE63AB700DE0CF6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		994458CF1BE63AB700DE0CF6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		994458D11BE63AB700DE0CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		994458D61BE63AB700DE0CF6 /* NFYUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NFYUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		994458DA1BE63AB700DE0CF6 /* NFYUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFYUTests.swift; sourceTree = "<group>"; };
 		994458DC1BE63AB700DE0CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestWeatherViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
-				994458C71BE63AB700DE0CF6 /* ViewController.swift */,
+				994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */,
 				994458C91BE63AB700DE0CF6 /* Main.storyboard */,
 				994458CC1BE63AB700DE0CF6 /* Assets.xcassets */,
 				994458CE1BE63AB700DE0CF6 /* LaunchScreen.storyboard */,
@@ -90,8 +90,8 @@
 		994458D91BE63AB700DE0CF6 /* NFYUTests */ = {
 			isa = PBXGroup;
 			children = (
-				994458DA1BE63AB700DE0CF6 /* NFYUTests.swift */,
 				994458DC1BE63AB700DE0CF6 /* Info.plist */,
+				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
 			);
 			path = NFYUTests;
 			sourceTree = "<group>";
@@ -197,7 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				994458C81BE63AB700DE0CF6 /* ViewController.swift in Sources */,
+				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -206,7 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				994458DB1BE63AB700DE0CF6 /* NFYUTests.swift in Sources */,
+				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,10 +347,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = NFYUTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = con.gtranchedone.ios.NFYUTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NFYU.app/NFYU";
 			};
 			name = Debug;
@@ -359,6 +361,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = NFYUTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = con.gtranchedone.ios.NFYUTests;

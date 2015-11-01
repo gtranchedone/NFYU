@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  WeatherViewController.swift
 //  NFYU
 //
 //  Created by Gianluca Tranchedone on 01/11/2015.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class WeatherViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
