@@ -16,6 +16,9 @@
 		994458E81BE6658900DE0CF6 /* TestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */; };
 		994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458E91BE667A900DE0CF6 /* UserDefaults.swift */; };
 		994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */; };
+		994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F01BE6743F00DE0CF6 /* BaseViewController.swift */; };
+		994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */; };
+		994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +45,9 @@
 		994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAppDelegate.swift; sourceTree = "<group>"; };
 		994458E91BE667A900DE0CF6 /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeUserDefaults.swift; sourceTree = "<group>"; };
+		994458F01BE6743F00DE0CF6 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseViewController+TestExtensions.swift"; sourceTree = "<group>"; };
+		994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockNotificationObserver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +91,7 @@
 			children = (
 				994458D11BE63AB700DE0CF6 /* Info.plist */,
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
+				994458F01BE6743F00DE0CF6 /* BaseViewController.swift */,
 				994458E91BE667A900DE0CF6 /* UserDefaults.swift */,
 				994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */,
 				994458CC1BE63AB700DE0CF6 /* Assets.xcassets */,
@@ -108,7 +115,9 @@
 		994458EB1BE6695100DE0CF6 /* MocksAndStubs */ = {
 			isa = PBXGroup;
 			children = (
+				994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */,
 				994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */,
+				994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */,
 			);
 			path = MocksAndStubs;
 			sourceTree = "<group>";
@@ -215,6 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
+				994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
 				994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */,
 			);
@@ -227,6 +237,8 @@
 				994458E81BE6658900DE0CF6 /* TestAppDelegate.swift in Sources */,
 				994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */,
 				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
+				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
+				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

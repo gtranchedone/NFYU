@@ -8,20 +8,20 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController {
+class WeatherViewController: BaseViewController {
 
+    struct SegueIdentifier {
+        static let Intro = "IntroSegueIdentifier"
+    }
+    
     var userDefaults: UserDefaults?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        let didPresentIntro = userDefaults?.boolForKey(UserDefaultsKeys.DidPresentIntro) ?? false
+        if !didPresentIntro {
+            performSegueWithIdentifier(SegueIdentifier.Intro, sender: self)
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
-

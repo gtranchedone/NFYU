@@ -8,6 +8,10 @@
 
 import Foundation
 
+struct UserDefaultsKeys {
+    static let DidPresentIntro = "com.gtranchedone.NFYU.DidPresentIntro"
+}
+
 protocol UserDefaults: AnyObject {
     
     func boolForKey(defaultName: String) -> Bool
