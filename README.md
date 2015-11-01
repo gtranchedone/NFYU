@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gtranchedone/NFYU.svg)](https://travis-ci.org/gtranchedone/NFYU)
+
 # NFYU
 
 Never Forget Your Umbrella is a sample iPhone app that demonstrates
