@@ -13,6 +13,9 @@
 		994458CD1BE63AB700DE0CF6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 994458CC1BE63AB700DE0CF6 /* Assets.xcassets */; };
 		994458D01BE63AB700DE0CF6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 994458CE1BE63AB700DE0CF6 /* LaunchScreen.storyboard */; };
 		994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */; };
+		994458E81BE6658900DE0CF6 /* TestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */; };
+		994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458E91BE667A900DE0CF6 /* UserDefaults.swift */; };
+		994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		994458D61BE63AB700DE0CF6 /* NFYUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NFYUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		994458DC1BE63AB700DE0CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestWeatherViewController.swift; sourceTree = "<group>"; };
+		994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAppDelegate.swift; sourceTree = "<group>"; };
+		994458E91BE667A900DE0CF6 /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeUserDefaults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,12 +83,13 @@
 		994458C41BE63AB600DE0CF6 /* NFYU */ = {
 			isa = PBXGroup;
 			children = (
+				994458D11BE63AB700DE0CF6 /* Info.plist */,
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
+				994458E91BE667A900DE0CF6 /* UserDefaults.swift */,
 				994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */,
-				994458C91BE63AB700DE0CF6 /* Main.storyboard */,
 				994458CC1BE63AB700DE0CF6 /* Assets.xcassets */,
 				994458CE1BE63AB700DE0CF6 /* LaunchScreen.storyboard */,
-				994458D11BE63AB700DE0CF6 /* Info.plist */,
+				994458C91BE63AB700DE0CF6 /* Main.storyboard */,
 			);
 			path = NFYU;
 			sourceTree = "<group>";
@@ -90,10 +97,20 @@
 		994458D91BE63AB700DE0CF6 /* NFYUTests */ = {
 			isa = PBXGroup;
 			children = (
+				994458EB1BE6695100DE0CF6 /* MocksAndStubs */,
 				994458DC1BE63AB700DE0CF6 /* Info.plist */,
+				994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */,
 				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
 			);
 			path = NFYUTests;
+			sourceTree = "<group>";
+		};
+		994458EB1BE6695100DE0CF6 /* MocksAndStubs */ = {
+			isa = PBXGroup;
+			children = (
+				994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */,
+			);
+			path = MocksAndStubs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,6 +216,7 @@
 			files = (
 				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
+				994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +224,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				994458E81BE6658900DE0CF6 /* TestAppDelegate.swift in Sources */,
+				994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */,
 				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

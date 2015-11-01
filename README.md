@@ -18,4 +18,6 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
 adding and removing cities or disable current location usage
 - [ ] Make main screen have a way to display any of the selected cities
 - [ ] Fetch weather data from OpenWeatherMap APIs and fill the UI with it
+- [ ] Expand UI and APIs usage as needed for 5 days forecast
+- [ ] Add support for C and F temperature units
 - [ ] Cache weather data for offline use (last update date must be clear)
