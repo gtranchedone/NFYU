@@ -11,8 +11,9 @@ import UIKit
 class WeatherViewController: BaseViewController {
 
     var userDefaults: UserDefaults?
+    var locationManager: LocationManager?
     
-    @IBOutlet weak var initialSetupView: UIView!
+    @IBOutlet weak var initialSetupView: SetupView!
     @IBOutlet weak var backgroundMessageLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -25,9 +26,37 @@ class WeatherViewController: BaseViewController {
     
     private func setInitialViewState() {
         pageControl.numberOfPages = 0
-        activityIndicator.hidden = true
         backgroundMessageLabel.hidden = true
         initialSetupView.hidden = userDefaults?.didSetUpLocations ?? false
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        updateWithCurrentLocation()
+    }
+    
+    func updateWithCurrentLocation() {
+        let canUseUserLocation = userDefaults?.canUseUserLocation ?? false
+        if canUseUserLocation {
+            activityIndicator.startAnimating()
+            locationManager?.requestCurrentLocation() { [weak self] error, location in
+                self?.activityIndicator.stopAnimating()
+                if let error = error {
+                    self?.backgroundMessageLabel.text = error.localizedDescription
+                    self?.backgroundMessageLabel.hidden = false
+                }
+            }
+        }
+    }
+    
+    @IBAction func useCurrentLocation() {
+        userDefaults?.canUseUserLocation = true
+        initialSetupView.hidden = true
+        updateWithCurrentLocation()
+    }
+    
+    @IBAction func selectCities() {
+        initialSetupView.hidden = true
+    }
+    
 }

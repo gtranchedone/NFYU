@@ -19,6 +19,9 @@
 		994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F01BE6743F00DE0CF6 /* BaseViewController.swift */; };
 		994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */; };
 		994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */; };
+		995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */; };
+		995F112F1BE7E616004FE462 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F112E1BE7E616004FE462 /* LocationManager.swift */; };
+		995F11311BE7E99F004FE462 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F11301BE7E99F004FE462 /* SetupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +51,9 @@
 		994458F01BE6743F00DE0CF6 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseViewController+TestExtensions.swift"; sourceTree = "<group>"; };
 		994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockNotificationObserver.swift; sourceTree = "<group>"; };
+		995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeLocationManager.swift; sourceTree = "<group>"; };
+		995F112E1BE7E616004FE462 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		995F11301BE7E99F004FE462 /* SetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,8 @@
 				994458D11BE63AB700DE0CF6 /* Info.plist */,
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
 				994458F01BE6743F00DE0CF6 /* BaseViewController.swift */,
+				995F112E1BE7E616004FE462 /* LocationManager.swift */,
+				995F11301BE7E99F004FE462 /* SetupView.swift */,
 				994458E91BE667A900DE0CF6 /* UserDefaults.swift */,
 				994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */,
 				994458CC1BE63AB700DE0CF6 /* Assets.xcassets */,
@@ -116,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */,
+				995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */,
 				994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */,
 				994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */,
 			);
@@ -225,7 +234,9 @@
 			files = (
 				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
 				994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */,
+				995F112F1BE7E616004FE462 /* LocationManager.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
+				995F11311BE7E99F004FE462 /* SetupView.swift in Sources */,
 				994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,6 +250,7 @@
 				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
 				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,
+				995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +433,7 @@
 				994458E11BE63AB700DE0CF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		994458E21BE63AB700DE0CF6 /* Build configuration list for PBXNativeTarget "NFYUTests" */ = {
 			isa = XCConfigurationList;
@@ -429,6 +442,7 @@
 				994458E41BE63AB700DE0CF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
