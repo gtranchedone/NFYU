@@ -29,27 +29,31 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertNotNil(viewController)
     }
     
-    func testWeatherViewControllerPresentsIntroViewControllerIfTheLatterWasNeverPresented() {
-        viewController?.userDefaults?.setBool(false, forKey: UserDefaultsKeys.DidPresentIntro)
-        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptSegue
-        expectationForNotification(notificationName, object: viewController) { (notification) -> Bool in
-            let userInfo = notification.userInfo as? [NSObject : String]
-            let segueIdentifier = userInfo?[BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier]
-            let didPerformExpectedSegue = WeatherViewController.SegueIdentifier.Intro == segueIdentifier
-            return didPerformExpectedSegue
-        }
-        viewController?.beginAppearanceTransition(true, animated: false)
-        viewController?.endAppearanceTransition()
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+    func testWeatherViewControllerHasSetupViewHiddenByDefault() {
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
-
-    func testWeatherViewControllerDoesNotPresentIntroViewControllerIfLatterWasAlreadyPresented() {
-        viewController?.userDefaults?.setBool(true, forKey: UserDefaultsKeys.DidPresentIntro)
-        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptSegue
-        let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController, crashIfReceived: true)
-        viewController?.beginAppearanceTransition(true, animated: false)
-        viewController?.endAppearanceTransition()
-        observer.verify()
+    
+    func testWeatherViewControllerHasActivityIndicatorHiddenByDefault() {
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.activityIndicator.hidden)
+    }
+    
+    func testWeatherViewControllerHasBackgroundMessageLabelHiddenByDefault() {
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.backgroundMessageLabel.hidden)
+    }
+    
+    func testWeatherViewControllerHasPageControlHiddenByDefault() {
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.pageControl.hidden)
+    }
+    
+    // MARK: Private
+    
+    func loadViewControllerView() {
+        viewController!.beginAppearanceTransition(true, animated: false)
+        viewController!.endAppearanceTransition()
     }
     
 }

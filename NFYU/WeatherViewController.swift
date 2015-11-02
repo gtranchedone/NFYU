@@ -10,18 +10,24 @@ import UIKit
 
 class WeatherViewController: BaseViewController {
 
-    struct SegueIdentifier {
-        static let Intro = "IntroSegueIdentifier"
-    }
-    
     var userDefaults: UserDefaults?
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        let didPresentIntro = userDefaults?.boolForKey(UserDefaultsKeys.DidPresentIntro) ?? false
-        if !didPresentIntro {
-            performSegueWithIdentifier(SegueIdentifier.Intro, sender: self)
-        }
+    @IBOutlet weak var initialSetupView: UIView!
+    @IBOutlet weak var backgroundMessageLabel: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var pageControl: UIPageControl!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setInitialViewState()
+    }
+    
+    private func setInitialViewState() {
+        pageControl.numberOfPages = 0
+        initialSetupView.hidden = true
+        activityIndicator.hidden = true
+        backgroundMessageLabel.hidden = true
     }
 
 }
