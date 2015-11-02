@@ -25,9 +25,9 @@ class WeatherViewController: BaseViewController {
     
     private func setInitialViewState() {
         pageControl.numberOfPages = 0
-        initialSetupView.hidden = true
         activityIndicator.hidden = true
         backgroundMessageLabel.hidden = true
+        initialSetupView.hidden = userDefaults?.didSetUpLocations ?? false
     }
 
 }

@@ -8,14 +8,27 @@
 
 import Foundation
 
-struct UserDefaultsKeys {
-    static let DidPresentIntro = "com.gtranchedone.NFYU.DidPresentIntro"
-}
-
 protocol UserDefaults: AnyObject {
     
     func boolForKey(defaultName: String) -> Bool
     func setBool(value: Bool, forKey defaultName: String)
+    
+}
+
+struct UserDefaultsKeys {
+    static let DidSetUpLocations = "com.gtranchedone.NFYU.DidSetUpLocations"
+}
+
+extension UserDefaults {
+    
+    var didSetUpLocations: Bool {
+        get {
+            return boolForKey(UserDefaultsKeys.DidSetUpLocations)
+        }
+        set {
+            setBool(newValue, forKey:UserDefaultsKeys.DidSetUpLocations)
+        }
+    }
     
 }
 

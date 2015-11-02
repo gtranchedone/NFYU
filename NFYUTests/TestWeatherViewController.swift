@@ -30,8 +30,9 @@ class TestWeatherViewController: XCTestCase {
     }
     
     func testWeatherViewControllerHasSetupViewHiddenByDefault() {
+        viewController?.userDefaults = nil
         loadViewControllerView()
-        XCTAssertTrue(viewController!.initialSetupView.hidden)
+        XCTAssertFalse(viewController!.initialSetupView.hidden)
     }
     
     func testWeatherViewControllerHasActivityIndicatorHiddenByDefault() {
@@ -47,6 +48,18 @@ class TestWeatherViewController: XCTestCase {
     func testWeatherViewControllerHasPageControlHiddenByDefault() {
         loadViewControllerView()
         XCTAssertTrue(viewController!.pageControl.hidden)
+    }
+    
+    func testWeatherViewControllerShowsInitialSetUpViewIfUserDidNotYetSetUpLocations() {
+        viewController!.userDefaults!.didSetUpLocations = false
+        loadViewControllerView()
+        XCTAssertFalse(viewController!.initialSetupView.hidden)
+    }
+    
+    func testWeatherViewControllerHidesInitialSetUpViewIfUserDidAlreadySetUpLocations() {
+        viewController!.userDefaults!.didSetUpLocations = true
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
     
     // MARK: Private
