@@ -65,16 +65,34 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
     
+    func testWeatherViewControllerHidesSettingsButtonWhenShowingInitialSetupView() {
+        viewController!.userDefaults!.didSetUpLocations = false
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.settingsButton.hidden)
+    }
+    
+    func testWeatherViewControllerShowsSettingsButtonWhenNotShowingInitialSetupView() {
+        viewController!.userDefaults!.didSetUpLocations = true
+        loadViewControllerView()
+        XCTAssertFalse(viewController!.settingsButton.hidden)
+    }
+    
     // MARK: Using Device Location
     
     // TODO: test that AppDelegate injects a LocationManager into the viewController
     // TODO: test behaviour of viewController when canUseUserLocation == true but location services are disabled -> Test this in LocationManager implementation instead
     // TODO: test behaviour with different location services authorization statuses -> Also test this in LocationManager implementation, e.g. return error, or wait while user decides if grant auth
     
-    func testWeatherViewControllerUpdatesUserDefaultsIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
+    func testWeatherViewControllerUpdatesUserDefaultsForUsingCurrentLocationIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
         viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
         XCTAssertTrue(viewController!.userDefaults!.canUseUserLocation)
+    }
+    
+    func testWeatherViewControllerUpdatesUserDefaultsForHavingSetupLocationsIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
+        loadViewControllerView()
+        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
     
     func testWeatherViewControllerHidesInitialSetupViewIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
@@ -146,6 +164,19 @@ class TestWeatherViewController: XCTestCase {
     }
     
     // TODO: test that selecting "add favourite cities" on initial setup presents view controller for doing so
+    
+    // MARK: Settings
+    
+    func testWeatherViewControllerPerformsSegueToSettingsScreenWhenUserTapsSettingsButton() {
+        loadViewControllerView()
+        expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
+            let userInfo = notification.userInfo as! [String : String]
+            let segueIdentifier = userInfo[BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier]
+            return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings
+        }
+        viewController!.settingsButton.sendActionsForControlEvents(.TouchUpInside)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
     
     // MARK: Private
     

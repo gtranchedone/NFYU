@@ -12,11 +12,11 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
 
 ## TODO
 
-- [ ] Create setup screen for using user location
+- [x] Create setup screen for using user location
 - [ ] Add custom cities input in setup screen
-- [ ] Make main screen have a way to display the setup screen for
-adding and removing cities or disable current location usage
-- [ ] Make main screen have a way to display any of the selected cities
+- [x] Make main screen have a way to display settings for disabling use
+ of current location and add / remote cities
+- [ ] Make main screen have a way to display all of the selected cities
 - [ ] Fetch weather data from OpenWeatherMap APIs and fill the UI with it
 - [ ] Expand UI and APIs usage as needed for 5 days forecast
 - [ ] Add support for C and F temperature units

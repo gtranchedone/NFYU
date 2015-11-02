@@ -10,6 +10,10 @@ import UIKit
 
 class WeatherViewController: BaseViewController {
 
+    struct SegueIdentifiers {
+        static let Settings = "SettingsSegueIdentifier"
+    }
+    
     var userDefaults: UserDefaults?
     var locationManager: LocationManager?
     
@@ -18,6 +22,7 @@ class WeatherViewController: BaseViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var settingsButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +33,7 @@ class WeatherViewController: BaseViewController {
         pageControl.numberOfPages = 0
         backgroundMessageLabel.hidden = true
         initialSetupView.hidden = userDefaults?.didSetUpLocations ?? false
+        settingsButton.hidden = !initialSetupView.hidden
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -51,6 +57,7 @@ class WeatherViewController: BaseViewController {
     
     @IBAction func useCurrentLocation() {
         userDefaults?.canUseUserLocation = true
+        userDefaults?.didSetUpLocations = true
         initialSetupView.hidden = true
         updateWithCurrentLocation()
     }
@@ -59,4 +66,7 @@ class WeatherViewController: BaseViewController {
         initialSetupView.hidden = true
     }
     
+    @IBAction func showSettings() {
+        performSegueWithIdentifier(SegueIdentifiers.Settings, sender: settingsButton)
+    }
 }
