@@ -9,9 +9,31 @@
 import Foundation
 import CoreLocation
 
-protocol LocationManager {
+protocol LocationManager : AnyObject {
     
     func locationServicesEnabled() -> Bool
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ())
+    
+}
+
+class SystemLocationManager : NSObject, LocationManager, CLLocationManagerDelegate {
+    
+    let locationManager: CLLocationManager
+    
+    init(locationManager: CLLocationManager? = nil) {
+        self.locationManager = locationManager ?? CLLocationManager()
+    }
+    
+    // MARK: - LocationManager
+    
+    func locationServicesEnabled() -> Bool {
+        return false // CLLocationManager.locationServicesEnabled()
+    }
+    
+    func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {
+        // TODO: implement me
+    }
+    
+    // MARK: - CLLocationManagerDelegate
     
 }

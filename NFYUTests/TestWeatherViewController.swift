@@ -79,10 +79,6 @@ class TestWeatherViewController: XCTestCase {
     
     // MARK: Using Device Location
     
-    // TODO: test that AppDelegate injects a LocationManager into the viewController
-    // TODO: test behaviour of viewController when canUseUserLocation == true but location services are disabled -> Test this in LocationManager implementation instead
-    // TODO: test behaviour with different location services authorization statuses -> Also test this in LocationManager implementation, e.g. return error, or wait while user decides if grant auth
-    
     func testWeatherViewControllerUpdatesUserDefaultsForUsingCurrentLocationIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
         viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)

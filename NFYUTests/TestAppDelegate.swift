@@ -37,6 +37,18 @@ class TestAppDelegate: XCTestCase {
             "The main view controller should only know system settings via the user defaults passed by the AppDelegate")
     }
     
+    func testAppDelegateHasSystemLocationManagerWhenInitialized() {
+        let locationManager = appDelegate!.locationManager as? SystemLocationManager
+        XCTAssertNotNil(locationManager)
+    }
+    
+    func testAppDelegateInjectsLocationManagerIntoMainViewController() {
+        appDelegate?.application(UIApplication.sharedApplication(), didFinishLaunchingWithOptions: nil)
+        let viewController = appDelegate?.window?.rootViewController as? WeatherViewController
+        XCTAssert(appDelegate?.locationManager === viewController?.locationManager,
+            "The main view controller should only know system settings via the user defaults passed by the AppDelegate")
+    }
+    
     // MARK: Private
 
     func setUpAppDelegate(appDelegate: AppDelegate) {
