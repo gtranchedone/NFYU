@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreLocation
 @testable import NFYU
 
 class TestWeatherViewController: XCTestCase {
@@ -170,13 +171,6 @@ class TestWeatherViewController: XCTestCase {
     
     // MARK: Selecting Cities
     
-    // TODO: actually hide the initialSetupView only if the user is done adding cities -> use delegate call to verify that at least one city has been selected to do that
-    func testWeatherViewControllerHidesInitialSetupViewIfUserChoosesToAddCitiesForForecastsOnInitialSetUp() {
-        loadViewControllerView()
-        viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
-        XCTAssertTrue(viewController!.initialSetupView.hidden)
-    }
-    
     func testWeatherViewControllerPresentsSettingScreenWhenSelectCitiesButtonIsPressed() {
         loadViewControllerView()
         expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { [weak self] (notification) -> Bool in
@@ -197,9 +191,91 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(settingsViewController.displayOnlyFavouriteCities)
     }
     
-    // TODO: test that if the user is done adding cities "didSetupLocations" is set to true -> use delegate call to verify that at least one city has been selected to do that
-    
     // MARK: Settings
+    
+    func testWeatherViewControllerSetsItselfAsSettingsViewControllerDelegateWhenPresentingItViaSegue() {
+        let segueIdentifier = WeatherViewController.SegueIdentifiers.Settings
+        let settingsViewController = SettingsViewController()
+        let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
+        let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
+        viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
+        XCTAssertTrue(settingsViewController.delegate === viewController)
+    }
+    
+    func testWeatherViewControllerDoesNotHideInitialSetupViewWhenSettingsViewControllerIsDoneAndHasNoCitiesAndUserLocationIsDisabled() {
+        loadViewControllerView()
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertFalse(viewController!.initialSetupView.hidden)
+    }
+    
+    func testWeatherViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasCurrentLocation() {
+        loadViewControllerView()
+        viewController?.userDefaults?.canUseUserLocation = true
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(viewController!.initialSetupView.hidden)
+    }
+    
+    func testWeatherViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasAtLeastOneCity() {
+        loadViewControllerView()
+        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(viewController!.initialSetupView.hidden)
+    }
+    
+    func testWeatherViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasNoCurrentLocationNorFavouriteCities() {
+        loadViewControllerView()
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertFalse(viewController!.userDefaults!.didSetUpLocations)
+    }
+    
+    func testWeatherViewControllerUpdatesShowsInitialSetupViewWhenSettingsViewControllerIsDoneIfHasNoCurrentLocationNorFavouriteCities() {
+        loadViewControllerView()
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertFalse(viewController!.initialSetupView.hidden)
+    }
+    
+    func testWeatherViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasCurrentLocation() {
+        loadViewControllerView()
+        viewController?.userDefaults?.canUseUserLocation = true
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
+    }
+    
+    func testWeatherViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasAtLeastOneCity() {
+        loadViewControllerView()
+        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
+    }
+    
+    func testWeatherViewControllerDoesNotDismissSettingsViewControllerWhenDoneIfHasNoCitiesAndUserLocationIsDisabled() {
+        loadViewControllerView()
+        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
+        let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertFalse(observer.didReceiveNotification)
+    }
+    
+    func testWeatherViewControllerDismissesSettingsViewControllerWhenDoneIfHasCurrentLocation() {
+        loadViewControllerView()
+        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
+        let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
+        viewController?.userDefaults?.canUseUserLocation = true
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(observer.didReceiveNotification)
+    }
+    
+    func testWeatherViewControllerDismissesSettingsViewControllerWhenDoneIfHasAtLeastOneCity() {
+        loadViewControllerView()
+        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
+        let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
+        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(observer.didReceiveNotification)
+    }
+    
+    // TODO: test that if no favourite cities have been added and cannot use location viewController presents alert when settings try to get dismissed
+    // TODO: note that the alert needs to differ depending on whether adding cities was the only option
     
     func testWeatherViewControllerPerformsSegueToSettingsScreenWhenUserTapsSettingsButton() {
         loadViewControllerView()

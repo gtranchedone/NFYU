@@ -13,6 +13,19 @@ class FakeUserDefaults: NSObject, UserDefaults {
 
     var dictionary = NSMutableDictionary()
     
+    func objectForKey(defaultName: String) -> AnyObject? {
+        return dictionary.objectForKey(defaultName)
+    }
+    
+    func setObject(value: AnyObject?, forKey defaultName: String) {
+        if let value = value {
+            dictionary.setObject(value, forKey: defaultName)
+        }
+        else {
+            dictionary.removeObjectForKey(defaultName)
+        }
+    }
+    
     func setBool(value: Bool, forKey defaultName: String) {
         dictionary.setObject(NSNumber(bool: value), forKey: defaultName)
     }

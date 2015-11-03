@@ -8,31 +8,27 @@
 
 import Foundation
 
-class MockNotificationObserver {
+class MockNotificationObserver: NSObject {
     
     private struct ExpeptionNames {
         static let DidReceiveInappropriateNotification = "com.gtranchedone.tests.MockNotificationObserver.DidReceivedInappropriateNotification"
     }
     
     private let notificationName: String
-    private let needsCrashingIfReceiveNotification: Bool
     private(set) var didReceiveNotification: Bool = false
     
-    init(notificationName: String, sender: AnyObject?, crashIfReceived: Bool = false) {
+    init(notificationName: String, sender: AnyObject?) {
         self.notificationName = notificationName
-        needsCrashingIfReceiveNotification = crashIfReceived
+        super.init()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "receiveNotification", name: notificationName, object: sender)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func receiveNotification() {
         didReceiveNotification = true
-    }
-    
-    func verify() {
-        if didReceiveNotification && needsCrashingIfReceiveNotification {
-            let exception = NSException(name: ExpeptionNames.DidReceiveInappropriateNotification, reason: "Did receive \(notificationName)", userInfo: nil)
-            exception.raise()
-        }
     }
     
 }

@@ -24,6 +24,7 @@
 		995F11311BE7E99F004FE462 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F11301BE7E99F004FE462 /* SetupView.swift */; };
 		996EE9541BE913FA0016C73D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 996EE9561BE913FA0016C73D /* Localizable.strings */; };
 		996EE9581BE953DE0016C73D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9571BE953DE0016C73D /* SettingsViewController.swift */; };
+		996EE95A1BE95B6C0016C73D /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9591BE95B6C0016C73D /* City.swift */; };
 		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		995F11301BE7E99F004FE462 /* SetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		996EE9551BE913FA0016C73D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		996EE9571BE953DE0016C73D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		996EE9591BE95B6C0016C73D /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 				994458D11BE63AB700DE0CF6 /* Info.plist */,
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
 				994458F01BE6743F00DE0CF6 /* BaseViewController.swift */,
+				996EE9591BE95B6C0016C73D /* City.swift */,
 				995F112E1BE7E616004FE462 /* LocationFinder.swift */,
 				996EE9571BE953DE0016C73D /* SettingsViewController.swift */,
 				995F11301BE7E99F004FE462 /* SetupView.swift */,
@@ -248,6 +251,7 @@
 				995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
 				995F11311BE7E99F004FE462 /* SetupView.swift in Sources */,
+				996EE95A1BE95B6C0016C73D /* City.swift in Sources */,
 				994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

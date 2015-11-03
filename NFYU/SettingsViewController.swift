@@ -8,8 +8,15 @@
 
 import UIKit
 
+protocol SettingsViewControllerDelegate: AnyObject {
+    
+    func settingsViewControllerDidFinish(viewController: SettingsViewController)
+    
+}
+
 class SettingsViewController: UITableViewController {
     
+    var delegate: SettingsViewControllerDelegate?
     var displayOnlyFavouriteCities: Bool = false
 
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherViewController: BaseViewController {
+class WeatherViewController: BaseViewController, SettingsViewControllerDelegate {
 
     struct SegueIdentifiers {
         static let Settings = "SettingsSegueIdentifier"
@@ -78,6 +78,19 @@ class WeatherViewController: BaseViewController {
         performSegueWithIdentifier(SegueIdentifiers.Settings, sender: settingsButton)
     }
     
+    // MARK: SettingsViewControllerDelegate
+    
+    func settingsViewControllerDidFinish(viewController: SettingsViewController) {
+        if let userDefaults = userDefaults {
+            let hasValidData = userDefaults.favouriteCities.count > 0 || userDefaults.canUseUserLocation
+            userDefaults.didSetUpLocations = hasValidData
+            if hasValidData {
+                initialSetupView.hidden = true
+                dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+    }
+    
     // MARK: Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -85,6 +98,7 @@ class WeatherViewController: BaseViewController {
             let destinationViewController = segue.destinationViewController as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
             settingsViewController?.displayOnlyFavouriteCities = true
+            settingsViewController?.delegate = self
         }
     }
     

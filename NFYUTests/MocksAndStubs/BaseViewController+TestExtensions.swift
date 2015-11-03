@@ -13,6 +13,7 @@ extension BaseViewController {
     
     struct TestExtensionNotifications {
         static let DidAttemptSegue = "TestExtensionNotificationsDidAttemptSegue"
+        static let DidAttemptDismissingViewController = "TestExtensionNotificationsDidAttemptDismissingViewController"
     }
     
     struct TestExtensionNotificationsKeys {
@@ -26,6 +27,10 @@ extension BaseViewController {
             userInfo[TestExtensionNotificationsKeys.SegueSender] = sender
         }
         NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptSegue, object: self, userInfo: userInfo)
+    }
+    
+    override func dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?) {
+        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptDismissingViewController, object: self)
     }
     
 }
