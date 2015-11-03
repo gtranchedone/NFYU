@@ -55,10 +55,15 @@ class WeatherViewController: BaseViewController {
         }
     }
     
-    @IBAction func useCurrentLocation() {
-        userDefaults?.canUseUserLocation = true
+    func didSetupLocations() {
         userDefaults?.didSetUpLocations = true
         initialSetupView.hidden = true
+        settingsButton.hidden = false
+    }
+    
+    @IBAction func useCurrentLocation() {
+        didSetupLocations()
+        userDefaults?.canUseUserLocation = true
         updateWithCurrentLocation()
     }
     

@@ -38,6 +38,23 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertFalse(viewController!.initialSetupView.hidden)
     }
     
+    func testWeatherViewControllerHasSettingsButtonHiddenByDefault() {
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.settingsButton.hidden)
+    }
+    
+    func testWeatherViewControllerShowsSettingsButtonIfLocationsAreSetUp() {
+        viewController?.userDefaults?.didSetUpLocations = true
+        loadViewControllerView()
+        XCTAssertFalse(viewController!.settingsButton.hidden)
+    }
+    
+    func testWeatherViewControllerShowsSettingsButtonIfLocationsGetSetUp() {
+        loadViewControllerView()
+        viewController?.didSetupLocations()
+        XCTAssertFalse(viewController!.settingsButton.hidden)
+    }
+    
     func testWeatherViewControllerHasActivityIndicatorHiddenByDefault() {
         loadViewControllerView()
         XCTAssertTrue(viewController!.activityIndicator.hidden)
