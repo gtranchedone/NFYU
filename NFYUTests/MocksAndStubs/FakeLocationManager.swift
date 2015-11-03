@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 @testable import NFYU
 
-class FakeLocationManager: LocationManager {
+class FakeLocationFinder: LocationFinder {
     
     var allowUseOfLocationServices = true
     var didRequestCurrentLocation = false
@@ -27,6 +27,31 @@ class FakeLocationManager: LocationManager {
         if shouldCallCompletionBlock {
             completionBlock(stubError, stubLocation)
         }
+    }
+    
+}
+
+class FakeLocationManager: CLLocationManager {
+    
+    static var stubAuthorizationStatus: CLAuthorizationStatus = .NotDetermined
+    var didRequestAuthorizationForInUse = false
+    var didStartUpdatingLocation = false
+    var didStopUpdatingLocation = false
+    
+    override class func authorizationStatus() -> CLAuthorizationStatus {
+        return stubAuthorizationStatus
+    }
+    
+    override func startUpdatingLocation() {
+        didStartUpdatingLocation = true
+    }
+    
+    override func stopUpdatingLocation() {
+        didStopUpdatingLocation = true
+    }
+    
+    override func requestWhenInUseAuthorization() {
+        didRequestAuthorizationForInUse = true
     }
     
 }

@@ -15,7 +15,7 @@ class WeatherViewController: BaseViewController {
     }
     
     var userDefaults: UserDefaults?
-    var locationManager: LocationManager?
+    var locationManager: LocationFinder?
     
     @IBOutlet weak var initialSetupView: SetupView!
     @IBOutlet weak var backgroundMessageLabel: UILabel!

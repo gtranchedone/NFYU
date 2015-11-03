@@ -17,7 +17,7 @@ class TestWeatherViewController: XCTestCase {
         super.setUp()
         let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         viewController = storyboard.instantiateInitialViewController() as? WeatherViewController
-        viewController?.locationManager = FakeLocationManager()
+        viewController?.locationManager = FakeLocationFinder()
         viewController?.userDefaults = FakeUserDefaults()
     }
     
@@ -100,33 +100,33 @@ class TestWeatherViewController: XCTestCase {
     func testWeatherViewControllerRequestsUserLocationIfUserChoosesToUseItForForecastsOnInitialSetUp() {
         loadViewControllerView()
         viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
-        let locationManager = viewController!.locationManager as! FakeLocationManager
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
         XCTAssertTrue(locationManager.didRequestCurrentLocation)
     }
     
     func testWeatherViewControllerRequestsUserLocationWhenIsAboutToAppearOnScreenIfUserChoosedToUseItForForecasts() {
         viewController!.userDefaults!.canUseUserLocation = true
         loadViewControllerView()
-        let locationManager = viewController!.locationManager as! FakeLocationManager
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
         XCTAssertTrue(locationManager.didRequestCurrentLocation)
     }
     
     func testWeatherViewControllerDoesNotRequestUserLocationWhenIsAboutToAppearOnScreenIfUserChoosedNotToUseItForForecasts() {
         viewController!.userDefaults!.canUseUserLocation = false
         loadViewControllerView()
-        let locationManager = viewController!.locationManager as! FakeLocationManager
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
         XCTAssertFalse(locationManager.didRequestCurrentLocation)
     }
     
     func testWeatherViewControllerDoesNotRequestUserLocationWhenIsAboutToAppearOnScreenIfUserHasNotYetDecidedIfToUseItForForecasts() {
         loadViewControllerView()
-        let locationManager = viewController!.locationManager as! FakeLocationManager
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
         XCTAssertFalse(locationManager.didRequestCurrentLocation)
     }
     
     func testWeatherViewControllerShowsLoadingIndicatorWhileLoadingLocation() {
         viewController!.userDefaults!.canUseUserLocation = true
-        let locationManager = viewController!.locationManager as! FakeLocationManager
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.shouldCallCompletionBlock = false
         loadViewControllerView()
         XCTAssertFalse(viewController!.activityIndicator.hidden)
@@ -142,7 +142,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testWeatherViewControllerShowsLocalizedErrorMessageFromLocationManagerWhenRequestForLoadingCurrentLocationFails() {
         viewController!.userDefaults!.canUseUserLocation = true
-        let locationManager = viewController!.locationManager as! FakeLocationManager
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
         let expectedErrorMessage = "Some error message"
         let stubUserInfo = [NSLocalizedDescriptionKey: expectedErrorMessage]
         locationManager.stubError = NSError(domain: "test", code: 400, userInfo: stubUserInfo)
@@ -153,6 +153,7 @@ class TestWeatherViewController: XCTestCase {
     
     // MARK: Selecting Cities
     
+    // TODO: actually hide the initialSetupView only if the user is done adding cities -> use delegate call to verify that at least one city has been selected to do that
     func testWeatherViewControllerHidesInitialSetupViewIfUserChoosesToAddCitiesForForecastsOnInitialSetUp() {
         loadViewControllerView()
         viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
@@ -160,6 +161,7 @@ class TestWeatherViewController: XCTestCase {
     }
     
     // TODO: test that selecting "add favourite cities" on initial setup presents view controller for doing so
+    // TODO: test that if the user is done adding cities "didSetupLocations" is set to true -> use delegate call to verify that at least one city has been selected to do that
     
     // MARK: Settings
     

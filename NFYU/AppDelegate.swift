@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var userDefaults: UserDefaults = NSUserDefaults.standardUserDefaults()
-    var locationManager: LocationManager = SystemLocationManager()
+    var locationManager: LocationFinder = SystemLocationFinder()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let viewController = window?.rootViewController as? WeatherViewController

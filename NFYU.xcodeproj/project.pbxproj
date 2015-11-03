@@ -20,9 +20,9 @@
 		994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */; };
 		994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */; };
 		995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */; };
-		995F112F1BE7E616004FE462 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F112E1BE7E616004FE462 /* LocationManager.swift */; };
+		995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F112E1BE7E616004FE462 /* LocationFinder.swift */; };
 		995F11311BE7E99F004FE462 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F11301BE7E99F004FE462 /* SetupView.swift */; };
-		99C69F571BE8D01600188A78 /* TestSystemLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationManager.swift */; };
+		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,9 +53,9 @@
 		994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseViewController+TestExtensions.swift"; sourceTree = "<group>"; };
 		994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockNotificationObserver.swift; sourceTree = "<group>"; };
 		995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeLocationManager.swift; sourceTree = "<group>"; };
-		995F112E1BE7E616004FE462 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		995F112E1BE7E616004FE462 /* LocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationFinder.swift; sourceTree = "<group>"; };
 		995F11301BE7E99F004FE462 /* SetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
-		99C69F561BE8D01600188A78 /* TestSystemLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationManager.swift; sourceTree = "<group>"; };
+		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +100,7 @@
 				994458D11BE63AB700DE0CF6 /* Info.plist */,
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
 				994458F01BE6743F00DE0CF6 /* BaseViewController.swift */,
-				995F112E1BE7E616004FE462 /* LocationManager.swift */,
+				995F112E1BE7E616004FE462 /* LocationFinder.swift */,
 				995F11301BE7E99F004FE462 /* SetupView.swift */,
 				994458E91BE667A900DE0CF6 /* UserDefaults.swift */,
 				994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */,
@@ -118,7 +118,7 @@
 				994458DC1BE63AB700DE0CF6 /* Info.plist */,
 				994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */,
 				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
-				99C69F561BE8D01600188A78 /* TestSystemLocationManager.swift */,
+				99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */,
 			);
 			path = NFYUTests;
 			sourceTree = "<group>";
@@ -237,7 +237,7 @@
 			files = (
 				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
 				994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */,
-				995F112F1BE7E616004FE462 /* LocationManager.swift in Sources */,
+				995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
 				995F11311BE7E99F004FE462 /* SetupView.swift in Sources */,
 				994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */,
@@ -251,7 +251,7 @@
 				994458E81BE6658900DE0CF6 /* TestAppDelegate.swift in Sources */,
 				994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */,
 				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
-				99C69F571BE8D01600188A78 /* TestSystemLocationManager.swift in Sources */,
+				99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */,
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
 				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,
 				995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */,
