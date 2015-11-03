@@ -23,6 +23,7 @@
 		995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F112E1BE7E616004FE462 /* LocationFinder.swift */; };
 		995F11311BE7E99F004FE462 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F11301BE7E99F004FE462 /* SetupView.swift */; };
 		996EE9541BE913FA0016C73D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 996EE9561BE913FA0016C73D /* Localizable.strings */; };
+		996EE9581BE953DE0016C73D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9571BE953DE0016C73D /* SettingsViewController.swift */; };
 		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		995F112E1BE7E616004FE462 /* LocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationFinder.swift; sourceTree = "<group>"; };
 		995F11301BE7E99F004FE462 /* SetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		996EE9551BE913FA0016C73D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		996EE9571BE953DE0016C73D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,13 +105,14 @@
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
 				994458F01BE6743F00DE0CF6 /* BaseViewController.swift */,
 				995F112E1BE7E616004FE462 /* LocationFinder.swift */,
+				996EE9571BE953DE0016C73D /* SettingsViewController.swift */,
 				995F11301BE7E99F004FE462 /* SetupView.swift */,
 				994458E91BE667A900DE0CF6 /* UserDefaults.swift */,
 				994458C71BE63AB700DE0CF6 /* WeatherViewController.swift */,
 				994458CC1BE63AB700DE0CF6 /* Assets.xcassets */,
 				994458CE1BE63AB700DE0CF6 /* LaunchScreen.storyboard */,
-				994458C91BE63AB700DE0CF6 /* Main.storyboard */,
 				996EE9561BE913FA0016C73D /* Localizable.strings */,
+				994458C91BE63AB700DE0CF6 /* Main.storyboard */,
 			);
 			path = NFYU;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 			files = (
 				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
 				994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */,
+				996EE9581BE953DE0016C73D /* SettingsViewController.swift in Sources */,
 				995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
 				995F11311BE7E99F004FE462 /* SetupView.swift in Sources */,

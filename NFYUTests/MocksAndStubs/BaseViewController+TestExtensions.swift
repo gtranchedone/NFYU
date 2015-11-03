@@ -17,10 +17,14 @@ extension BaseViewController {
     
     struct TestExtensionNotificationsKeys {
         static let SegueIdentifier = "TestExtensionNotificationsKeysSegueIdentifier"
+        static let SegueSender = "TestExtensionNotificationsKeysSegueSender"
     }
     
     override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
-        let userInfo = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
+        var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
+        if let sender = sender {
+            userInfo[TestExtensionNotificationsKeys.SegueSender] = sender
+        }
         NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptSegue, object: self, userInfo: userInfo)
     }
     

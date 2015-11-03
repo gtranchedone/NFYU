@@ -177,7 +177,26 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
     
-    // TODO: test that selecting "add favourite cities" on initial setup presents view controller for doing so
+    func testWeatherViewControllerPresentsSettingScreenWhenSelectCitiesButtonIsPressed() {
+        loadViewControllerView()
+        expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { [weak self] (notification) -> Bool in
+            let segueIdentifier = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as! String
+            let sender = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueSender]
+            return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings && sender === self?.viewController?.initialSetupView
+        }
+        viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testWeatherViewControllerAsksTheSettingScreenToPresentItselfWithOnlyTheCitiesOptionIfSenderIsInitialSetupView() {
+        let segueIdentifier = WeatherViewController.SegueIdentifiers.Settings
+        let settingsViewController = SettingsViewController()
+        let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
+        let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
+        viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
+        XCTAssertTrue(settingsViewController.displayOnlyFavouriteCities)
+    }
+    
     // TODO: test that if the user is done adding cities "didSetupLocations" is set to true -> use delegate call to verify that at least one city has been selected to do that
     
     // MARK: Settings
@@ -185,13 +204,18 @@ class TestWeatherViewController: XCTestCase {
     func testWeatherViewControllerPerformsSegueToSettingsScreenWhenUserTapsSettingsButton() {
         loadViewControllerView()
         expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
-            let userInfo = notification.userInfo as! [String : String]
-            let segueIdentifier = userInfo[BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier]
+            let segueIdentifier = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as! String
             return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings
         }
         viewController!.settingsButton.sendActionsForControlEvents(.TouchUpInside)
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
+    
+    // MARK: Loading Forecasts
+    
+    // TODO: test that when scrolling to a location, the forecast for that location gets updated if not updated within the last hour
+    // TODO: test that the forecast for the displayed location is updated when the app becomes active
+    // TODO: test that current location is updated when app becomes active
     
     // MARK: Private
     

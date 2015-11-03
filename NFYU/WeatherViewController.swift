@@ -61,6 +61,8 @@ class WeatherViewController: BaseViewController {
         settingsButton.hidden = false
     }
     
+    // MARK: User Actions Handling
+    
     @IBAction func useCurrentLocation() {
         didSetupLocations()
         userDefaults?.canUseUserLocation = true
@@ -69,9 +71,21 @@ class WeatherViewController: BaseViewController {
     
     @IBAction func selectCities() {
         initialSetupView.hidden = true
+        performSegueWithIdentifier(SegueIdentifiers.Settings, sender: initialSetupView)
     }
     
     @IBAction func showSettings() {
         performSegueWithIdentifier(SegueIdentifiers.Settings, sender: settingsButton)
     }
+    
+    // MARK: Segues
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == SegueIdentifiers.Settings && sender === initialSetupView {
+            let destinationViewController = segue.destinationViewController as? UINavigationController
+            let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
+            settingsViewController?.displayOnlyFavouriteCities = true
+        }
+    }
+    
 }
