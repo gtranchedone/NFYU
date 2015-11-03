@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  NFYU
+
+  Created by Gianluca Tranchedone on 03/11/2015.
+  Copyright © 2015 Gianluca Tranchedone. All rights reserved.
+*/
+
+"USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED" = "This app cannot use your location because you didn't authorize it's use. You can change this in the Settings app.";
+"CANNOT_FIND_CURRENT_LOCATION" = "There's been a problem loading your current location. Please try again later.";

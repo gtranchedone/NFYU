@@ -27,6 +27,10 @@ class TestSystemLocationFinder: XCTestCase {
         super.tearDown()
     }
     
+    func testInfoPlistContainsRequiredInfoForUsingLocationServices() {
+        XCTAssertNotNil(NSBundle.mainBundle().objectForInfoDictionaryKey("NSLocationWhenInUseUsageDescription"))
+    }
+    
     func testSystemLocationFinderSetsItselfAsTheLocationManagerDelegate() {
         XCTAssertTrue(fakeLocationManager!.delegate === systemLocationFinder)
     }
@@ -110,19 +114,7 @@ class TestSystemLocationFinder: XCTestCase {
     func testSystemLocationFinderForwardsRequestForUpdatingCurrentLocationToLocationManager() {
         FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
         systemLocationFinder?.requestCurrentLocation { _, _ in }
-        XCTAssertTrue(fakeLocationManager!.didStartUpdatingLocation)
-    }
-    
-    func testSystemLocationFinderStopsUpdatingLocationsIfLocationManagerFailsToUpdateLocation() {
-        let error = NSError(domain: "testDomain", code: 400, userInfo: nil)
-        systemLocationFinder?.locationManager(fakeLocationManager!, didFailWithError: error)
-        XCTAssertTrue(fakeLocationManager!.didStopUpdatingLocation)
-    }
-    
-    func testSystemLocationFinderStopsUpdatingLocationsIfLocationManagerSucceedsInUpdatingLocation() {
-        let locations: [CLLocation] = []
-        systemLocationFinder?.locationManager(fakeLocationManager!, didUpdateLocations: locations)
-        XCTAssertTrue(fakeLocationManager!.didStopUpdatingLocation)
+        XCTAssertTrue(fakeLocationManager!.didRequestLocation)
     }
     
     func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationManagerFailsToUpdateLocation() {

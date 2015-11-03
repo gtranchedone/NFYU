@@ -35,19 +35,14 @@ class FakeLocationManager: CLLocationManager {
     
     static var stubAuthorizationStatus: CLAuthorizationStatus = .NotDetermined
     var didRequestAuthorizationForInUse = false
-    var didStartUpdatingLocation = false
-    var didStopUpdatingLocation = false
+    var didRequestLocation = false
     
     override class func authorizationStatus() -> CLAuthorizationStatus {
         return stubAuthorizationStatus
     }
     
-    override func startUpdatingLocation() {
-        didStartUpdatingLocation = true
-    }
-    
-    override func stopUpdatingLocation() {
-        didStopUpdatingLocation = true
+    override func requestLocation() {
+        didRequestLocation = true
     }
     
     override func requestWhenInUseAuthorization() {

@@ -52,7 +52,7 @@ class SystemLocationFinder : NSObject, LocationFinder, CLLocationManagerDelegate
             self.completionBlock = nil
         }
         else {
-            locationManager.startUpdatingLocation()
+            locationManager.requestLocation()
         }
     }
     
@@ -65,16 +65,17 @@ class SystemLocationFinder : NSObject, LocationFinder, CLLocationManagerDelegate
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        manager.stopUpdatingLocation()
         if let completionBlock = completionBlock {
             completionBlock(nil, locations.first)
         }
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        manager.stopUpdatingLocation()
         if let completionBlock = completionBlock {
-            completionBlock(error, nil)
+            // bacause the description of the default error isn't great...
+            let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("CANNOT_FIND_CURRENT_LOCATION", comment: "")]
+            let finalError = NSError(domain: error.domain, code: error.code, userInfo: userInfo)
+            completionBlock(finalError, nil)
         }
     }
     
