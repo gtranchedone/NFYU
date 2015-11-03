@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreLocation
 @testable import NFYU
 
 class TestSystemLocationFinder: XCTestCase {
@@ -112,21 +113,40 @@ class TestSystemLocationFinder: XCTestCase {
         XCTAssertTrue(fakeLocationManager!.didStartUpdatingLocation)
     }
     
-// NOTE: this is a reminder for what I have to do next
-//    func testSystemLocationFinderStopsUpdatingLocationsIfLocationManagerFailsToUpdateLocation() {
-//        XCTFail()
-//    }
-//    
-//    func testSystemLocationFinderStopsUpdatingLocationsIfLocationManagerSucceedsInUpdatingLocation() {
-//        XCTFail()
-//    }
-//    
-//    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationManagerFailsToUpdateLocation() {
-//        XCTFail()
-//    }
-//    
-//    func testSystemLocationFinderCallsCompletionBlockWithLastFoundLocationIfLocationManagerSucceedsInUpdatingLocation() {
-//        XCTFail()
-//    }
+    func testSystemLocationFinderStopsUpdatingLocationsIfLocationManagerFailsToUpdateLocation() {
+        let error = NSError(domain: "testDomain", code: 400, userInfo: nil)
+        systemLocationFinder?.locationManager(fakeLocationManager!, didFailWithError: error)
+        XCTAssertTrue(fakeLocationManager!.didStopUpdatingLocation)
+    }
+    
+    func testSystemLocationFinderStopsUpdatingLocationsIfLocationManagerSucceedsInUpdatingLocation() {
+        let locations: [CLLocation] = []
+        systemLocationFinder?.locationManager(fakeLocationManager!, didUpdateLocations: locations)
+        XCTAssertTrue(fakeLocationManager!.didStopUpdatingLocation)
+    }
+    
+    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationManagerFailsToUpdateLocation() {
+        let expectation = expectationWithDescription("Location update request calls completion block")
+        systemLocationFinder?.requestCurrentLocation { error, location in
+            XCTAssertNotNil(error)
+            XCTAssertNil(location)
+            expectation.fulfill()
+        }
+        let error = NSError(domain: "testDomain", code: 400, userInfo: nil)
+        systemLocationFinder?.locationManager(fakeLocationManager!, didFailWithError: error)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSystemLocationFinderCallsCompletionBlockWithLastFoundLocationIfLocationManagerSucceedsInUpdatingLocation() {
+        let expectation = expectationWithDescription("Location update request calls completion block")
+        systemLocationFinder?.requestCurrentLocation { error, location in
+            XCTAssertNil(error)
+            XCTAssertNotNil(location)
+            expectation.fulfill()
+        }
+        let locations: [CLLocation] = [CLLocation(latitude: 0, longitude: 0)]
+        systemLocationFinder?.locationManager(fakeLocationManager!, didUpdateLocations: locations)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
 
 }

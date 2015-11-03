@@ -64,4 +64,18 @@ class SystemLocationFinder : NSObject, LocationFinder, CLLocationManagerDelegate
         }
     }
     
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        manager.stopUpdatingLocation()
+        if let completionBlock = completionBlock {
+            completionBlock(nil, locations.first)
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        manager.stopUpdatingLocation()
+        if let completionBlock = completionBlock {
+            completionBlock(error, nil)
+        }
+    }
+    
 }
