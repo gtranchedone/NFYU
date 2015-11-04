@@ -14,7 +14,11 @@ protocol SettingsViewControllerDelegate: AnyObject {
     
 }
 
-class SettingsViewController: UITableViewController {
+class SettingsViewController: BaseTableViewController {
+    
+    enum Segues: String {
+        case AddCitySegue = "AddCitySegue"
+    }
     
     enum CellIdentifiers: String {
         case AddCityCell = "AddCityCell"
@@ -42,14 +46,14 @@ class SettingsViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellIdentifier: String
         let rowTitle: String
-        if indexPath.row > 0 {
+        if isAddCityIndexPath(indexPath) {
+            cellIdentifier = CellIdentifiers.AddCityCell.rawValue
+            rowTitle = NSLocalizedString("ADD_CITY_CELL_TITLE", comment: "")
+        }
+        else {
             cellIdentifier = CellIdentifiers.SimpleCityCell.rawValue
             let city = userDefaults!.favouriteCities[indexPath.row - 1]
             rowTitle = city.displayableName
-        }
-        else {
-            cellIdentifier = CellIdentifiers.AddCityCell.rawValue
-            rowTitle = NSLocalizedString("ADD_CITY_CELL_TITLE", comment: "")
         }
         
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
@@ -60,11 +64,11 @@ class SettingsViewController: UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return indexPath.row > 0
+        return !isAddCityIndexPath(indexPath)
     }
     
     override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return indexPath.row > 0 ? .Delete : .None
+        return isAddCityIndexPath(indexPath) ? .None : .Delete
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -76,10 +80,20 @@ class SettingsViewController: UITableViewController {
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if isAddCityIndexPath(indexPath) {
+            performSegueWithIdentifier(Segues.AddCitySegue.rawValue, sender: indexPath)
+        }
+    }
+    
     // MARK: - Other
     
     func finish() {
         delegate?.settingsViewControllerDidFinish(self)
+    }
+    
+    func isAddCityIndexPath(indexPath: NSIndexPath) -> Bool {
+        return indexPath.row == 0
     }
     
 }

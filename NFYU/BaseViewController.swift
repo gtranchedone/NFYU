@@ -11,3 +11,8 @@ import UIKit
 /// Superclass for all viewControllers in this app. This is useful for customizations, testing and debugging. See test classes for more.
 class BaseViewController: UIViewController {
 }
+
+/// Superclass for all table viewControllers in this app. This is useful for customizations, testing and debugging. See test classes for more.
+// TODO: refactor to be subclass of BaseViewController
+class BaseTableViewController: UITableViewController {
+}

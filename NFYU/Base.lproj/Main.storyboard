@@ -245,10 +245,32 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="jtn-qR-TVP"/>
+                    <connections>
+                        <segue destination="tei-bT-scr" kind="show" identifier="AddCitySegue" id="cFR-oD-viV"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9p9-G6-ZPq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2060" y="290"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="TaK-dK-s9l">
+            <objects>
+                <viewController id="tei-bT-scr" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fsX-Jr-E9F"/>
+                        <viewControllerLayoutGuide type="bottom" id="d5T-sM-0XC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="174-9U-Wrp">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gNi-de-nYB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2856" y="290"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="RTs-p2-06y">

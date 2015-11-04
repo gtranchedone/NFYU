@@ -34,3 +34,31 @@ extension BaseViewController {
     }
     
 }
+
+// TODO: delete me when BaseTableViewController is subclass of BaseViewController
+
+extension BaseTableViewController {
+    
+    struct TestExtensionNotifications {
+        static let DidAttemptSegue = "TestExtensionNotificationsDidAttemptSegue"
+        static let DidAttemptDismissingViewController = "TestExtensionNotificationsDidAttemptDismissingViewController"
+    }
+    
+    struct TestExtensionNotificationsKeys {
+        static let SegueIdentifier = "TestExtensionNotificationsKeysSegueIdentifier"
+        static let SegueSender = "TestExtensionNotificationsKeysSegueSender"
+    }
+    
+    override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
+        var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
+        if let sender = sender {
+            userInfo[TestExtensionNotificationsKeys.SegueSender] = sender
+        }
+        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptSegue, object: self, userInfo: userInfo)
+    }
+    
+    override func dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?) {
+        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptDismissingViewController, object: self)
+    }
+    
+}

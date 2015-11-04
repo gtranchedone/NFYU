@@ -168,6 +168,25 @@ class TestSettingsViewController: XCTestCase {
     
     // MARK: Cities Addition
     
+    func testSettingsViewControllerPresentsCitySearchViewControllerWhenUserTapsOnAddCityRow() {
+        loadViewControllerView()
+        expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
+            let identifier = notification.userInfo?[BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as? String
+            return identifier == SettingsViewController.Segues.AddCitySegue.rawValue
+        }
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSettingsViewControllerDoesNotPresentCitySearchViewControllerWhenUserTapsOnCityRow() {
+        loadViewControllerView()
+        let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptSegue, sender: viewController)
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
+        XCTAssertFalse(observer.didReceiveNotification)
+    }
+    
     // MARK: - Helpers
     
     private func loadViewControllerView() {
