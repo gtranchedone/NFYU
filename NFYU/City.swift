@@ -21,9 +21,7 @@ class City: Equatable {
             if let region = region {
                 return "\(name), \(region)"
             }
-            else {
-                return "\(name), \(country)"
-            }
+            return "\(name), \(country)"
         }
     }
     

@@ -76,6 +76,13 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(1, numberOfRows)
     }
     
+    func testSettingsViewControllerHasOneRowToAddCitiesIfUserHasNoFavouriteCities2() {
+        viewController?.userDefaults = nil
+        loadViewControllerView()
+        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
+        XCTAssertEqual(1, numberOfRows)
+    }
+    
     func testSettingsViewControllerHasOneRowForEachFavouriteCityPlusOneForAddingNewCities() {
         loadViewControllerView()
         insertStubCitiesInUserDefaults()
