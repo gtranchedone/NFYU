@@ -109,6 +109,22 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
     
+    func testWeatherViewControllerShowsErrorMessageIfAfterInitialSetupTheUserHaChoosenToUseCurrentLocationButDisabledLocationServices() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.allowUseOfLocationServices = false
+        loadViewControllerView()
+        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        XCTAssertEqual(NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: ""), viewController!.backgroundMessageLabel.text)
+    }
+    
+    func testWeatherViewControllerDoesNotShowErrorMessageIfLocationServicesAreDisabledButHasFavouriteCities() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.allowUseOfLocationServices = false
+        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
+        loadViewControllerView()
+        XCTAssertNil(viewController!.backgroundMessageLabel.text)
+    }
+    
     func testWeatherViewControllerRequestsUserLocationIfUserChoosesToUseItForForecastsOnInitialSetUp() {
         loadViewControllerView()
         viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
@@ -268,9 +284,6 @@ class TestWeatherViewController: XCTestCase {
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(observer.didReceiveNotification)
     }
-    
-    // TODO: test that if no favourite cities have been added and cannot use location viewController presents alert when settings try to get dismissed
-    // TODO: note that the alert needs to differ depending on whether adding cities was the only option
     
     func testWeatherViewControllerPerformsSegueToSettingsScreenWhenUserTapsSettingsButton() {
         loadViewControllerView()

@@ -57,6 +57,10 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
                 }
             }
         }
+        else {
+            let hasCities = userDefaults?.favouriteCities.count > 0
+            backgroundMessageLabel.text = hasCities ? nil : NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")
+        }
     }
     
     func didSetupLocations() {
