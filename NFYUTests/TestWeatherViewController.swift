@@ -27,6 +27,10 @@ class TestWeatherViewController: XCTestCase {
         super.tearDown()
     }
     
+    func testViewControllerStopsObservingNotificationsWhenDeinitialized() {
+        // ???: how to test this? Setting viewController to nil doesn't seem to call -deinit
+    }
+    
     // MARK: Initial UI State
     
     func testWeatherViewControllerCanBeCorrectlyInitialized() {
@@ -122,6 +126,34 @@ class TestWeatherViewController: XCTestCase {
         locationManager.allowUseOfLocationServices = false
         viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
         loadViewControllerView()
+        XCTAssertNil(viewController!.backgroundMessageLabel.text)
+    }
+    
+    func testWeatherViewControllerShowsErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasNoOtherCity() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.allowUseOfLocationServices = true
+        loadViewControllerView()
+        locationManager.allowUseOfLocationServices = false
+        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        XCTAssertEqual(NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: ""), viewController!.backgroundMessageLabel.text)
+    }
+    
+    func testWeatherViewControllerReloadsUserLocationWhenAppBecomesActive() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.allowUseOfLocationServices = false
+        loadViewControllerView()
+        locationManager.allowUseOfLocationServices = true
+        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        XCTAssertTrue(locationManager.didRequestCurrentLocation)
+    }
+    
+    func testWeatherViewControllerDoesNotShowErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasOtherCities()() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.allowUseOfLocationServices = true
+        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
+        loadViewControllerView()
+        locationManager.allowUseOfLocationServices = false
+        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
         XCTAssertNil(viewController!.backgroundMessageLabel.text)
     }
     

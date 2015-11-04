@@ -26,9 +26,14 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     // MARK: - View Lifecycle
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setInitialViewState()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
     private func setInitialViewState() {
@@ -44,6 +49,10 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     }
     
     // MARK: - Other Business Logic
+    
+    func applicationDidBecomeActive() {
+        updateWithCurrentLocation()
+    }
     
     func updateWithCurrentLocation() {
         let canUseUserLocation = locationManager?.locationServicesEnabled() ?? false
