@@ -109,7 +109,6 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         if segue.identifier == SegueIdentifiers.Settings && sender === initialSetupView {
             let destinationViewController = segue.destinationViewController as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
-            settingsViewController?.displayOnlyFavouriteCities = true
             settingsViewController?.delegate = self
         }
     }

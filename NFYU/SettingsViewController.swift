@@ -17,6 +17,5 @@ protocol SettingsViewControllerDelegate: AnyObject {
 class SettingsViewController: UITableViewController {
     
     var delegate: SettingsViewControllerDelegate?
-    var displayOnlyFavouriteCities: Bool = false
 
 }

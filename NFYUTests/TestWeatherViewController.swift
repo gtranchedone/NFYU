@@ -187,15 +187,6 @@ class TestWeatherViewController: XCTestCase {
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
-    func testWeatherViewControllerAsksTheSettingScreenToPresentItselfWithOnlyTheCitiesOptionIfSenderIsInitialSetupView() {
-        let segueIdentifier = WeatherViewController.SegueIdentifiers.Settings
-        let settingsViewController = SettingsViewController()
-        let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
-        let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
-        viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
-        XCTAssertTrue(settingsViewController.displayOnlyFavouriteCities)
-    }
-    
     // MARK: Settings
     
     func testWeatherViewControllerSetsItselfAsSettingsViewControllerDelegateWhenPresentingItViaSegue() {
