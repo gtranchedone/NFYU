@@ -12,8 +12,9 @@ import CoreLocation
 
 class FakeLocationFinder: LocationFinder {
     
+    private(set) var didRequestCurrentLocation = false
+    
     var allowUseOfLocationServices = true
-    var didRequestCurrentLocation = false
     var shouldCallCompletionBlock = true
     var stubLocation: CLLocation?
     var stubError: NSError?

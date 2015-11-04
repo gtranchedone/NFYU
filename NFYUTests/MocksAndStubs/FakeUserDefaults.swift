@@ -11,7 +11,7 @@ import Foundation
 
 class FakeUserDefaults: NSObject, UserDefaults {
 
-    var dictionary = NSMutableDictionary()
+    private var dictionary = NSMutableDictionary()
     
     func objectForKey(defaultName: String) -> AnyObject? {
         return dictionary.objectForKey(defaultName)

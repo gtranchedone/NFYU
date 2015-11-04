@@ -110,6 +110,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
             initialSetupView.hidden = true
             dismissViewControllerAnimated(true, completion: nil)
         }
+        collectionView.reloadData()
     }
     
     // MARK: Segues
@@ -118,6 +119,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         if segue.identifier == SegueIdentifiers.Settings && sender === initialSetupView {
             let destinationViewController = segue.destinationViewController as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
+            settingsViewController?.userDefaults = userDefaults
             settingsViewController?.delegate = self
         }
     }

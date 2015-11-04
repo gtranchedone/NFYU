@@ -25,6 +25,8 @@
 		996EE9541BE913FA0016C73D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 996EE9561BE913FA0016C73D /* Localizable.strings */; };
 		996EE9581BE953DE0016C73D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9571BE953DE0016C73D /* SettingsViewController.swift */; };
 		996EE95A1BE95B6C0016C73D /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9591BE95B6C0016C73D /* City.swift */; };
+		996EE95C1BEA3CBE0016C73D /* FakeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */; };
+		996EE95E1BEA3E880016C73D /* TestSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */; };
 		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +63,8 @@
 		996EE9551BE913FA0016C73D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		996EE9571BE953DE0016C73D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		996EE9591BE95B6C0016C73D /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeCollectionView.swift; sourceTree = "<group>"; };
+		996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSettingsViewController.swift; sourceTree = "<group>"; };
 		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,6 +129,7 @@
 			children = (
 				994458DC1BE63AB700DE0CF6 /* Info.plist */,
 				994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */,
+				996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */,
 				99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */,
 				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
 				994458EB1BE6695100DE0CF6 /* MocksAndStubs */,
@@ -136,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */,
+				996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */,
 				995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */,
 				994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */,
 				994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */,
@@ -261,8 +267,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				994458E81BE6658900DE0CF6 /* TestAppDelegate.swift in Sources */,
+				996EE95C1BEA3CBE0016C73D /* FakeCollectionView.swift in Sources */,
 				994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */,
 				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
+				996EE95E1BEA3E880016C73D /* TestSettingsViewController.swift in Sources */,
 				99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */,
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
 				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,

@@ -191,14 +191,14 @@
         <!--Root View Controller-->
         <scene sceneID="EJf-NC-9H4">
             <objects>
-                <tableViewController id="euT-l7-283" customClass="SettingsViewController" customModule="NFYU" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SettingsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="euT-l7-283" customClass="SettingsViewController" customModule="NFYU" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="dSR-b4-R4A">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="dzk-6z-xNe" style="IBUITableViewCellStyleDefault" id="uUA-OU-cew">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SimpleCityCell" textLabel="dzk-6z-xNe" style="IBUITableViewCellStyleDefault" id="uUA-OU-cew">
                                 <rect key="frame" x="0.0" y="72" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uUA-OU-cew" id="fC0-1j-9nt">
@@ -218,32 +218,23 @@
                                 </tableViewCellContentView>
                                 <animations/>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="lqM-Xx-jcN">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="AddCityCell" textLabel="wYl-vd-RoA" style="IBUITableViewCellStyleDefault" id="lqM-Xx-jcN">
                                 <rect key="frame" x="0.0" y="116" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lqM-Xx-jcN" id="zYD-Ov-gKP">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUh-qd-SKF">
-                                            <rect key="frame" x="16" y="13" width="32" height="19"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wYl-vd-RoA">
+                                            <rect key="frame" x="15" y="0.0" width="550" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <animations/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sJT-cc-PAS">
-                                            <rect key="frame" x="535" y="7" width="51" height="31"/>
-                                            <animations/>
-                                        </switch>
                                     </subviews>
                                     <animations/>
-                                    <constraints>
-                                        <constraint firstItem="ZUh-qd-SKF" firstAttribute="centerY" secondItem="zYD-Ov-gKP" secondAttribute="centerY" id="6QG-zZ-KER"/>
-                                        <constraint firstItem="ZUh-qd-SKF" firstAttribute="leading" secondItem="zYD-Ov-gKP" secondAttribute="leadingMargin" constant="8" id="9fb-Mk-niv"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="sJT-cc-PAS" secondAttribute="trailing" constant="8" id="R4V-Nh-Yja"/>
-                                        <constraint firstItem="sJT-cc-PAS" firstAttribute="centerY" secondItem="zYD-Ov-gKP" secondAttribute="centerY" id="qmm-4L-eq8"/>
-                                    </constraints>
                                 </tableViewCellContentView>
                                 <animations/>
                             </tableViewCell>

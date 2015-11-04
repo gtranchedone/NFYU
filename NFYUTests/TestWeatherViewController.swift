@@ -230,6 +230,15 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(settingsViewController.delegate === viewController)
     }
     
+    func testWeatherViewControllerPassesUserDefaultsToSettingsViewControllerWhenPresentingItViaSegue() {
+        let segueIdentifier = WeatherViewController.SegueIdentifiers.Settings
+        let settingsViewController = SettingsViewController()
+        let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
+        let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
+        viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
+        XCTAssertTrue(settingsViewController.userDefaults === viewController?.userDefaults)
+    }
+    
     func testWeatherViewControllerDoesNotHideInitialSetupViewWhenSettingsViewControllerIsDoneAndHasNoCitiesAndUserLocationIsDisabled() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = false
@@ -318,15 +327,24 @@ class TestWeatherViewController: XCTestCase {
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
+    func testWeatherViewControllerReloadsDataOnCollectionViewWhenSettingsViewControllerIsDone() {
+        // TODO: for MVP just reload everything... later on, perform only required changes
+        loadViewControllerView()
+        let fakeCollectionView = FakeCollectionView()
+        viewController?.collectionView = fakeCollectionView
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertTrue(fakeCollectionView.didReloadData)
+    }
+    
     // MARK: Loading Forecasts
     
     // TODO: test that when scrolling to a location, the forecast for that location gets updated if not updated within the last hour
     // TODO: test that the forecast for the displayed location is updated when the app becomes active
     // TODO: test that current location is updated when app becomes active
     
-    // MARK: Private
+    // MARK: Helpers
     
-    func loadViewControllerView() {
+    private func loadViewControllerView() {
         viewController!.beginAppearanceTransition(true, animated: false)
         viewController!.endAppearanceTransition()
     }
