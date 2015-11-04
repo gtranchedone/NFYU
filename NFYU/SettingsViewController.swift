@@ -28,7 +28,8 @@ class SettingsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = editButtonItem()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "finish")
+        navigationItem.leftBarButtonItem = editButtonItem()
         title = NSLocalizedString("SETTINGS_TITLE", comment: "")
     }
     
@@ -73,6 +74,12 @@ class SettingsViewController: UITableViewController {
             userDefaults.favouriteCities = newCities
         }
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    }
+    
+    // MARK: - Other
+    
+    func finish() {
+        delegate?.settingsViewControllerDidFinish(self)
     }
     
 }

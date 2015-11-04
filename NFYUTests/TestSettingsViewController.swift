@@ -10,6 +10,16 @@ import XCTest
 import CoreLocation
 @testable import NFYU
 
+class FakeSettingsViewControllerDelegate: SettingsViewControllerDelegate {
+    
+    private(set) var didFinish = false
+    
+    func settingsViewControllerDidFinish(viewController: SettingsViewController) {
+        didFinish = true
+    }
+    
+}
+
 class TestSettingsViewController: XCTestCase {
 
     var viewController: SettingsViewController?
@@ -35,6 +45,20 @@ class TestSettingsViewController: XCTestCase {
     func testViewControllerTitleIsCorrectlySet() {
         loadViewControllerView()
         XCTAssertEqual(NSLocalizedString("SETTINGS_TITLE", comment: ""), viewController?.title)
+    }
+    
+    func testViewControllerShowsDoneButtonInNavigationBarInOrderToGetDismissed() {
+        loadViewControllerView()
+        XCTAssertEqual(UIBarButtonItemStyle.Done, viewController?.navigationItem.rightBarButtonItem?.style)
+    }
+    
+    func testViewControllerTellsDelegateThatItHasFinishedWhenUserTapsDoneButtonInNavigationBar() {
+        loadViewControllerView()
+        let fakeDelegate = FakeSettingsViewControllerDelegate()
+        viewController?.delegate = fakeDelegate
+        let button = viewController?.navigationItem.rightBarButtonItem
+        button?.target?.performSelector(button!.action)
+        XCTAssertTrue(fakeDelegate.didFinish)
     }
     
     // MARK: - UITableViewDelegate
@@ -92,11 +116,11 @@ class TestSettingsViewController: XCTestCase {
     }
     
     // MARK: - UITableViewDelegate
-    // MARK: Cities Editing
+    // MARK: Cities Deletion
     
     func testSettingsViewControllerHasEditButtonInNavigationBarWhenPresent() {
         loadViewControllerView()
-        XCTAssertEqual(viewController!.editButtonItem(), viewController!.navigationItem.rightBarButtonItem)
+        XCTAssertEqual(viewController!.editButtonItem(), viewController!.navigationItem.leftBarButtonItem)
     }
     
     func testSettingsViewControllerAllowsDeletionOfCityRows() {
@@ -142,7 +166,9 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual([indexPath], fakeTableView.deletedIndexPaths!)
     }
     
-    // MARK: Helpers
+    // MARK: Cities Addition
+    
+    // MARK: - Helpers
     
     private func loadViewControllerView() {
         viewController!.beginAppearanceTransition(true, animated: false)
