@@ -37,7 +37,8 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(NSLocalizedString("SETTINGS_TITLE", comment: ""), viewController?.title)
     }
     
-    // MARK: UITableViewDelegate
+    // MARK: - UITableViewDelegate
+    // MARK: Cities Display Logic
     
     func testSettingsViewControllerAlwaysHasOneSectionInTableViewToBeAbleToAddCities() {
         loadViewControllerView()
@@ -88,7 +89,57 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(UITableViewCellSelectionStyle.None, cell2.selectionStyle)
         XCTAssertEqual(UITableViewCellAccessoryType.None, cell2.accessoryType)
         XCTAssertEqual("San Francisco, USA", cell2.textLabel?.text)
-        
+    }
+    
+    // MARK: - UITableViewDelegate
+    // MARK: Cities Editing
+    
+    func testSettingsViewControllerHasEditButtonInNavigationBarWhenPresent() {
+        loadViewControllerView()
+        XCTAssertEqual(viewController!.editButtonItem(), viewController!.navigationItem.rightBarButtonItem)
+    }
+    
+    func testSettingsViewControllerAllowsDeletionOfCityRows() {
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
+        XCTAssertTrue(canDeleteRow)
+    }
+    
+    func testSettingsViewControllerDoesNotAllowDeletionOfAddCityRow() {
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
+        XCTAssertFalse(canDeleteRow)
+    }
+    
+    func testSettingsViewControllerDisplaysEditStyleForDeletingCitiesWhileEditing() {
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let editingStyle = viewController!.tableView(viewController!.tableView, editingStyleForRowAtIndexPath: indexPath)
+        XCTAssertEqual(UITableViewCellEditingStyle.Delete, editingStyle)
+    }
+    
+    func testSettingsViewControllerDisplaysNoEditStyleForAddingCitiesWhileEditing() {
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let editingStyle = viewController!.tableView(viewController!.tableView, editingStyleForRowAtIndexPath: indexPath)
+        XCTAssertEqual(UITableViewCellEditingStyle.None, editingStyle)
+    }
+    
+    func testSettingsViewControllerDeletesCitiesFromUserDefaultsWhenUserDeletesRow() {
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        viewController!.tableView.reloadData()
+        viewController!.tableView(viewController!.tableView, commitEditingStyle: .Delete, forRowAtIndexPath: indexPath)
+        XCTAssertEqual(1, viewController!.userDefaults!.favouriteCities.count)
+    }
+    
+    func testSettingsViewControllerDeletesCityRowWhenUserDeletesCity() {
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        let fakeTableView = FakeTableView()
+        viewController?.tableView = fakeTableView
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        viewController!.tableView(viewController!.tableView, commitEditingStyle: .Delete, forRowAtIndexPath: indexPath)
+        XCTAssertEqual([indexPath], fakeTableView.deletedIndexPaths!)
     }
     
     // MARK: Helpers

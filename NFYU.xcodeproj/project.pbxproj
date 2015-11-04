@@ -28,6 +28,7 @@
 		996EE95C1BEA3CBE0016C73D /* FakeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */; };
 		996EE95E1BEA3E880016C73D /* TestSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */; };
 		9997BAB61BEA508B00368DD9 /* TestCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB51BEA508B00368DD9 /* TestCity.swift */; };
+		9997BAB81BEA573600368DD9 /* FakeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB71BEA573600368DD9 /* FakeTableView.swift */; };
 		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,7 @@
 		996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeCollectionView.swift; sourceTree = "<group>"; };
 		996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSettingsViewController.swift; sourceTree = "<group>"; };
 		9997BAB51BEA508B00368DD9 /* TestCity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCity.swift; sourceTree = "<group>"; };
+		9997BAB71BEA573600368DD9 /* FakeTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeTableView.swift; sourceTree = "<group>"; };
 		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -146,6 +148,7 @@
 				994458F21BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift */,
 				996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */,
 				995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */,
+				9997BAB71BEA573600368DD9 /* FakeTableView.swift */,
 				994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */,
 				994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */,
 			);
@@ -277,6 +280,7 @@
 				99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */,
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
 				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,
+				9997BAB81BEA573600368DD9 /* FakeTableView.swift in Sources */,
 				9997BAB61BEA508B00368DD9 /* TestCity.swift in Sources */,
 				995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */,
 			);
