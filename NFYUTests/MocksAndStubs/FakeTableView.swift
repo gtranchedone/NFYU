@@ -10,8 +10,8 @@ import UIKit
 
 class FakeTableView: UITableView {
     
-    private(set) var insertedIndexPaths: [NSIndexPath]?
-    private(set) var deletedIndexPaths: [NSIndexPath]?
+    private(set) var insertedIndexPaths: [NSIndexPath] = []
+    private(set) var deletedIndexPaths: [NSIndexPath] = []
     
     override func insertRowsAtIndexPaths(indexPaths: [NSIndexPath], withRowAnimation animation: UITableViewRowAnimation) {
         insertedIndexPaths = indexPaths

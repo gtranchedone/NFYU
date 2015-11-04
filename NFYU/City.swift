@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-class City {
+class City: Equatable {
     
     let coordinate: CLLocationCoordinate2D
     let country: String
@@ -34,4 +34,8 @@ class City {
         self.name = name
     }
     
+}
+
+func ==(lhs: City, rhs: City) -> Bool {
+    return lhs.name == rhs.name && lhs.region == rhs.region && lhs.country == rhs.country
 }

@@ -8,6 +8,14 @@
 
 import UIKit
 
+protocol CitySearchViewControllerDelegate: AnyObject {
+    
+    func citySearchViewController(viewController: CitySearchViewController, didFinishWithCity city: City?)
+    
+}
+
 class CitySearchViewController: UIViewController {
 
+    var delegate: CitySearchViewControllerDelegate?
+    
 }

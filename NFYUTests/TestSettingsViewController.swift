@@ -163,7 +163,7 @@ class TestSettingsViewController: XCTestCase {
         viewController?.tableView = fakeTableView
         let indexPath = NSIndexPath(forRow: 1, inSection: 0)
         viewController!.tableView(viewController!.tableView, commitEditingStyle: .Delete, forRowAtIndexPath: indexPath)
-        XCTAssertEqual([indexPath], fakeTableView.deletedIndexPaths!)
+        XCTAssertEqual([indexPath], fakeTableView.deletedIndexPaths)
     }
     
     // MARK: Cities Addition
@@ -185,6 +185,45 @@ class TestSettingsViewController: XCTestCase {
         let indexPath = NSIndexPath(forRow: 1, inSection: 0)
         viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
         XCTAssertFalse(observer.didReceiveNotification)
+    }
+    
+    func testSettingsViewControllerSetsItselfAsCitySearchViewControllerDelegateWhenPresentingIt() {
+        let citySearchViewController = CitySearchViewController()
+        let segue = UIStoryboardSegue(identifier: SettingsViewController.Segues.AddCitySegue.rawValue, source: viewController!, destination: citySearchViewController)
+        viewController?.prepareForSegue(segue, sender: NSIndexPath(forRow: 0, inSection: 0))
+        XCTAssertTrue(viewController === citySearchViewController.delegate)
+    }
+    
+    func testSettingsViewControllerDismissesCitySearchWhenReceivingDelegateCallWithoutNewCity() {
+        let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController, sender: viewController)
+        let citySearchViewController = CitySearchViewController()
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: nil)
+        XCTAssertTrue(observer.didReceiveNotification)
+    }
+    
+    func testSettingsViewControllerDismissesCitySearchWhenReceivingDelegateCallWithNewCity() {
+        let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController, sender: viewController)
+        let citySearchViewController = CitySearchViewController()
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: City(coordinate: CLLocationCoordinate2D(), name: "", country: ""))
+        XCTAssertTrue(observer.didReceiveNotification)
+    }
+    
+    func testSettingsViewControllerAddsNewCityToUserDefaultsWhenReceivingCitySearchDelegateCallWithNewCity() {
+        let citySearchViewController = CitySearchViewController()
+        let newCity = City(coordinate: CLLocationCoordinate2D(), name: "", country: "")
+        var expectedCities = viewController!.userDefaults!.favouriteCities
+        expectedCities.append(newCity)
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: newCity)
+        XCTAssertEqual(expectedCities, viewController!.userDefaults!.favouriteCities)
+    }
+    
+    func testSettingsViewControllerInsertsNewCityRowToUserDefaultsWhenReceivingCitySearchDelegateCallWithNewCity() {
+        let fakeTableView = FakeTableView()
+        viewController?.tableView = fakeTableView
+        let citySearchViewController = CitySearchViewController()
+        let newCity = City(coordinate: CLLocationCoordinate2D(), name: "", country: "")
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: newCity)
+        XCTAssertEqual([NSIndexPath(forRow: 1, inSection: 0)], fakeTableView.insertedIndexPaths)
     }
     
     // MARK: - Helpers

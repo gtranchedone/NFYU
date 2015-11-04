@@ -14,7 +14,7 @@ protocol SettingsViewControllerDelegate: AnyObject {
     
 }
 
-class SettingsViewController: BaseTableViewController {
+class SettingsViewController: BaseTableViewController, CitySearchViewControllerDelegate {
     
     enum Segues: String {
         case AddCitySegue = "AddCitySegue"
@@ -83,6 +83,30 @@ class SettingsViewController: BaseTableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if isAddCityIndexPath(indexPath) {
             performSegueWithIdentifier(Segues.AddCitySegue.rawValue, sender: indexPath)
+        }
+    }
+    
+    // MARK: - Segues
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == Segues.AddCitySegue.rawValue {
+            let citySearchViewController = segue.destinationViewController as? CitySearchViewController
+            citySearchViewController?.delegate = self
+        }
+    }
+    
+    // MARK: - CitySearchViewControllerDelegate
+    
+    func citySearchViewController(viewController: CitySearchViewController, didFinishWithCity city: City?) {
+        dismissViewControllerAnimated(true, completion: nil)
+        if let city = city {
+            if let userDefaults = userDefaults {
+                var newCities = userDefaults.favouriteCities
+                newCities.append(city)
+                userDefaults.favouriteCities = newCities
+                let newIndexPath = NSIndexPath(forRow: userDefaults.favouriteCities.count, inSection: 0)
+                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
+            }
         }
     }
     
