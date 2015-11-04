@@ -13,11 +13,24 @@ class City {
     
     let coordinate: CLLocationCoordinate2D
     let country: String
+    let region: String?
     let name: String
     
-    init(coordinate: CLLocationCoordinate2D, name: String, country: String) {
+    var displayableName: String {
+        get {
+            if let region = region {
+                return "\(name), \(region)"
+            }
+            else {
+                return "\(name), \(country)"
+            }
+        }
+    }
+    
+    init(coordinate: CLLocationCoordinate2D, name: String, country: String, region: String? = nil) {
         self.coordinate = coordinate
         self.country = country
+        self.region = region
         self.name = name
     }
     

@@ -43,7 +43,7 @@ class SettingsViewController: UITableViewController {
         if indexPath.row > 0 {
             cellIdentifier = CellIdentifiers.SimpleCityCell.rawValue
             let city = userDefaults!.favouriteCities[indexPath.row - 1]
-            rowTitle = "\(city.name), \(city.country)"
+            rowTitle = city.displayableName
         }
         else {
             cellIdentifier = CellIdentifiers.AddCityCell.rawValue
