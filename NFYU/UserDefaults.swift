@@ -19,21 +19,11 @@ protocol UserDefaults: AnyObject {
 }
 
 struct UserDefaultsKeys {
-    static let CanUseUserLocation = "com.gtranchedone.NFYU.CanUseUserLocation"
     static let DidSetUpLocations = "com.gtranchedone.NFYU.DidSetUpLocations"
     static let FavouriteCities = "com.gtranchedone.NFYU.FavouriteCities"
 }
 
 extension UserDefaults {
-    
-    var canUseUserLocation: Bool {
-        get {
-            return boolForKey(UserDefaultsKeys.CanUseUserLocation)
-        }
-        set {
-            setBool(newValue, forKey:UserDefaultsKeys.CanUseUserLocation)
-        }
-    }
     
     var didSetUpLocations: Bool {
         get {

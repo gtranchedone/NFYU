@@ -24,6 +24,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var settingsButton: UIButton!
     
+    // MARK: - View Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setInitialViewState()
@@ -41,8 +43,10 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         updateWithCurrentLocation()
     }
     
+    // MARK: - Other Business Logic
+    
     func updateWithCurrentLocation() {
-        let canUseUserLocation = userDefaults?.canUseUserLocation ?? false
+        let canUseUserLocation = locationManager?.locationServicesEnabled() ?? false
         if canUseUserLocation {
             activityIndicator.startAnimating()
             locationManager?.requestCurrentLocation() { [weak self] error, location in
@@ -61,11 +65,10 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         settingsButton.hidden = false
     }
     
-    // MARK: User Actions Handling
+    // MARK: - User Actions Handling
     
     @IBAction func useCurrentLocation() {
         didSetupLocations()
-        userDefaults?.canUseUserLocation = true
         updateWithCurrentLocation()
     }
     
@@ -81,13 +84,18 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     // MARK: SettingsViewControllerDelegate
     
     func settingsViewControllerDidFinish(viewController: SettingsViewController) {
+        var hasValidData = false
         if let userDefaults = userDefaults {
-            let hasValidData = userDefaults.favouriteCities.count > 0 || userDefaults.canUseUserLocation
-            userDefaults.didSetUpLocations = hasValidData
-            if hasValidData {
-                initialSetupView.hidden = true
-                dismissViewControllerAnimated(true, completion: nil)
-            }
+            hasValidData = userDefaults.favouriteCities.count > 0
+        }
+        if let locationManager = locationManager {
+            hasValidData = hasValidData || locationManager.locationServicesEnabled()
+        }
+        
+        userDefaults?.didSetUpLocations = hasValidData
+        if hasValidData {
+            initialSetupView.hidden = true
+            dismissViewControllerAnimated(true, completion: nil)
         }
     }
     

@@ -123,11 +123,11 @@
 		994458D91BE63AB700DE0CF6 /* NFYUTests */ = {
 			isa = PBXGroup;
 			children = (
-				994458EB1BE6695100DE0CF6 /* MocksAndStubs */,
 				994458DC1BE63AB700DE0CF6 /* Info.plist */,
 				994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */,
-				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
 				99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */,
+				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
+				994458EB1BE6695100DE0CF6 /* MocksAndStubs */,
 			);
 			path = NFYUTests;
 			sourceTree = "<group>";
