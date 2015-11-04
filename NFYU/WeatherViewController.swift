@@ -116,7 +116,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     // MARK: Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == SegueIdentifiers.Settings && sender === initialSetupView {
+        if segue.identifier == SegueIdentifiers.Settings {
             let destinationViewController = segue.destinationViewController as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
             settingsViewController?.userDefaults = userDefaults

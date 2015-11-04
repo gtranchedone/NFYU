@@ -226,7 +226,7 @@ class TestWeatherViewController: XCTestCase {
         let settingsViewController = SettingsViewController()
         let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
         let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
-        viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
+        viewController?.prepareForSegue(segue, sender: viewController)
         XCTAssertTrue(settingsViewController.delegate === viewController)
     }
     
