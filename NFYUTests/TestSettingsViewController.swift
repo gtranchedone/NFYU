@@ -202,17 +202,18 @@ class TestSettingsViewController: XCTestCase {
     }
     
     func testSettingsViewControllerDismissesLocationSearchWhenReceivingDelegateCallWithoutNewLocation() {
-        let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController, sender: viewController)
+        let navigationController = FakeNavigationController(rootViewController: viewController!)
         let citySearchViewController = CitySearchViewController()
         viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: nil)
-        XCTAssertTrue(observer.didReceiveNotification)
+        XCTAssertTrue(navigationController.didAttemptPoppingViewController)
     }
     
     func testSettingsViewControllerDismissesLocationSearchWhenReceivingDelegateCallWithNewLocation() {
-        let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController, sender: viewController)
+        let navigationController = FakeNavigationController(rootViewController: viewController!)
         let citySearchViewController = CitySearchViewController()
-        viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: Location(coordinate: CLLocationCoordinate2D(), name: "", country: ""))
-        XCTAssertTrue(observer.didReceiveNotification)
+        let testLocation = Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: testLocation)
+        XCTAssertTrue(navigationController.didAttemptPoppingViewController)
     }
     
     func testSettingsViewControllerAddsNewLocationToUserDefaultsWhenReceivingLocationSearchDelegateCallWithNewLocation() {
@@ -231,6 +232,19 @@ class TestSettingsViewController: XCTestCase {
         let newLocation = Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")
         viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: newLocation)
         XCTAssertEqual([NSIndexPath(forRow: 1, inSection: 0)], fakeTableView.insertedIndexPaths)
+    }
+    
+    // MARK: - Editing State
+    
+    func testSettingsViewControllerHidesDoneButtonWhileEditing() {
+        viewController?.editing = true
+        XCTAssertNil(viewController!.navigationItem.rightBarButtonItem)
+    }
+    
+    func testSettingsViewControllerResetsDoneButtonWhenFinishedEditing() {
+        viewController?.editing = true
+        viewController?.editing = false
+        XCTAssertEqual(UIBarButtonItemStyle.Done, viewController?.navigationItem.rightBarButtonItem?.style)
     }
     
     // MARK: - Helpers

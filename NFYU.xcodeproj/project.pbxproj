@@ -32,6 +32,7 @@
 		9997BABA1BEA606E00368DD9 /* CitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB91BEA606E00368DD9 /* CitySearchViewController.swift */; };
 		9997BABC1BEA88A900368DD9 /* TestCitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */; };
 		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
+		99D5EBD91BEB491E002149D7 /* FakeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBD81BEB491E002149D7 /* FakeNavigationController.swift */; };
 		99F581E01BEAA8BE00C83E7B /* FakeGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,7 @@
 		9997BAB91BEA606E00368DD9 /* CitySearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CitySearchViewController.swift; sourceTree = "<group>"; };
 		9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCitySearchViewController.swift; sourceTree = "<group>"; };
 		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
+		99D5EBD81BEB491E002149D7 /* FakeNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeNavigationController.swift; sourceTree = "<group>"; };
 		99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeGeocoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +159,7 @@
 				996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */,
 				99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */,
 				995F112C1BE7E5FF004FE462 /* FakeLocationManager.swift */,
+				99D5EBD81BEB491E002149D7 /* FakeNavigationController.swift */,
 				9997BAB71BEA573600368DD9 /* FakeTableView.swift */,
 				994458EC1BE6697B00DE0CF6 /* FakeUserDefaults.swift */,
 				994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */,
@@ -288,6 +291,7 @@
 				994458ED1BE6697B00DE0CF6 /* FakeUserDefaults.swift in Sources */,
 				9997BABC1BEA88A900368DD9 /* TestCitySearchViewController.swift in Sources */,
 				994458E61BE63B7F00DE0CF6 /* TestWeatherViewController.swift in Sources */,
+				99D5EBD91BEB491E002149D7 /* FakeNavigationController.swift in Sources */,
 				996EE95E1BEA3E880016C73D /* TestSettingsViewController.swift in Sources */,
 				99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */,
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,

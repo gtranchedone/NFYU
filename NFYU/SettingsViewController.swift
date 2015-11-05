@@ -32,9 +32,19 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "finish")
+        setEditing(false, animated: false)
         navigationItem.leftBarButtonItem = editButtonItem()
         title = NSLocalizedString("SETTINGS_TITLE", comment: "")
+    }
+    
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        if editing {
+            navigationItem.rightBarButtonItem = nil
+        }
+        else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "finish")
+        }
     }
     
     // MARK: - UITableViewDataSource
@@ -107,7 +117,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
             }
         }
-        dismissViewControllerAnimated(true, completion: nil) // TODO: this should be a pop
+        navigationController?.popViewControllerAnimated(true)
     }
     
     // MARK: - Other
