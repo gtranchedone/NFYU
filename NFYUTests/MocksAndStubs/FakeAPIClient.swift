@@ -10,18 +10,24 @@ import Foundation
 import CoreLocation
 @testable import NFYU
 
-class FakeRequestSerializer: APIClientRequestSerializer {
+class FakeRequestSerializer: APIRequestSerializer {
+    
+    var stubURLString = "http://google.com"
     
     func buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D) -> NSURLRequest {
-        return NSURLRequest(URL: NSURL(string: "http://google.com")!)
+        return NSURLRequest(URL: NSURL(string: stubURLString)!)
     }
     
 }
 
-class FakeResponseSerializer: APIClientResponseSerializer {
+class FakeResponseSerializer: APIResponseSerializer {
     
-    func parseForecastsAPIResponseData(data: NSData) -> (NSError?, [Forecast]?, LocationInfo?) {
-        return (nil, nil, nil)
+    var stubError: NSError?
+    var stubForecasts: [Forecast]?
+    var stubLocationInfo: LocationInfo?
+    
+    func parseForecastsAPIResponseData(data: NSData) -> SerializedAPIResponse {
+        return (stubError, stubForecasts, stubLocationInfo)
     }
     
 }

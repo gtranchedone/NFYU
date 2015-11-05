@@ -72,6 +72,13 @@
             ReferencedContainer = "container:NFYU.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "com.gtranchedone.openWeatherAPIKey"
+            value = "6755996e3df0771a70bc7fc878d04775"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

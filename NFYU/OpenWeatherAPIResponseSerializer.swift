@@ -8,9 +8,9 @@
 
 import Foundation
 
-class OpenWeatherAPIClientResponseSerializer: NSObject, APIClientResponseSerializer {
+class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
 
-    func parseForecastsAPIResponseData(data: NSData) -> (NSError?, [Forecast]?, LocationInfo?) {
+    func parseForecastsAPIResponseData(data: NSData) -> SerializedAPIResponse {
         return (nil, nil, nil)
     }
     

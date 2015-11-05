@@ -8,5 +8,9 @@
 
 import Foundation
 
-class Forecast: NSObject {
+class Forecast: AnyObject, Equatable {
+}
+
+func ==(lhs: Forecast, rhs: Forecast) -> Bool {
+    return lhs === rhs
 }
