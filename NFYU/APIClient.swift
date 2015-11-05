@@ -17,7 +17,7 @@ struct LocationInfo {
     
 }
 
-protocol APIClient {
+protocol APIClient: AnyObject {
     
     func fetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D, completionBlock: (NSError?, [Forecast]?, LocationInfo?) -> ())
     

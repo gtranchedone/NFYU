@@ -12,6 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var apiClient: APIClient = OpenWeatherAPIClient()
     var userDefaults: UserDefaults = NSUserDefaults.standardUserDefaults()
     var locationManager: LocationFinder = SystemLocationFinder()
 
@@ -19,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let viewController = window?.rootViewController as? WeatherViewController
         viewController?.locationManager = locationManager
         viewController?.userDefaults = userDefaults
+        viewController?.apiClient = apiClient
         return true
     }
 

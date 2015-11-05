@@ -49,6 +49,17 @@ class TestAppDelegate: XCTestCase {
             "The main view controller should only know system settings via the user defaults passed by the AppDelegate")
     }
     
+    func testAppDelegateHasOpenWeatherAPIClientWhenInitialized() {
+        let apiClient = appDelegate!.apiClient as? OpenWeatherAPIClient
+        XCTAssertNotNil(apiClient)
+    }
+    
+    func testAppDelegateInjectsAPIClientIntoMainViewController() {
+        appDelegate?.application(UIApplication.sharedApplication(), didFinishLaunchingWithOptions: nil)
+        let viewController = appDelegate?.window?.rootViewController as? WeatherViewController
+        XCTAssert(appDelegate?.apiClient === viewController!.apiClient)
+    }
+    
     // MARK: Private
 
     func setUpAppDelegate(appDelegate: AppDelegate) {

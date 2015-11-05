@@ -36,6 +36,7 @@
 		99D5EBDB1BEB4BA5002149D7 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBDA1BEB4BA5002149D7 /* APIClient.swift */; };
 		99D5EBDD1BEB4DD2002149D7 /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBDC1BEB4DD2002149D7 /* Forecast.swift */; };
 		99D5EBDF1BEB502D002149D7 /* FakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBDE1BEB502D002149D7 /* FakeAPIClient.swift */; };
+		99D5EBE11BEB9417002149D7 /* OpenWeatherAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBE01BEB9417002149D7 /* OpenWeatherAPIClient.swift */; };
 		99F581E01BEAA8BE00C83E7B /* FakeGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,7 @@
 		99D5EBDA1BEB4BA5002149D7 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		99D5EBDC1BEB4DD2002149D7 /* Forecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
 		99D5EBDE1BEB502D002149D7 /* FakeAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeAPIClient.swift; sourceTree = "<group>"; };
+		99D5EBE01BEB9417002149D7 /* OpenWeatherAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenWeatherAPIClient.swift; sourceTree = "<group>"; };
 		99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeGeocoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +135,7 @@
 				99D5EBDC1BEB4DD2002149D7 /* Forecast.swift */,
 				996EE9591BE95B6C0016C73D /* Location.swift */,
 				995F112E1BE7E616004FE462 /* LocationFinder.swift */,
+				99D5EBE01BEB9417002149D7 /* OpenWeatherAPIClient.swift */,
 				996EE9571BE953DE0016C73D /* SettingsViewController.swift */,
 				995F11301BE7E99F004FE462 /* SetupView.swift */,
 				994458E91BE667A900DE0CF6 /* UserDefaults.swift */,
@@ -282,6 +285,7 @@
 				994458C81BE63AB700DE0CF6 /* WeatherViewController.swift in Sources */,
 				994458F11BE6743F00DE0CF6 /* BaseViewController.swift in Sources */,
 				99D5EBDB1BEB4BA5002149D7 /* APIClient.swift in Sources */,
+				99D5EBE11BEB9417002149D7 /* OpenWeatherAPIClient.swift in Sources */,
 				996EE9581BE953DE0016C73D /* SettingsViewController.swift in Sources */,
 				995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,

@@ -57,6 +57,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     func applicationDidBecomeActive() {
         updateCurrentLocationIfPossible()
+        updateLocations()
+        loadForecastsForAllLocations()
     }
     
     private func updateLocations() {

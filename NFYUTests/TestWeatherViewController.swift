@@ -387,9 +387,23 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual(expectedRequestedCoordinates, apiClient.requestedCoordinates)
     }
     
+    func testWeatherViewControllerLoadsForecastsForFavouriteLocationsWhenAppBecomesActive() {
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        let expectedRequestedCoordinates = viewController!.userDefaults!.favouriteLocations.map { (location) -> CLLocationCoordinate2D in
+            return location.coordinate
+        }
+        let apiClient = FakeAPIClient() // need new one for thest
+        viewController?.apiClient = apiClient
+        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        XCTAssertEqual(expectedRequestedCoordinates, apiClient.requestedCoordinates)
+    }
+    
+    // TODO: test OpenWeatherAPIClient
+    // TODO: test OpenWeatherAPIResponseParser
+    // TODO: test WeatherViewController updates the locations forecasts <- room for refactoring: extract this logic out of the WeatherViewController
+    // TODO: test UI
     // TODO: test that when scrolling to a location, the forecast for that location gets updated if not updated within the last hour
-    // TODO: test that the forecast for the displayed location is updated when the app becomes active
-    // TODO: test that current location is updated when app becomes active
     
     // MARK: Helpers
     
