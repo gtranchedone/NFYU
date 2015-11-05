@@ -291,6 +291,36 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
     
+    func testWeatherViewControllerUpdatesLocationsWhenSettingsViewControllerIsDoneIfHasAtLeastOneLocation() {
+        loadViewControllerView()
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        XCTAssertEqual(viewController!.locations, viewController!.userDefaults!.favouriteLocations)
+    }
+    
+    func testWeatherViewControllerUpdatesLocationsCorrectlyIfCurrentLocationWasAlreadyFoundWhenSettingsViewControllerIsDoneIfHasAtLeastOneLocation() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.stubLocation = CLLocation(latitude: 0.1234, longitude: 23.3456)
+        loadViewControllerView()
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.settingsViewControllerDidFinish(SettingsViewController())
+        let currentLocation = Location(coordinate: locationManager.stubLocation!.coordinate)
+        let expectedLocations = [currentLocation] + viewController!.userDefaults!.favouriteLocations
+        XCTAssertEqual(viewController!.locations, expectedLocations)
+    }
+    
+    func testWeatherViewControllerUpdatesLocationsCorrectlyIfCurrentLocationWasAlreadyFoundWhenReloadingUserLocation() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.stubLocation = CLLocation(latitude: 0.1234, longitude: 23.3456)
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        loadViewControllerView()
+        locationManager.stubLocation = CLLocation(latitude: 0.2345, longitude: 32.5648)
+        let currentLocation = Location(coordinate: locationManager.stubLocation!.coordinate)
+        viewController?.updateCurrentLocationIfPossible()
+        let expectedLocations = [currentLocation] + viewController!.userDefaults!.favouriteLocations
+        XCTAssertEqual(viewController!.locations, expectedLocations)
+    }
+    
     func testWeatherViewControllerDoesNotDismissSettingsViewControllerWhenDoneIfHasNoCitiesAndUserLocationIsDisabled() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = false

@@ -18,6 +18,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     var userDefaults: UserDefaults?
     var locationManager: LocationFinder?
     
+    private(set) var locations: [Location] = []
+    
     @IBOutlet weak var initialSetupView: SetupView!
     @IBOutlet weak var backgroundMessageLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -33,6 +35,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateLocations()
         setInitialViewState()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
@@ -46,17 +49,32 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        updateWithCurrentLocation()
-        loadForecastsForFavouriteLocations()
+        updateCurrentLocationIfPossible()
+        loadForecastsForAllLocations()
     }
     
     // MARK: - Other Business Logic
     
     func applicationDidBecomeActive() {
-        updateWithCurrentLocation()
+        updateCurrentLocationIfPossible()
     }
     
-    func updateWithCurrentLocation() {
+    private func updateLocations() {
+        let currentLocation = self.currentLocation()
+        var newLocations = userDefaults?.favouriteLocations ?? []
+        if let currentLocation = currentLocation {
+            newLocations.insert(currentLocation, atIndex: 0)
+        }
+        locations = newLocations
+    }
+    
+    private func currentLocation() -> Location? {
+        return locations.filter({ (location) -> Bool in
+            return location.isUserLocation
+        }).first
+    }
+    
+    func updateCurrentLocationIfPossible() {
         let canUseUserLocation = locationManager?.locationServicesEnabled() ?? false
         if canUseUserLocation {
             activityIndicator.startAnimating()
@@ -67,9 +85,14 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
                     self?.backgroundMessageLabel.hidden = false
                 }
                 else if let userLocation = location {
-                    self?.apiClient?.fetchForecastsForLocationWithCoordinate(userLocation.coordinate) { (error, forecasts, locationInfo) -> () in
-                        // TODO: do something here
+                    var currentLocation = self?.currentLocation()
+                    if let currentLocation = currentLocation {
+                        self?.locations.removeAtIndex(self!.locations.indexOf(currentLocation)!)
                     }
+                    currentLocation = Location(coordinate: userLocation.coordinate)
+                    currentLocation!.isUserLocation = true
+                    self?.locations.insert(currentLocation!, atIndex: 0)
+                    self?.loadForecastsForAllLocations()
                 }
             }
         }
@@ -86,11 +109,9 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     // MARK: - Fetching Forecasts
     
-    private func loadForecastsForFavouriteLocations() {
-        if let userDefaults = userDefaults {
-            for favouriteLocation in userDefaults.favouriteLocations {
-                fetchForecastsForLocation(favouriteLocation)
-            }
+    private func loadForecastsForAllLocations() {
+        for location in locations {
+            fetchForecastsForLocation(location)
         }
     }
     
@@ -104,7 +125,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     @IBAction func useCurrentLocation() {
         didSetupLocations()
-        updateWithCurrentLocation()
+        updateCurrentLocationIfPossible()
     }
     
     @IBAction func selectCities() {
@@ -123,12 +144,12 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         if let locationManager = locationManager {
             hasValidData = hasValidData || locationManager.locationServicesEnabled()
         }
-        
         userDefaults?.didSetUpLocations = hasValidData
         if hasValidData {
             initialSetupView.hidden = true
             dismissViewControllerAnimated(true, completion: nil)
         }
+        updateLocations()
         collectionView.reloadData()
     }
     

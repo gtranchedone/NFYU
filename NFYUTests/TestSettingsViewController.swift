@@ -119,7 +119,7 @@ class TestSettingsViewController: XCTestCase {
         let cell2 = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath2)
         XCTAssertEqual(UITableViewCellSelectionStyle.None, cell2.selectionStyle)
         XCTAssertEqual(UITableViewCellAccessoryType.None, cell2.accessoryType)
-        XCTAssertEqual("San Francisco, USA", cell2.textLabel?.text)
+        XCTAssertEqual("San Francisco, CA", cell2.textLabel?.text)
     }
     
     // MARK: - UITableViewDelegate
@@ -256,7 +256,7 @@ class TestSettingsViewController: XCTestCase {
     
     private func insertStubCitiesInUserDefaults() {
         let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "UK")
-        let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA")
+        let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA", state: "CA")
         viewController?.userDefaults?.favouriteLocations = [london, sf]
     }
 

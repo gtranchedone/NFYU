@@ -56,7 +56,7 @@ class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableVi
                     let placeName = placemark.name ?? placemark.subLocality
                     let cityName = placemark.locality
                     let regionName = placemark.administrativeArea
-                    let countryName = placemark.country ?? ""
+                    let countryName = placemark.country
                     return Location(coordinate: placemark.location!.coordinate, name: placeName, country: countryName, state: regionName, city: cityName)
                 }
                 self?.tableView.reloadData()

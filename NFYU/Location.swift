@@ -19,10 +19,12 @@ public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool
 class Location: NSObject, NSCoding {
     
     let coordinate: CLLocationCoordinate2D
-    let country: String
+    let country: String?
     let state: String?
     let city: String?
     let name: String?
+    
+    var isUserLocation = false
     
     var displayableName: String {
         get {
@@ -32,12 +34,15 @@ class Location: NSObject, NSCoding {
                     placeName = "\(name), \(city)"
                 }
             }
-            if country == "United States" || country == "USA" {
-                if let state = state {
-                    return "\(placeName), \(state)"
+            if let country = country {
+                if country == "United States" || country == "USA" {
+                    if let state = state {
+                        return "\(placeName), \(state)"
+                    }
                 }
+                return "\(placeName), \(country)"
             }
-            return "\(placeName), \(country)"
+            return placeName
         }
     }
     
@@ -47,7 +52,7 @@ class Location: NSObject, NSCoding {
         }
     }
     
-    init(coordinate: CLLocationCoordinate2D, name: String?, country: String, state: String? = nil, city: String? = nil) {
+    init(coordinate: CLLocationCoordinate2D, name: String? = nil, country: String? = nil, state: String? = nil, city: String? = nil) {
         self.coordinate = coordinate
         self.country = country
         self.state = state
