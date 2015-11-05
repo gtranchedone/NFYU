@@ -84,4 +84,10 @@ class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableVi
         return cell
     }
     
+    // MARK: - UITableViewDelegate
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        delegate?.citySearchViewController(self, didFinishWithCity: cities[indexPath.row])
+    }
+    
 }

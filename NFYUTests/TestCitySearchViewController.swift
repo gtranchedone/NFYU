@@ -125,35 +125,58 @@ class TestCitySearchViewController: XCTestCase {
     }
     
     func testViewControllerReturnsCorrectNumberOfResultsAfterGeocodingLocation() {
-        let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
-        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "Cupertino", kABPersonAddressStateKey as String: "CA"]
-        let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
         let geocoder = viewController?.geocoder as! FakeGeocoder
-        geocoder.stubPlacemarks = [placemark]
+        geocoder.stubPlacemarks = [placemarkForCupertino()]
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
         XCTAssertEqual(1, viewController!.tableView(viewController!.tableView, numberOfRowsInSection: 0))
     }
     
     func testViewControllerShowsCorrectResultsAfterGeocodingLocation() {
-        let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
-        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "Cupertino", kABPersonAddressStateKey as String: "CA", kABPersonAddressCountryKey as String: "USA"]
-        let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
         let geocoder = viewController?.geocoder as! FakeGeocoder
-        geocoder.stubPlacemarks = [placemark]
+        geocoder.stubPlacemarks = [placemarkForCupertino()]
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
         let cell = viewController!.tableView(viewController!.tableView, cellForRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
         XCTAssertEqual("Cupertino, CA", cell.textLabel?.text)
     }
     
     func testViewControllerShowsCorrectResultsAfterGeocodingLocation2() {
-        let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
-        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "London", kABPersonAddressCountryKey as String: "UK"]
-        let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
         let geocoder = viewController?.geocoder as! FakeGeocoder
-        geocoder.stubPlacemarks = [placemark]
+        geocoder.stubPlacemarks = [placemarkForLondon()]
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
         let cell = viewController!.tableView(viewController!.tableView, cellForRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
         XCTAssertEqual("London, UK", cell.textLabel?.text)
+    }
+    
+    func testViewControllerInformsDelegateWhenUserSelectsCityFromSearchResults() {
+        let geocoder = viewController?.geocoder as! FakeGeocoder
+        geocoder.stubPlacemarks = [placemarkForLondon()]
+        viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
+        viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+        let delegate = viewController?.delegate as! MockCitySearchViewControllerDelegate
+        let expectedCity = City(coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 20), name: "London", country: "UK")
+        let actualCity = delegate.returnedCity
+        XCTAssertEqual(expectedCity, actualCity)
+    }
+    
+    // MARK: Private
+    
+    // NOTE: AddressBook is deprecated but using Contacts keys as suggested in the deprecation warning makes returned CLPlacemark not work as expected
+    
+    private func placemarkForCupertino() -> CLPlacemark {
+        let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
+        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "Cupertino",
+                                                      kABPersonAddressStateKey as String: "CA",
+                                                      kABPersonAddressCountryKey as String: "USA"]
+        let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
+        return placemark
+    }
+    
+    private func placemarkForLondon() -> CLPlacemark {
+        let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
+        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "London",
+                                                      kABPersonAddressCountryKey as String: "UK"]
+        let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
+        return placemark
     }
 
 }

@@ -21,7 +21,7 @@ class City: Equatable {
         get {
             var placeName = name ?? city ?? ""
             if let name = name, city = city {
-                if name != city {
+                if !name.containsString(city) {
                     placeName = "\(name), \(city)"
                 }
             }
@@ -38,12 +38,13 @@ class City: Equatable {
         self.coordinate = coordinate
         self.country = country
         self.state = state
-        self.city = city
+        self.city = city ?? name
         self.name = name
     }
     
 }
 
 func ==(lhs: City, rhs: City) -> Bool {
-    return lhs.name == rhs.name && lhs.state == rhs.state && lhs.country == rhs.country
+    // !!!: this should probably be based only upon coordinates but different services may locate cities to different coordinates (small differences of course)
+    return lhs.city == rhs.city && lhs.state == rhs.state && lhs.country == rhs.country
 }
