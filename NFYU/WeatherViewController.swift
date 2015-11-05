@@ -67,8 +67,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
             }
         }
         else {
-            let hasCities = userDefaults?.favouriteCities.count > 0
-            backgroundMessageLabel.text = hasCities ? nil : NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")
+            backgroundMessageLabel.text = hasCities() ? nil : NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")
         }
     }
     
@@ -97,10 +96,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     // MARK: SettingsViewControllerDelegate
     
     func settingsViewControllerDidFinish(viewController: SettingsViewController) {
-        var hasValidData = false
-        if let userDefaults = userDefaults {
-            hasValidData = userDefaults.favouriteCities.count > 0
-        }
+        var hasValidData = hasCities()
         if let locationManager = locationManager {
             hasValidData = hasValidData || locationManager.locationServicesEnabled()
         }
@@ -122,6 +118,12 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
             settingsViewController?.userDefaults = userDefaults
             settingsViewController?.delegate = self
         }
+    }
+    
+    // MARK: Helpers
+    
+    func hasCities() -> Bool {
+        return userDefaults?.favouriteLocations.count > 0
     }
     
 }

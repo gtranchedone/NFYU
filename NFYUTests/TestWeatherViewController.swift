@@ -124,12 +124,12 @@ class TestWeatherViewController: XCTestCase {
     func testWeatherViewControllerDoesNotShowErrorMessageIfLocationServicesAreDisabledButHasFavouriteCities() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = false
-        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
         loadViewControllerView()
         XCTAssertNil(viewController!.backgroundMessageLabel.text)
     }
     
-    func testWeatherViewControllerShowsErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasNoOtherCity() {
+    func testWeatherViewControllerShowsErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasNoOtherLocation() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = true
         loadViewControllerView()
@@ -150,7 +150,7 @@ class TestWeatherViewController: XCTestCase {
     func testWeatherViewControllerDoesNotShowErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasOtherCities()() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = true
-        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
         loadViewControllerView()
         locationManager.allowUseOfLocationServices = false
         NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
@@ -253,9 +253,9 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
     
-    func testWeatherViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasAtLeastOneCity() {
+    func testWeatherViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasAtLeastOneLocation() {
         loadViewControllerView()
-        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
@@ -283,9 +283,9 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
     
-    func testWeatherViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasAtLeastOneCity() {
+    func testWeatherViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasAtLeastOneLocation() {
         loadViewControllerView()
-        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
@@ -308,11 +308,11 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(observer.didReceiveNotification)
     }
     
-    func testWeatherViewControllerDismissesSettingsViewControllerWhenDoneIfHasAtLeastOneCity() {
+    func testWeatherViewControllerDismissesSettingsViewControllerWhenDoneIfHasAtLeastOneLocation() {
         loadViewControllerView()
         let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
         let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
-        viewController?.userDefaults?.favouriteCities = [City(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(observer.didReceiveNotification)
     }

@@ -15,11 +15,11 @@ import AddressBook
 class MockCitySearchViewControllerDelegate: CitySearchViewControllerDelegate {
     
     private(set) var didFinish = false
-    private(set) var returnedCity: City?
+    private(set) var returnedCity: Location?
     
-    func citySearchViewController(viewController: CitySearchViewController, didFinishWithCity city: City?) {
+    func citySearchViewController(viewController: CitySearchViewController, didFinishWithLocation location: Location?) {
         didFinish = true
-        returnedCity = city
+        returnedCity = location
     }
     
 }
@@ -153,7 +153,7 @@ class TestCitySearchViewController: XCTestCase {
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
         viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
         let delegate = viewController?.delegate as! MockCitySearchViewControllerDelegate
-        let expectedCity = City(coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 20), name: "London", country: "UK")
+        let expectedCity = Location(coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 20), name: "London", country: "UK")
         let actualCity = delegate.returnedCity
         XCTAssertEqual(expectedCity, actualCity)
     }

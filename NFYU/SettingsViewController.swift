@@ -17,7 +17,7 @@ protocol SettingsViewControllerDelegate: AnyObject {
 class SettingsViewController: BaseTableViewController, CitySearchViewControllerDelegate {
     
     enum Segues: String {
-        case AddCitySegue = "AddCitySegue"
+        case AddLocationSegue = "AddCitySegue"
     }
     
     enum CellIdentifiers: String {
@@ -40,7 +40,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     // MARK: - UITableViewDataSource
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 + (userDefaults?.favouriteCities.count ?? 0)
+        return 1 + (userDefaults?.favouriteLocations.count ?? 0)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -52,7 +52,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
         }
         else {
             cellIdentifier = CellIdentifiers.SimpleCityCell.rawValue
-            let city = userDefaults!.favouriteCities[indexPath.row - 1]
+            let city = userDefaults!.favouriteLocations[indexPath.row - 1]
             rowTitle = city.displayableName
         }
         
@@ -73,23 +73,23 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if let userDefaults = userDefaults {
-            var newCities = userDefaults.favouriteCities
+            var newCities = userDefaults.favouriteLocations
             newCities.removeAtIndex(indexPath.row - 1)
-            userDefaults.favouriteCities = newCities
+            userDefaults.favouriteLocations = newCities
         }
         tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if isAddCityIndexPath(indexPath) {
-            performSegueWithIdentifier(Segues.AddCitySegue.rawValue, sender: indexPath)
+            performSegueWithIdentifier(Segues.AddLocationSegue.rawValue, sender: indexPath)
         }
     }
     
     // MARK: - Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == Segues.AddCitySegue.rawValue {
+        if segue.identifier == Segues.AddLocationSegue.rawValue {
             let citySearchViewController = segue.destinationViewController as? CitySearchViewController
             citySearchViewController?.delegate = self
         }
@@ -97,13 +97,13 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     // MARK: - CitySearchViewControllerDelegate
     
-    func citySearchViewController(viewController: CitySearchViewController, didFinishWithCity city: City?) {
-        if let city = city {
+    func citySearchViewController(viewController: CitySearchViewController, didFinishWithLocation location: Location?) {
+        if let location = location {
             if let userDefaults = userDefaults {
-                var newCities = userDefaults.favouriteCities
-                newCities.append(city)
-                userDefaults.favouriteCities = newCities
-                let newIndexPath = NSIndexPath(forRow: userDefaults.favouriteCities.count, inSection: 0)
+                var newLocations = userDefaults.favouriteLocations
+                newLocations.append(location)
+                userDefaults.favouriteLocations = newLocations
+                let newIndexPath = NSIndexPath(forRow: userDefaults.favouriteLocations.count, inSection: 0)
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
             }
         }

@@ -24,10 +24,10 @@
 		995F11311BE7E99F004FE462 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995F11301BE7E99F004FE462 /* SetupView.swift */; };
 		996EE9541BE913FA0016C73D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 996EE9561BE913FA0016C73D /* Localizable.strings */; };
 		996EE9581BE953DE0016C73D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9571BE953DE0016C73D /* SettingsViewController.swift */; };
-		996EE95A1BE95B6C0016C73D /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9591BE95B6C0016C73D /* City.swift */; };
+		996EE95A1BE95B6C0016C73D /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE9591BE95B6C0016C73D /* Location.swift */; };
 		996EE95C1BEA3CBE0016C73D /* FakeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */; };
 		996EE95E1BEA3E880016C73D /* TestSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */; };
-		9997BAB61BEA508B00368DD9 /* TestCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB51BEA508B00368DD9 /* TestCity.swift */; };
+		9997BAB61BEA508B00368DD9 /* TestLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB51BEA508B00368DD9 /* TestLocation.swift */; };
 		9997BAB81BEA573600368DD9 /* FakeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB71BEA573600368DD9 /* FakeTableView.swift */; };
 		9997BABA1BEA606E00368DD9 /* CitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BAB91BEA606E00368DD9 /* CitySearchViewController.swift */; };
 		9997BABC1BEA88A900368DD9 /* TestCitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */; };
@@ -67,10 +67,10 @@
 		995F11301BE7E99F004FE462 /* SetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		996EE9551BE913FA0016C73D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		996EE9571BE953DE0016C73D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		996EE9591BE95B6C0016C73D /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		996EE9591BE95B6C0016C73D /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		996EE95B1BEA3CBE0016C73D /* FakeCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeCollectionView.swift; sourceTree = "<group>"; };
 		996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSettingsViewController.swift; sourceTree = "<group>"; };
-		9997BAB51BEA508B00368DD9 /* TestCity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCity.swift; sourceTree = "<group>"; };
+		9997BAB51BEA508B00368DD9 /* TestLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestLocation.swift; sourceTree = "<group>"; };
 		9997BAB71BEA573600368DD9 /* FakeTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeTableView.swift; sourceTree = "<group>"; };
 		9997BAB91BEA606E00368DD9 /* CitySearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CitySearchViewController.swift; sourceTree = "<group>"; };
 		9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCitySearchViewController.swift; sourceTree = "<group>"; };
@@ -120,8 +120,8 @@
 				994458D11BE63AB700DE0CF6 /* Info.plist */,
 				994458C51BE63AB600DE0CF6 /* AppDelegate.swift */,
 				994458F01BE6743F00DE0CF6 /* BaseViewController.swift */,
-				996EE9591BE95B6C0016C73D /* City.swift */,
 				9997BAB91BEA606E00368DD9 /* CitySearchViewController.swift */,
+				996EE9591BE95B6C0016C73D /* Location.swift */,
 				995F112E1BE7E616004FE462 /* LocationFinder.swift */,
 				996EE9571BE953DE0016C73D /* SettingsViewController.swift */,
 				995F11301BE7E99F004FE462 /* SetupView.swift */,
@@ -140,8 +140,8 @@
 			children = (
 				994458DC1BE63AB700DE0CF6 /* Info.plist */,
 				994458E71BE6658900DE0CF6 /* TestAppDelegate.swift */,
-				9997BAB51BEA508B00368DD9 /* TestCity.swift */,
 				9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */,
+				9997BAB51BEA508B00368DD9 /* TestLocation.swift */,
 				996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */,
 				99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */,
 				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
@@ -273,7 +273,7 @@
 				995F112F1BE7E616004FE462 /* LocationFinder.swift in Sources */,
 				994458C61BE63AB600DE0CF6 /* AppDelegate.swift in Sources */,
 				995F11311BE7E99F004FE462 /* SetupView.swift in Sources */,
-				996EE95A1BE95B6C0016C73D /* City.swift in Sources */,
+				996EE95A1BE95B6C0016C73D /* Location.swift in Sources */,
 				994458EA1BE667A900DE0CF6 /* UserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,7 +293,7 @@
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
 				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,
 				9997BAB81BEA573600368DD9 /* FakeTableView.swift in Sources */,
-				9997BAB61BEA508B00368DD9 /* TestCity.swift in Sources */,
+				9997BAB61BEA508B00368DD9 /* TestLocation.swift in Sources */,
 				995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

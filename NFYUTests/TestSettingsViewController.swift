@@ -83,14 +83,14 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(1, numberOfRows)
     }
     
-    func testSettingsViewControllerHasOneRowForEachFavouriteCityPlusOneForAddingNewCities() {
+    func testSettingsViewControllerHasOneRowForEachFavouriteLocationPlusOneForAddingNewCities() {
         loadViewControllerView()
         insertStubCitiesInUserDefaults()
         let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
         XCTAssertEqual(3, numberOfRows)
     }
     
-    func testSettingsViewControllerDisplaysTheRightRowForAddingCitiesWhenNoOtherCityIsPresent() {
+    func testSettingsViewControllerDisplaysTheRightRowForAddingCitiesWhenNoOtherLocationIsPresent() {
         loadViewControllerView()
         let tableView = viewController!.tableView
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
@@ -130,13 +130,13 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(viewController!.editButtonItem(), viewController!.navigationItem.leftBarButtonItem)
     }
     
-    func testSettingsViewControllerAllowsDeletionOfCityRows() {
+    func testSettingsViewControllerAllowsDeletionOfLocationRows() {
         let indexPath = NSIndexPath(forRow: 1, inSection: 0)
         let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
         XCTAssertTrue(canDeleteRow)
     }
     
-    func testSettingsViewControllerDoesNotAllowDeletionOfAddCityRow() {
+    func testSettingsViewControllerDoesNotAllowDeletionOfAddLocationRow() {
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
         XCTAssertFalse(canDeleteRow)
@@ -160,10 +160,10 @@ class TestSettingsViewController: XCTestCase {
         let indexPath = NSIndexPath(forRow: 1, inSection: 0)
         viewController!.tableView.reloadData()
         viewController!.tableView(viewController!.tableView, commitEditingStyle: .Delete, forRowAtIndexPath: indexPath)
-        XCTAssertEqual(1, viewController!.userDefaults!.favouriteCities.count)
+        XCTAssertEqual(1, viewController!.userDefaults!.favouriteLocations.count)
     }
     
-    func testSettingsViewControllerDeletesCityRowWhenUserDeletesCity() {
+    func testSettingsViewControllerDeletesLocationRowWhenUserDeletesLocation() {
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
         let fakeTableView = FakeTableView()
@@ -175,18 +175,18 @@ class TestSettingsViewController: XCTestCase {
     
     // MARK: Cities Addition
     
-    func testSettingsViewControllerPresentsCitySearchViewControllerWhenUserTapsOnAddCityRow() {
+    func testSettingsViewControllerPresentsLocationSearchViewControllerWhenUserTapsOnAddLocationRow() {
         loadViewControllerView()
         expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
             let identifier = notification.userInfo?[BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as? String
-            return identifier == SettingsViewController.Segues.AddCitySegue.rawValue
+            return identifier == SettingsViewController.Segues.AddLocationSegue.rawValue
         }
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
-    func testSettingsViewControllerDoesNotPresentCitySearchViewControllerWhenUserTapsOnCityRow() {
+    func testSettingsViewControllerDoesNotPresentLocationSearchViewControllerWhenUserTapsOnLocationRow() {
         loadViewControllerView()
         let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptSegue, sender: viewController)
         let indexPath = NSIndexPath(forRow: 1, inSection: 0)
@@ -194,42 +194,42 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertFalse(observer.didReceiveNotification)
     }
     
-    func testSettingsViewControllerSetsItselfAsCitySearchViewControllerDelegateWhenPresentingIt() {
+    func testSettingsViewControllerSetsItselfAsLocationSearchViewControllerDelegateWhenPresentingIt() {
         let citySearchViewController = CitySearchViewController()
-        let segue = UIStoryboardSegue(identifier: SettingsViewController.Segues.AddCitySegue.rawValue, source: viewController!, destination: citySearchViewController)
+        let segue = UIStoryboardSegue(identifier: SettingsViewController.Segues.AddLocationSegue.rawValue, source: viewController!, destination: citySearchViewController)
         viewController?.prepareForSegue(segue, sender: NSIndexPath(forRow: 0, inSection: 0))
         XCTAssertTrue(viewController === citySearchViewController.delegate)
     }
     
-    func testSettingsViewControllerDismissesCitySearchWhenReceivingDelegateCallWithoutNewCity() {
+    func testSettingsViewControllerDismissesLocationSearchWhenReceivingDelegateCallWithoutNewLocation() {
         let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController, sender: viewController)
         let citySearchViewController = CitySearchViewController()
-        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: nil)
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: nil)
         XCTAssertTrue(observer.didReceiveNotification)
     }
     
-    func testSettingsViewControllerDismissesCitySearchWhenReceivingDelegateCallWithNewCity() {
+    func testSettingsViewControllerDismissesLocationSearchWhenReceivingDelegateCallWithNewLocation() {
         let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController, sender: viewController)
         let citySearchViewController = CitySearchViewController()
-        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: City(coordinate: CLLocationCoordinate2D(), name: "", country: ""))
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: Location(coordinate: CLLocationCoordinate2D(), name: "", country: ""))
         XCTAssertTrue(observer.didReceiveNotification)
     }
     
-    func testSettingsViewControllerAddsNewCityToUserDefaultsWhenReceivingCitySearchDelegateCallWithNewCity() {
+    func testSettingsViewControllerAddsNewLocationToUserDefaultsWhenReceivingLocationSearchDelegateCallWithNewLocation() {
         let citySearchViewController = CitySearchViewController()
-        let newCity = City(coordinate: CLLocationCoordinate2D(), name: "", country: "")
-        var expectedCities = viewController!.userDefaults!.favouriteCities
-        expectedCities.append(newCity)
-        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: newCity)
-        XCTAssertEqual(expectedCities, viewController!.userDefaults!.favouriteCities)
+        let newLocation = Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")
+        var expectedCities = viewController!.userDefaults!.favouriteLocations
+        expectedCities.append(newLocation)
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: newLocation)
+        XCTAssertEqual(expectedCities, viewController!.userDefaults!.favouriteLocations)
     }
     
-    func testSettingsViewControllerInsertsNewCityRowToUserDefaultsWhenReceivingCitySearchDelegateCallWithNewCity() {
+    func testSettingsViewControllerInsertsNewLocationRowToUserDefaultsWhenReceivingLocationSearchDelegateCallWithNewLocation() {
         let fakeTableView = FakeTableView()
         viewController?.tableView = fakeTableView
         let citySearchViewController = CitySearchViewController()
-        let newCity = City(coordinate: CLLocationCoordinate2D(), name: "", country: "")
-        viewController?.citySearchViewController(citySearchViewController, didFinishWithCity: newCity)
+        let newLocation = Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")
+        viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: newLocation)
         XCTAssertEqual([NSIndexPath(forRow: 1, inSection: 0)], fakeTableView.insertedIndexPaths)
     }
     
@@ -241,9 +241,9 @@ class TestSettingsViewController: XCTestCase {
     }
     
     private func insertStubCitiesInUserDefaults() {
-        let london = City(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "UK")
-        let sf = City(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA")
-        viewController?.userDefaults?.favouriteCities = [london, sf]
+        let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "UK")
+        let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA")
+        viewController?.userDefaults?.favouriteLocations = [london, sf]
     }
 
 }

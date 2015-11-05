@@ -20,7 +20,7 @@ protocol UserDefaults: AnyObject {
 
 struct UserDefaultsKeys {
     static let DidSetUpLocations = "com.gtranchedone.NFYU.DidSetUpLocations"
-    static let FavouriteCities = "com.gtranchedone.NFYU.FavouriteCities"
+    static let FavouriteLocations = "com.gtranchedone.NFYU.FavouriteLocations"
 }
 
 extension UserDefaults {
@@ -34,12 +34,12 @@ extension UserDefaults {
         }
     }
     
-    var favouriteCities: [City] {
+    var favouriteLocations: [Location] {
         get {
-            return objectForKey(UserDefaultsKeys.FavouriteCities) as? [City] ?? []
+            return objectForKey(UserDefaultsKeys.FavouriteLocations) as? [Location] ?? []
         }
         set {
-            setObject(newValue, forKey: UserDefaultsKeys.FavouriteCities)
+            setObject(newValue, forKey: UserDefaultsKeys.FavouriteLocations)
         }
     }
     
