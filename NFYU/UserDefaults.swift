@@ -35,11 +35,18 @@ extension UserDefaults {
     }
     
     var favouriteLocations: [Location] {
+        // NOTE: mapping necessary as NSUserDefaults can only store Plist data... probably this should be in an extension of NSUserDefaults, at least in part
         get {
-            return objectForKey(UserDefaultsKeys.FavouriteLocations) as? [Location] ?? []
+            let locationsData = objectForKey(UserDefaultsKeys.FavouriteLocations) as? [NSData] ?? []
+            return locationsData.map { (locationData) -> Location in
+                return NSKeyedUnarchiver.unarchiveObjectWithData(locationData) as! Location
+            }
         }
         set {
-            setObject(newValue, forKey: UserDefaultsKeys.FavouriteLocations)
+            let locationsData = newValue.map { (location) -> NSData in
+                return NSKeyedArchiver.archivedDataWithRootObject(location)
+            }
+            setObject(locationsData, forKey: UserDefaultsKeys.FavouriteLocations)
         }
     }
     
