@@ -14,6 +14,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         static let Settings = "SettingsSegueIdentifier"
     }
     
+    var apiClient: APIClient?
     var userDefaults: UserDefaults?
     var locationManager: LocationFinder?
     
@@ -63,6 +64,11 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
                 if let error = error {
                     self?.backgroundMessageLabel.text = error.localizedDescription
                     self?.backgroundMessageLabel.hidden = false
+                }
+                else if let location = location {
+                    self?.apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { (error, forecasts, locationInfo) -> () in
+                        // TODO: do something here
+                    }
                 }
             }
         }

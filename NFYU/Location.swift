@@ -9,6 +9,13 @@
 import Foundation
 import CoreLocation
 
+extension CLLocationCoordinate2D: Equatable {
+}
+
+public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+    return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+}
+
 class Location: NSObject, NSCoding {
     
     let coordinate: CLLocationCoordinate2D
@@ -90,5 +97,5 @@ class Location: NSObject, NSCoding {
 
 func ==(lhs: Location, rhs: Location) -> Bool {
     // !!!: this should probably be based only upon coordinates but different services may locate cities to different coordinates (small differences of course)
-    return lhs.city == rhs.city && lhs.state == rhs.state && lhs.country == rhs.country && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude
+    return lhs.city == rhs.city && lhs.state == rhs.state && lhs.country == rhs.country && lhs.coordinate == rhs.coordinate
 }

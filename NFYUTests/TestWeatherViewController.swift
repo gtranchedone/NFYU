@@ -20,6 +20,7 @@ class TestWeatherViewController: XCTestCase {
         viewController = storyboard.instantiateInitialViewController() as? WeatherViewController
         viewController?.locationManager = FakeLocationFinder()
         viewController?.userDefaults = FakeUserDefaults()
+        viewController?.apiClient = FakeAPIClient()
     }
     
     override func tearDown() {
@@ -147,7 +148,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(locationManager.didRequestCurrentLocation)
     }
     
-    func testWeatherViewControllerDoesNotShowErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasOtherCities()() {
+    func testWeatherViewControllerDoesNotShowErrorMessageWhenAppBecomesActiveAndUserChangedPrivacySettingsForLocationServicesAndHasOtherCities() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = true
         viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
@@ -337,6 +338,14 @@ class TestWeatherViewController: XCTestCase {
     }
     
     // MARK: Loading Forecasts
+    
+    func testWeatherViewControllerLoadsForecastsForUserLocationAfterFindingIt() {
+        let locationManager = viewController!.locationManager as! FakeLocationFinder
+        locationManager.stubLocation = CLLocation(latitude: 0.1234, longitude: 23.3456)
+        let apiClient = viewController!.apiClient as! FakeAPIClient
+        loadViewControllerView()
+        XCTAssertEqual(locationManager.stubLocation?.coordinate, apiClient.lastRequestCoordinate)
+    }
     
     // TODO: test that when scrolling to a location, the forecast for that location gets updated if not updated within the last hour
     // TODO: test that the forecast for the displayed location is updated when the app becomes active
