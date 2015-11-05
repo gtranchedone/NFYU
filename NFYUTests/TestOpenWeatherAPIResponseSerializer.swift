@@ -57,6 +57,19 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
         XCTAssertEqual("Error: Not found city", result.error?.localizedDescription)
     }
     
+    func testResultsNoErrorAfterParsingValidAPIResponse() {
+        let testData = dataForSampleAPIResponseContainingForecastData()
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        XCTAssertNil(result.error)
+    }
+    
+    func testReturnsCorrectLocationInfoFromValidAPIResponse() {
+        let testData = dataForSampleAPIResponseContainingForecastData()
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        let expectedLocationInfo = LocationInfo(cityID: "2643743", cityName: "London", cityCountry: "GB")
+        XCTAssertEqual(expectedLocationInfo, result.locationInfo)
+    }
+    
     // MARK: - Helpers
     
     func dataForSampleAPIResponseContainingError() -> NSData {

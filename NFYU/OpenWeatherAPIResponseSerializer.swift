@@ -12,14 +12,21 @@ let kOpenWeatherAPIClientResponseSerializerErrorDomain = "OpenWeatherAPIClientRe
 
 class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
     
-    enum ResponseKeys: String {
-        case StatusCode = "cod"
-        case ErrorMessage = "message"
-    }
-    
     enum ErrorCodes: Int {
         case OK = 200
         case UnacceptableResponse = 406
+    }
+    
+    enum ResponseKeys: String {
+        case StatusCode = "cod"
+        case LocationInfo = "city"
+        case ErrorMessage = "message"
+    }
+    
+    enum LocationInfoKeys: String {
+        case ID = "id"
+        case Name = "name"
+        case Country = "country"
     }
     
     func parseForecastsAPIResponseData(data: NSData) -> SerializedAPIResponse {
@@ -34,11 +41,25 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
                 return (errorForAPIErrorWithInfo(parsedData!, errorCode: errorCode!), nil, nil)
             }
             
-            return (nil, nil, nil)
+            return (nil, parseForcastsInResponse(parsedData!), parseLocationInfoInResponse(parsedData!))
         }
         catch {
             return (error as NSError, nil, nil)
         }
+    }
+    
+    private func parseLocationInfoInResponse(response: [String : AnyObject]) -> LocationInfo? {
+        let locationInfoDictionary = response[ResponseKeys.LocationInfo.rawValue]
+        guard locationInfoDictionary != nil else { return nil }
+        // it's OK to crash if the expected info isn't there
+        let cityID = locationInfoDictionary![LocationInfoKeys.ID.rawValue] as! Int
+        let cityName = locationInfoDictionary![LocationInfoKeys.Name.rawValue] as! String
+        let cityCountry = locationInfoDictionary![LocationInfoKeys.Country.rawValue] as! String
+        return LocationInfo(cityID: String(cityID), cityName: cityName, cityCountry: cityCountry)
+    }
+    
+    private func parseForcastsInResponse(response: [String : AnyObject]) -> [Forecast]? {
+        return nil
     }
     
     private func errorForUnexpectedResponseFormat() -> NSError {
