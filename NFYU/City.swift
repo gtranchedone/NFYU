@@ -13,27 +13,37 @@ class City: Equatable {
     
     let coordinate: CLLocationCoordinate2D
     let country: String
-    let region: String?
-    let name: String
+    let state: String?
+    let city: String?
+    let name: String?
     
     var displayableName: String {
         get {
-            if let region = region {
-                return "\(name), \(region)"
+            var placeName = name ?? city ?? ""
+            if let name = name, city = city {
+                if name != city {
+                    placeName = "\(name), \(city)"
+                }
             }
-            return "\(name), \(country)"
+            if country == "United States" || country == "USA" {
+                if let state = state {
+                    return "\(placeName), \(state)"
+                }
+            }
+            return "\(placeName), \(country)"
         }
     }
     
-    init(coordinate: CLLocationCoordinate2D, name: String, country: String, region: String? = nil) {
+    init(coordinate: CLLocationCoordinate2D, name: String?, country: String, state: String? = nil, city: String? = nil) {
         self.coordinate = coordinate
         self.country = country
-        self.region = region
+        self.state = state
+        self.city = city
         self.name = name
     }
     
 }
 
 func ==(lhs: City, rhs: City) -> Bool {
-    return lhs.name == rhs.name && lhs.region == rhs.region && lhs.country == rhs.country
+    return lhs.name == rhs.name && lhs.state == rhs.state && lhs.country == rhs.country
 }

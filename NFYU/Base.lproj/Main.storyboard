@@ -192,14 +192,14 @@
         <scene sceneID="EJf-NC-9H4">
             <objects>
                 <tableViewController storyboardIdentifier="SettingsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="euT-l7-283" customClass="SettingsViewController" customModule="NFYU" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="dSR-b4-R4A">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="dSR-b4-R4A">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SimpleCityCell" textLabel="dzk-6z-xNe" style="IBUITableViewCellStyleDefault" id="uUA-OU-cew">
-                                <rect key="frame" x="0.0" y="72" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="93.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uUA-OU-cew" id="fC0-1j-9nt">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -219,7 +219,7 @@
                                 <animations/>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="AddCityCell" textLabel="wYl-vd-RoA" style="IBUITableViewCellStyleDefault" id="lqM-Xx-jcN">
-                                <rect key="frame" x="0.0" y="116" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="137.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lqM-Xx-jcN" id="zYD-Ov-gKP">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
@@ -253,10 +253,10 @@
             </objects>
             <point key="canvasLocation" x="2060" y="290"/>
         </scene>
-        <!--View Controller-->
+        <!--City Search View Controller-->
         <scene sceneID="TaK-dK-s9l">
             <objects>
-                <viewController id="tei-bT-scr" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CitySearchViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="tei-bT-scr" customClass="CitySearchViewController" customModule="NFYU" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fsX-Jr-E9F"/>
                         <viewControllerLayoutGuide type="bottom" id="d5T-sM-0XC"/>
@@ -264,9 +264,63 @@
                     <view key="view" contentMode="scaleToFill" id="174-9U-Wrp">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Bxh-tT-JE1">
+                                <rect key="frame" x="0.0" y="44" width="600" height="44"/>
+                                <animations/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="tei-bT-scr" id="PZA-f1-VKL"/>
+                                </connections>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="O1C-0h-juO">
+                                <rect key="frame" x="0.0" y="88" width="600" height="512"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CitySearchResultCell" textLabel="PPA-2K-fTb" style="IBUITableViewCellStyleDefault" id="iTi-CH-Y42">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iTi-CH-Y42" id="4K0-Pj-7xQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PPA-2K-fTb">
+                                                    <rect key="frame" x="15" y="0.0" width="570" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <animations/>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="tei-bT-scr" id="qq8-7P-Zlc"/>
+                                    <outlet property="delegate" destination="tei-bT-scr" id="52b-kd-2ts"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Bxh-tT-JE1" secondAttribute="trailing" id="1Qi-f6-9Cg"/>
+                            <constraint firstAttribute="trailing" secondItem="O1C-0h-juO" secondAttribute="trailing" id="7aB-kP-NCn"/>
+                            <constraint firstItem="d5T-sM-0XC" firstAttribute="top" secondItem="O1C-0h-juO" secondAttribute="bottom" id="E0J-c2-8l5"/>
+                            <constraint firstItem="Bxh-tT-JE1" firstAttribute="top" secondItem="fsX-Jr-E9F" secondAttribute="bottom" id="a0V-PJ-wPz"/>
+                            <constraint firstItem="O1C-0h-juO" firstAttribute="top" secondItem="Bxh-tT-JE1" secondAttribute="bottom" id="gfz-JH-BuP"/>
+                            <constraint firstItem="O1C-0h-juO" firstAttribute="leading" secondItem="174-9U-Wrp" secondAttribute="leading" id="lB9-lR-tfz"/>
+                            <constraint firstItem="Bxh-tT-JE1" firstAttribute="leading" secondItem="174-9U-Wrp" secondAttribute="leading" id="wj0-Hb-cF3"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="searchBar" destination="Bxh-tT-JE1" id="Vb9-OC-voy"/>
+                        <outlet property="tableView" destination="O1C-0h-juO" id="iX7-Ch-Zqk"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gNi-de-nYB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

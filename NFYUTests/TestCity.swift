@@ -12,8 +12,13 @@ import CoreLocation
 
 class TestCity: XCTestCase {
 
-    func testCityWithRegionFormatsDisplayableNameAppropriately() {
-        let city = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", region: "Kent")
+    func testUSCityWithRegionFormatsDisplayableNameAppropriately() {
+        let city = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "Kent")
+        XCTAssertEqual("Smallville, Kent", city.displayableName)
+    }
+    
+    func testUSCityWithRegionFormatsDisplayableNameAppropriately2() {
+        let city = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "United States", state: "Kent")
         XCTAssertEqual("Smallville, Kent", city.displayableName)
     }
     
@@ -22,9 +27,19 @@ class TestCity: XCTestCase {
         XCTAssertEqual("London, UK", city.displayableName)
     }
     
+    func testCityFormatTakesIntoAccountStateOnlyForUnitedStates() {
+        let city = City(coordinate: CLLocationCoordinate2D(), name: "London", country: "UK", state: "England", city: "London")
+        XCTAssertEqual("London, UK", city.displayableName)
+    }
+    
+    func testCityFormatTakesIntoAccountPlaceNameIfDifferentThenCityName() {
+        let city = City(coordinate: CLLocationCoordinate2D(), name: "Brixton", country: "UK", state: "England", city: "London")
+        XCTAssertEqual("Brixton, London, UK", city.displayableName)
+    }
+    
     func testTwoCitiesAreEqualWhenTheyHaveSameNameAndSameCountryAndSameRegion() {
-        let city1 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", region: "Kent")
-        let city2 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", region: "Kent")
+        let city1 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "Kent")
+        let city2 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "Kent")
         XCTAssertEqual(city1, city2)
     }
     
@@ -35,8 +50,8 @@ class TestCity: XCTestCase {
     }
     
     func testTwoCitiesAreNotEqualWhenTheyHaveSameNameAndSameCountryAndDifferentRegion() {
-        let city1 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", region: "Kent")
-        let city2 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", region: "FantasyLand")
+        let city1 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "Kent")
+        let city2 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "FantasyLand")
         XCTAssertNotEqual(city1, city2)
     }
     
@@ -47,8 +62,8 @@ class TestCity: XCTestCase {
     }
 
     func testTwoCitiesAreNotEqualWhenTheyHaveDifferentNameAndSameCountryAndSameRegion() {
-        let city1 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", region: "Kent")
-        let city2 = City(coordinate: CLLocationCoordinate2D(), name: "Metropolis", country: "USA", region: "Kent")
+        let city1 = City(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "Kent")
+        let city2 = City(coordinate: CLLocationCoordinate2D(), name: "Metropolis", country: "USA", state: "Kent")
         XCTAssertNotEqual(city1, city2)
     }
     

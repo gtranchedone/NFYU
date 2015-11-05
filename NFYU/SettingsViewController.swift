@@ -98,7 +98,6 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     // MARK: - CitySearchViewControllerDelegate
     
     func citySearchViewController(viewController: CitySearchViewController, didFinishWithCity city: City?) {
-        dismissViewControllerAnimated(true, completion: nil)
         if let city = city {
             if let userDefaults = userDefaults {
                 var newCities = userDefaults.favouriteCities
@@ -108,6 +107,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
             }
         }
+        dismissViewControllerAnimated(true, completion: nil) // TODO: this should be a pop
     }
     
     // MARK: - Other

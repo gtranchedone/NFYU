@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 
+// NOTE: this really hasn't the best name. Need something better.
 protocol LocationFinder : AnyObject {
     
     func locationServicesEnabled() -> Bool

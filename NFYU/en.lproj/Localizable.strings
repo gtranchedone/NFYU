@@ -15,3 +15,7 @@
 
 "SETTINGS_TITLE" = "Settings";
 "ADD_CITY_CELL_TITLE" = "Add city";
+
+/* CitySearchViewController */
+
+"CITY_SEARCH_VIEW_TITLE" = "Search city";

@@ -10,8 +10,13 @@ import UIKit
 
 class FakeTableView: UITableView {
     
+    private(set) var didReloadData = false
     private(set) var insertedIndexPaths: [NSIndexPath] = []
     private(set) var deletedIndexPaths: [NSIndexPath] = []
+    
+    override func reloadData() {
+        didReloadData = true
+    }
     
     override func insertRowsAtIndexPaths(indexPaths: [NSIndexPath], withRowAnimation animation: UITableViewRowAnimation) {
         insertedIndexPaths = indexPaths
