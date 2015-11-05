@@ -1,0 +1,16 @@
+{
+    "city": {
+        "id": 2643743,
+        "name": "London",
+        "coord": {
+            "lon": -0.12574,
+            "lat": 51.50853
+        },
+        "country": "GB",
+        "population": 0,
+        "sys": {
+            "population": 0
+        }
+    },
+    "cod": "200"
+}

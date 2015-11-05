@@ -11,15 +11,29 @@ import XCTest
 
 class TestForecast: XCTestCase {
 
-    func testTwoForecastsAreEqualIfTheyAreTheSameObject() {
-        let forecast1 = Forecast()
-        let forecast2 = forecast1
+    func testTwoForecastsAreEqualIfTheyHaveSameCityIDAndDate() {
+        let date = NSDate()
+        let forecast1 = Forecast(date: date, cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast2 = Forecast(date: date, cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
         XCTAssertEqual(forecast1, forecast2)
     }
     
-    func testTwoForecastsAreNotEqualIfTheyAreNotTheSameObject() {
-        let forecast1 = Forecast()
-        let forecast2 = Forecast()
+    func testTwoForecastsAreNotEqualIfTheyHaveSameCityIDAndDifferentDate() {
+        let forecast1 = Forecast(date: NSDate.distantPast(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast2 = Forecast(date: NSDate.distantFuture(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        XCTAssertNotEqual(forecast1, forecast2)
+    }
+    
+    func testTwoForecastsAreNotEqualIfTheyHaveDifferentCityIDAndSameDate() {
+        let date = NSDate()
+        let forecast1 = Forecast(date: date, cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast2 = Forecast(date: date, cityID: "cityID2", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        XCTAssertNotEqual(forecast1, forecast2)
+    }
+    
+    func testTwoForecastsAreNotEqualIfTheyHaveDifferentCityIDAndDate() {
+        let forecast1 = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast2 = Forecast(date: NSDate(), cityID: "cityID2", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
         XCTAssertNotEqual(forecast1, forecast2)
     }
 

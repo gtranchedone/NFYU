@@ -57,29 +57,102 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
         XCTAssertEqual("Error: Not found city", result.error?.localizedDescription)
     }
     
-    func testResultsNoErrorAfterParsingValidAPIResponse() {
+    func testResponseSerializerResultsNoErrorAfterParsingValidAPIResponse() {
         let testData = dataForSampleAPIResponseContainingForecastData()
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         XCTAssertNil(result.error)
     }
     
-    func testReturnsCorrectLocationInfoFromValidAPIResponse() {
+    func testResponseSerializerReturnsCorrectLocationInfoFromValidAPIResponse() {
         let testData = dataForSampleAPIResponseContainingForecastData()
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         let expectedLocationInfo = LocationInfo(cityID: "2643743", cityName: "London", cityCountry: "GB")
         XCTAssertEqual(expectedLocationInfo, result.locationInfo)
     }
     
+    func testResponseSerializerReturnsCorrectNumberOfForecastsFromValidAPIResponse() {
+        let testData = dataForSampleAPIResponseContainingForecastData()
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        XCTAssertEqual(40, result.forecasts?.count)
+    }
+    
+    func testResponseSerializerReturnsExpectedForecastDataForFirstSerializedForecast() {
+        let testData = dataForSampleAPIResponseContainingForecastData()
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        let forecast = result.forecasts?.first
+        XCTAssertEqual(forecast?.date, NSDate(timeIntervalSince1970: 1446573600))
+        XCTAssertEqual(forecast?.currentTemperature, 12)
+        XCTAssertEqual(forecast?.minTemperature, 12)
+        XCTAssertEqual(forecast?.maxTemperature, 13)
+        XCTAssertEqual(forecast?.cityID, "2643743")
+        XCTAssertEqual(forecast?.weather, .Rain)
+    }
+    
+    func testResponseSerializerReturnsExpectedForecastDataForSecondSerializedForecast() {
+        let testData = dataForSampleAPIResponseContainingForecastData()
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        let forecast = result.forecasts?[1]
+        XCTAssertEqual(forecast?.date, NSDate(timeIntervalSince1970: 1446584400))
+        XCTAssertEqual(forecast?.currentTemperature, 12)
+        XCTAssertEqual(forecast?.minTemperature, 12)
+        XCTAssertEqual(forecast?.maxTemperature, 13)
+        XCTAssertEqual(forecast?.cityID, "2643743")
+        XCTAssertEqual(forecast?.weather, .Rain)
+    }
+    
+    func testResponseSerializerParsesDifferentWeatherConditions() {
+        let testData = dataForSampleAPIResponseContainingForecastsWithSampleWeatherCodes()
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        var forecast = result.forecasts?.first
+        XCTAssertEqual(forecast?.weather, .Danger)
+        forecast = result.forecasts?[1]
+        XCTAssertEqual(forecast?.weather, .Danger)
+        forecast = result.forecasts?[2]
+        XCTAssertEqual(forecast?.weather, .Wind)
+        forecast = result.forecasts?[3]
+        XCTAssertEqual(forecast?.weather, .Clouds)
+        forecast = result.forecasts?[4]
+        XCTAssertEqual(forecast?.weather, .FewClouds)
+        forecast = result.forecasts?[5]
+        XCTAssertEqual(forecast?.weather, .Clear)
+        forecast = result.forecasts?[6]
+        XCTAssertEqual(forecast?.weather, .Mist)
+        forecast = result.forecasts?[7]
+        XCTAssertEqual(forecast?.weather, .Snow)
+        forecast = result.forecasts?[8]
+        XCTAssertEqual(forecast?.weather, .ShowerRain)
+        forecast = result.forecasts?[9]
+        XCTAssertEqual(forecast?.weather, .Rain)
+        forecast = result.forecasts?[10]
+        XCTAssertEqual(forecast?.weather, .Rain)
+        forecast = result.forecasts?[11]
+        XCTAssertEqual(forecast?.weather, .Thunderstorm)
+    }
+    
+    func testResponseSerializerReturnsOnlyLocationInfoIfForecastsInfoIsMissingInResponseData() {
+        let testData = dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-no-forecasts")
+        let result = responseSerializer!.parseForecastsAPIResponseData(testData)
+        XCTAssertNotNil(result.locationInfo)
+        XCTAssertNil(result.forecasts)
+        XCTAssertNil(result.error)
+    }
+    
     // MARK: - Helpers
     
     func dataForSampleAPIResponseContainingError() -> NSData {
-        let filePath = NSBundle(forClass: self.dynamicType).pathForResource("open-weather-api-sample-error", ofType: "json")
-        let data = NSData(contentsOfFile: filePath!)!
-        return data
+        return dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-error")
     }
     
     func dataForSampleAPIResponseContainingForecastData() -> NSData {
-        let filePath = NSBundle(forClass: self.dynamicType).pathForResource("open-weather-api-sample-success", ofType: "json")
+        return dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-success")
+    }
+    
+    func dataForSampleAPIResponseContainingForecastsWithSampleWeatherCodes() -> NSData {
+        return dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-weather-codes")
+    }
+    
+    func dataForSampleAPIResponseFromFileNamed(fileName: String) -> NSData {
+        let filePath = NSBundle(forClass: self.dynamicType).pathForResource(fileName, ofType: "json")
         let data = NSData(contentsOfFile: filePath!)!
         return data
     }

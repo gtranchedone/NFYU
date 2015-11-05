@@ -75,7 +75,8 @@ class TestAPIClient: XCTestCase {
         let session = apiClient?.session as? FakeURLSession
         let task = session?.lastCreatedDataTask as? FakeURLSessionDataTask
         let responseSerializer = apiClient?.responseSerializer as? FakeResponseSerializer
-        responseSerializer?.stubForecasts = [Forecast()]
+        let forecast = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        responseSerializer?.stubForecasts = [forecast]
         task?.completionHandler?(NSData(), nil, nil)
         XCTAssertEqual(responseSerializer!.stubForecasts!, receivedForecasts!)
     }
