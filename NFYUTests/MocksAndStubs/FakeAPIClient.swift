@@ -13,9 +13,16 @@ import CoreLocation
 class FakeAPIClient: APIClient {
     
     private(set) var lastRequestCoordinate: CLLocationCoordinate2D?
+    private(set) var requestedCoordinates: [CLLocationCoordinate2D] = []
+    
+    var stubError: NSError?
+    var stubForecasts: [Forecast]?
+    var stubLocationInfo: LocationInfo?
     
     func fetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D, completionBlock: (NSError?, [Forecast]?, LocationInfo?) -> ()) {
         lastRequestCoordinate = coordinate
+        requestedCoordinates.append(coordinate)
+        completionBlock(stubError, stubForecasts, stubLocationInfo)
     }
     
 }

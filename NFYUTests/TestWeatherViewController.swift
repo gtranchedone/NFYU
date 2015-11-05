@@ -347,6 +347,16 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual(locationManager.stubLocation?.coordinate, apiClient.lastRequestCoordinate)
     }
     
+    func testWeatherViewControllerLoadsForecastsForFavouriteLocationsWhenTheViewIsLoaded() {
+        let apiClient = viewController!.apiClient as! FakeAPIClient
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        let expectedRequestedCoordinates = viewController!.userDefaults!.favouriteLocations.map { (location) -> CLLocationCoordinate2D in
+            return location.coordinate
+        }
+        XCTAssertEqual(expectedRequestedCoordinates, apiClient.requestedCoordinates)
+    }
+    
     // TODO: test that when scrolling to a location, the forecast for that location gets updated if not updated within the last hour
     // TODO: test that the forecast for the displayed location is updated when the app becomes active
     // TODO: test that current location is updated when app becomes active
@@ -356,6 +366,12 @@ class TestWeatherViewController: XCTestCase {
     private func loadViewControllerView() {
         viewController!.beginAppearanceTransition(true, animated: false)
         viewController!.endAppearanceTransition()
+    }
+    
+    private func insertStubCitiesInUserDefaults() {
+        let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "UK")
+        let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA")
+        viewController?.userDefaults?.favouriteLocations = [london, sf]
     }
     
 }

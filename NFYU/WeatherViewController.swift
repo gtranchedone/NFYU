@@ -47,6 +47,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         updateWithCurrentLocation()
+        loadForecastsForFavouriteLocations()
     }
     
     // MARK: - Other Business Logic
@@ -65,8 +66,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
                     self?.backgroundMessageLabel.text = error.localizedDescription
                     self?.backgroundMessageLabel.hidden = false
                 }
-                else if let location = location {
-                    self?.apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { (error, forecasts, locationInfo) -> () in
+                else if let userLocation = location {
+                    self?.apiClient?.fetchForecastsForLocationWithCoordinate(userLocation.coordinate) { (error, forecasts, locationInfo) -> () in
                         // TODO: do something here
                     }
                 }
@@ -81,6 +82,22 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         userDefaults?.didSetUpLocations = true
         initialSetupView.hidden = true
         settingsButton.hidden = false
+    }
+    
+    // MARK: - Fetching Forecasts
+    
+    private func loadForecastsForFavouriteLocations() {
+        if let userDefaults = userDefaults {
+            for favouriteLocation in userDefaults.favouriteLocations {
+                fetchForecastsForLocation(favouriteLocation)
+            }
+        }
+    }
+    
+    private func fetchForecastsForLocation(location: Location) {
+        apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { (error, forecasts, locationInfo) -> () in
+            // TODO: do something here
+        }
     }
     
     // MARK: - User Actions Handling
