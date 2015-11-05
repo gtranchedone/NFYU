@@ -43,6 +43,9 @@
 		99D5EBE91BEBC5AF002149D7 /* TestLocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBE81BEBC5AE002149D7 /* TestLocationInfo.swift */; };
 		99D5EBEB1BEBC6E7002149D7 /* TestForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBEA1BEBC6E7002149D7 /* TestForecast.swift */; };
 		99D5EBED1BEBC7B7002149D7 /* TestOpenWeatherAPIRequestSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBEC1BEBC7B7002149D7 /* TestOpenWeatherAPIRequestSerializer.swift */; };
+		99D5EBEF1BEBCFC4002149D7 /* TestOpenWeatherAPIResponseSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBEE1BEBCFC4002149D7 /* TestOpenWeatherAPIResponseSerializer.swift */; };
+		99D5EBF21BEBD8A5002149D7 /* open-weather-api-sample-success.json in Resources */ = {isa = PBXBuildFile; fileRef = 99D5EBF11BEBD8A5002149D7 /* open-weather-api-sample-success.json */; };
+		99D5EBF41BEBD9C1002149D7 /* open-weather-api-sample-error.json in Resources */ = {isa = PBXBuildFile; fileRef = 99D5EBF31BEBD9C1002149D7 /* open-weather-api-sample-error.json */; };
 		99F581E01BEAA8BE00C83E7B /* FakeGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +100,9 @@
 		99D5EBE81BEBC5AE002149D7 /* TestLocationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestLocationInfo.swift; sourceTree = "<group>"; };
 		99D5EBEA1BEBC6E7002149D7 /* TestForecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestForecast.swift; sourceTree = "<group>"; };
 		99D5EBEC1BEBC7B7002149D7 /* TestOpenWeatherAPIRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestOpenWeatherAPIRequestSerializer.swift; sourceTree = "<group>"; };
+		99D5EBEE1BEBCFC4002149D7 /* TestOpenWeatherAPIResponseSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestOpenWeatherAPIResponseSerializer.swift; sourceTree = "<group>"; };
+		99D5EBF11BEBD8A5002149D7 /* open-weather-api-sample-success.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "open-weather-api-sample-success.json"; sourceTree = "<group>"; };
+		99D5EBF31BEBD9C1002149D7 /* open-weather-api-sample-error.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "open-weather-api-sample-error.json"; sourceTree = "<group>"; };
 		99F581DF1BEAA8BE00C83E7B /* FakeGeocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeGeocoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -172,10 +178,12 @@
 				9997BAB51BEA508B00368DD9 /* TestLocation.swift */,
 				99D5EBE81BEBC5AE002149D7 /* TestLocationInfo.swift */,
 				99D5EBEC1BEBC7B7002149D7 /* TestOpenWeatherAPIRequestSerializer.swift */,
+				99D5EBEE1BEBCFC4002149D7 /* TestOpenWeatherAPIResponseSerializer.swift */,
 				996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */,
 				99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */,
 				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
 				994458EB1BE6695100DE0CF6 /* MocksAndStubs */,
+				99D5EBF01BEBD86D002149D7 /* TestResources */,
 			);
 			path = NFYUTests;
 			sourceTree = "<group>";
@@ -195,6 +203,15 @@
 				994458F41BE67BDB00DE0CF6 /* MockNotificationObserver.swift */,
 			);
 			path = MocksAndStubs;
+			sourceTree = "<group>";
+		};
+		99D5EBF01BEBD86D002149D7 /* TestResources */ = {
+			isa = PBXGroup;
+			children = (
+				99D5EBF31BEBD9C1002149D7 /* open-weather-api-sample-error.json */,
+				99D5EBF11BEBD8A5002149D7 /* open-weather-api-sample-success.json */,
+			);
+			path = TestResources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,6 +306,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99D5EBF41BEBD9C1002149D7 /* open-weather-api-sample-error.json in Resources */,
+				99D5EBF21BEBD8A5002149D7 /* open-weather-api-sample-success.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +357,7 @@
 				994458F31BE674B900DE0CF6 /* BaseViewController+TestExtensions.swift in Sources */,
 				9997BAB81BEA573600368DD9 /* FakeTableView.swift in Sources */,
 				9997BAB61BEA508B00368DD9 /* TestLocation.swift in Sources */,
+				99D5EBEF1BEBCFC4002149D7 /* TestOpenWeatherAPIResponseSerializer.swift in Sources */,
 				995F112D1BE7E5FF004FE462 /* FakeLocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
