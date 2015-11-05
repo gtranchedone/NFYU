@@ -50,8 +50,10 @@ class TestAppDelegate: XCTestCase {
     }
     
     func testAppDelegateHasOpenWeatherAPIClientWhenInitialized() {
-        let apiClient = appDelegate!.apiClient as? OpenWeatherAPIClient
-        XCTAssertNotNil(apiClient)
+        let requestSerializer = appDelegate!.apiClient.requestSerializer as? OpenWeatherAPIClientRequestSerializer
+        XCTAssertNotNil(requestSerializer)
+        let responseSerializer = appDelegate!.apiClient.responseSerializer as? OpenWeatherAPIClientResponseSerializer
+        XCTAssertNotNil(responseSerializer)
     }
     
     func testAppDelegateInjectsAPIClientIntoMainViewController() {

@@ -12,7 +12,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var apiClient: APIClient = OpenWeatherAPIClient()
+    var apiClient: APIClient = APIClient(requestSerializer: OpenWeatherAPIClientRequestSerializer(),
+                                         responseSerializer: OpenWeatherAPIClientResponseSerializer())
     var userDefaults: UserDefaults = NSUserDefaults.standardUserDefaults()
     var locationManager: LocationFinder = SystemLocationFinder()
 

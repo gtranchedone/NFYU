@@ -9,10 +9,11 @@
 import Foundation
 import CoreLocation
 
-class OpenWeatherAPIClient: NSObject, APIClient {
+class OpenWeatherAPIClientRequestSerializer: APIClientRequestSerializer {
 
-    func fetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D, completionBlock: (NSError?, [Forecast]?, LocationInfo?) -> ()) {
+    func buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D) -> NSURLRequest {
         // TODO: implement me
+        return NSURLRequest(URL: NSURL())
     }
     
 }
