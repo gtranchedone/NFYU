@@ -16,8 +16,8 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
 - [x] ~~Make main screen have a way to display settings
  for adding / remoing cities~~
 - [x] ~~Add favourite cities input in setup screen~~
-- [ ] Make main screen have a way to display all of the selected cities
-- [ ] Fetch weather data from OpenWeatherMap APIs and fill the UI with it
+- [x] ~~Fetch weather data from OpenWeatherMap APIs~~
+- [ ] Fill the UI with the forecast data
 - [ ] Add support for C and F temperature units
 
 -- After MVP --
@@ -26,3 +26,4 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
 - [ ] Cache weather data for offline use (last update date must be clear)
 - [ ] Add API localization support
 - [ ] Use Google Places API instand of CLGeocoder for more results?
+
