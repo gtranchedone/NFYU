@@ -89,14 +89,14 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         let cityID = locationInfoDictionary![LocationInfoKeys.ID.rawValue] as! Int
         let cityName = locationInfoDictionary![LocationInfoKeys.Name.rawValue] as! String
         let cityCountry = locationInfoDictionary![LocationInfoKeys.Country.rawValue] as! String
-        return LocationInfo(cityID: String(cityID), cityName: cityName, cityCountry: cityCountry)
+        return LocationInfo(id: String(cityID), name: cityName, country: cityCountry)
     }
     
     private func parseForcastsInResponse(response: [String : AnyObject], locationInfo: LocationInfo?) -> [Forecast]? {
         let forecastsData = response[ResponseKeys.ForecastsData.rawValue] as? [[String : AnyObject]]
         guard forecastsData != nil else { return nil }
         return forecastsData!.map { (forecastDictionary) -> Forecast in
-            return forecastFromDictionary(forecastDictionary, cityID: locationInfo?.cityID ?? "")
+            return forecastFromDictionary(forecastDictionary, cityID: locationInfo?.id ?? "")
         }
     }
     

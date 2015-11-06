@@ -127,7 +127,9 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     }
     
     func fetchForecastsForLocation(location: Location) {
+        // TODO: don't load if last successful update is < 4h ago
         apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { [weak self] (error, forecasts, locationInfo) -> () in
+            // TODO: handle error
             if let forecasts = forecasts {
                 location.forecasts = forecasts
             }

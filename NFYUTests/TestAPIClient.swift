@@ -97,7 +97,7 @@ class TestAPIClient: XCTestCase {
         let session = apiClient?.session as? FakeURLSession
         let task = session?.lastCreatedDataTask as? FakeURLSessionDataTask
         let responseSerializer = apiClient?.responseSerializer as? FakeResponseSerializer
-        responseSerializer?.stubLocationInfo = LocationInfo(cityID: "testID", cityName: "testCity", cityCountry: "testCountry")
+        responseSerializer?.stubLocationInfo = LocationInfo(id: "testID", name: "testCity", country: "testCountry")
         task?.completionHandler?(NSData(), nil, nil)
         waitForExpectationsWithTimeout(1.0, handler: nil)
         XCTAssertEqual(responseSerializer!.stubLocationInfo, receivedLocationInfo)

@@ -12,14 +12,14 @@ import XCTest
 class TestLocationInfo: XCTestCase {
 
     func testTwoLocationInfoAreEqualIfTheyHaveSameID() {
-        let location1 = LocationInfo(cityID: "cityID1", cityName: "cityName1", cityCountry: "cityCountry1")
-        let location2 = LocationInfo(cityID: "cityID1", cityName: "cityName1", cityCountry: "cityCountry1")
+        let location1 = LocationInfo(id: "cityID1", name: "cityName1", country: "cityCountry1")
+        let location2 = LocationInfo(id: "cityID1", name: "cityName1", country: "cityCountry1")
         XCTAssertEqual(location1, location2)
     }
     
     func testTwoLocationInfoAreNotEqualIfTheyHaveDifferentID() {
-        let location1 = LocationInfo(cityID: "cityID1", cityName: "cityName1", cityCountry: "cityCountry1")
-        let location2 = LocationInfo(cityID: "cityID2", cityName: "cityName2", cityCountry: "cityCountry2")
+        let location1 = LocationInfo(id: "cityID1", name: "cityName1", country: "cityCountry1")
+        let location2 = LocationInfo(id: "cityID2", name: "cityName2", country: "cityCountry2")
         XCTAssertNotEqual(location1, location2)
     }
 

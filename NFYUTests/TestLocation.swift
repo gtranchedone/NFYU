@@ -75,7 +75,7 @@ class TestLocation: XCTestCase {
         XCTAssertNotEqual(city1, city2)
     }
 
-    func testTwoCitiesAreNotEqualWhenTheyHaveDifferentNameAndSameCountryAndSameRegion() {
+    func testTwoCitiesAreNotEqualWhenTheyHaveDifferentNameAndSameCountryAndSameState() {
         let city1 = Location(coordinate: CLLocationCoordinate2D(), name: "Smallville", country: "USA", state: "Kent")
         let city2 = Location(coordinate: CLLocationCoordinate2D(), name: "Metropolis", country: "USA", state: "Kent")
         XCTAssertNotEqual(city1, city2)

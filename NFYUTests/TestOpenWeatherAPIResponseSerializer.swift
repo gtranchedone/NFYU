@@ -66,7 +66,7 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
     func testResponseSerializerReturnsCorrectLocationInfoFromValidAPIResponse() {
         let testData = dataForSampleAPIResponseContainingForecastData()
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
-        let expectedLocationInfo = LocationInfo(cityID: "2643743", cityName: "London", cityCountry: "GB")
+        let expectedLocationInfo = LocationInfo(id: "2643743", name: "London", country: "GB")
         XCTAssertEqual(expectedLocationInfo, result.locationInfo)
     }
     

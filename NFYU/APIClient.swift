@@ -9,18 +9,6 @@
 import Foundation
 import CoreLocation
 
-struct LocationInfo: Equatable {
-    
-    let cityID: String
-    let cityName: String
-    let cityCountry: String
-    
-}
-
-func ==(lhs: LocationInfo, rhs: LocationInfo) -> Bool {
-    return lhs.cityID == rhs.cityID
-}
-
 protocol APIRequestSerializer {
     
     func buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D) -> NSURLRequest

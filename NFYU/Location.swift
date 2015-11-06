@@ -18,18 +18,28 @@ public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool
 
 class Location: NSObject, NSCoding {
     
+    var locationInfo: LocationInfo
     let coordinate: CLLocationCoordinate2D
-    let country: String?
-    let state: String?
-    let city: String?
-    let name: String?
     
     var forecasts: [Forecast] = []
     var isUserLocation: Bool = false
     
+    var country: String? {
+        get { return locationInfo.country }
+    }
+    var state: String? {
+        get { return locationInfo.state }
+    }
+    var city: String? {
+        get { return locationInfo.city ?? locationInfo.name }
+    }
+    var name: String? {
+        get { return locationInfo.name }
+    }
+    
     var displayableName: String {
         get {
-            var placeName = name ?? city ?? ""
+            var placeName = city ?? ""
             if let name = name, city = city {
                 if !name.containsString(city) {
                     placeName = "\(name), \(city)"
@@ -53,12 +63,14 @@ class Location: NSObject, NSCoding {
         }
     }
     
-    init(coordinate: CLLocationCoordinate2D, name: String? = nil, country: String? = nil, state: String? = nil, city: String? = nil) {
+    init(coordinate: CLLocationCoordinate2D, locationInfo: LocationInfo) {
         self.coordinate = coordinate
-        self.country = country
-        self.state = state
-        self.city = city ?? name
-        self.name = name
+        self.locationInfo = locationInfo
+    }
+    
+    convenience init(coordinate: CLLocationCoordinate2D, name: String? = nil, country: String? = nil, state: String? = nil, city: String? = nil) {
+        let locationInfo = LocationInfo(name: name, city: city, country: country, state: state)
+        self.init(coordinate: coordinate, locationInfo: locationInfo)
     }
     
     // MARK: - NSCoding
