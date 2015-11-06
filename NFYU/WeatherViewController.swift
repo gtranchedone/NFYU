@@ -8,10 +8,14 @@
 
 import UIKit
 
-class WeatherViewController: BaseViewController, SettingsViewControllerDelegate {
+class WeatherViewController: BaseViewController, SettingsViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-    struct SegueIdentifiers {
-        static let Settings = "SettingsSegueIdentifier"
+    enum SegueIdentifiers: String {
+        case Settings = "SettingsSegueIdentifier"
+    }
+    
+    enum CellIdentifiers: String {
+        case WeatherCell = "WeatherCell"
     }
     
     var apiClient: APIClient?
@@ -20,7 +24,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     private(set) var locations: [Location] = [] {
         didSet {
-            pageControl.numberOfPages = locations.count
+            pageControl.numberOfPages = collectionView(collectionView, numberOfItemsInSection: 0)
         }
     }
     
@@ -140,11 +144,11 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     @IBAction func selectCities() {
         initialSetupView.hidden = true
-        performSegueWithIdentifier(SegueIdentifiers.Settings, sender: initialSetupView)
+        performSegueWithIdentifier(SegueIdentifiers.Settings.rawValue, sender: initialSetupView)
     }
     
     @IBAction func showSettings() {
-        performSegueWithIdentifier(SegueIdentifiers.Settings, sender: settingsButton)
+        performSegueWithIdentifier(SegueIdentifiers.Settings.rawValue, sender: settingsButton)
     }
     
     // MARK: SettingsViewControllerDelegate
@@ -163,10 +167,42 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         collectionView.reloadData()
     }
     
+    // MARK: UICollectionViewDataSource
+    
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let canUseLocationServices = locationManager?.locationServicesEnabled() ?? false
+        let numberOfFavouriteCities = userDefaults?.favouriteLocations.count ?? 0
+        if canUseLocationServices {
+            return numberOfFavouriteCities + 1
+        }
+        return numberOfFavouriteCities
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellIdentifiers.WeatherCell.rawValue, forIndexPath: indexPath)
+        cell.backgroundColor = UIColor(red: CGFloat(random() % 255) / CGFloat(255.0), green: CGFloat(random() % 255) / CGFloat(255.0), blue: CGFloat(random() % 255) / CGFloat(255.0), alpha: 1)
+        return cell
+    }
+    
+    // MARK: UICollectionViewDelegateFlowLayout
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return collectionView.bounds.size
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        let currentPage = Int(scrollView.contentOffset.x / scrollView.bounds.width)
+        pageControl.currentPage = currentPage
+    }
+    
     // MARK: Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == SegueIdentifiers.Settings {
+        if segue.identifier == SegueIdentifiers.Settings.rawValue {
             let destinationViewController = segue.destinationViewController as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
             settingsViewController?.userDefaults = userDefaults
