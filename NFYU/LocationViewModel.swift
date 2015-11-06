@@ -36,7 +36,7 @@ class LocationViewModel: LocationViewModelProtocol {
             cell.currentTemperatureLabel.text = "-º"
             cell.weatherConditionLabel.text = "-"
         }
-        cell.locationNameLabel.text = location.displayableName
+        cell.locationNameLabel.text = location.city
         return cell
     }
     

@@ -533,7 +533,7 @@ class TestWeatherViewController: XCTestCase {
         loadViewControllerView()
         let indexPath = NSIndexPath(forItem: 0, inSection: 0)
         let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
-        XCTAssertEqual("London, GB", cell?.locationNameLabel.text)
+        XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("-", cell?.weatherConditionLabel.text)
         XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
     }
@@ -547,7 +547,7 @@ class TestWeatherViewController: XCTestCase {
         viewController?.collectionView.reloadData()
         let indexPath = NSIndexPath(forItem: 0, inSection: 0)
         let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
-        XCTAssertEqual("London, GB", cell?.locationNameLabel.text)
+        XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
         XCTAssertEqual("16º", cell?.currentTemperatureLabel.text)
     }
