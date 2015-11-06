@@ -8,17 +8,21 @@
 
 import Foundation
 
-enum WeatherCondition {
-    case Clear
-    case FewClouds, Clouds
-    case Rain, ShowerRain, Thunderstorm
-    case Snow
-    case Mist
-    case Wind, Hurricane
-    case Danger
+// Since weather conditions format may differ between weather forecast services, let's standardize it in our Domain
+enum WeatherCondition: String {
+    case Clear = "WEATHER_CONDITION_CLEAR"
+    case FewClouds = "WEATHER_CONDITION_FEW_CLOUDS", Clouds = "WEATHER_CONDITION_CLOUDS"
+    case Rain = "WEATHER_CONDITION_RAIN", ShowerRain = "WEATHER_CONDITION_SHOWER_RAIN", Thunderstorm = "WEATHER_CONDITION_THUNDERSTORM"
+    case Snow = "WEATHER_CONDITION_SNOW"
+    case Mist = "WEATHER_CONDITION_MIST"
+    case Wind = "WEATHER_CONDITION_WIND", Hurricane = "WEATHER_CONDITION_HURRICANE"
+    case Danger = "WEATHER_CONDITION_DANGER"
+    
+    var localizedDescription: String {
+        get { return NSLocalizedString(self.rawValue, comment: "") }
+    }
     
     // TODO: add method to get icon
-    // TODO: add method to get description
 }
 
 struct Forecast: Equatable, CustomStringConvertible {

@@ -128,7 +128,7 @@
                                             </constraints>
                                         </view>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="WeatherCell" id="lfg-Jy-ced">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LocationCell" id="lfg-Jy-ced" customClass="LocationCollectionViewCell" customModule="NFYU" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="9" width="580" height="500"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -171,6 +171,11 @@
                                                     <constraint firstItem="7CZ-kp-TVc" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" id="gZw-qs-2b9"/>
                                                     <constraint firstItem="dWV-5x-hcU" firstAttribute="top" secondItem="7CZ-kp-TVc" secondAttribute="bottom" constant="8" symbolic="YES" id="klc-Ez-gAo"/>
                                                 </constraints>
+                                                <connections>
+                                                    <outlet property="currentTemperatureLabel" destination="dWV-5x-hcU" id="HC3-2S-ieu"/>
+                                                    <outlet property="locationNameLabel" destination="GST-Po-yvR" id="bjQ-Xg-sl9"/>
+                                                    <outlet property="weatherConditionLabel" destination="7CZ-kp-TVc" id="WDE-pr-doz"/>
+                                                </connections>
                                             </collectionViewCell>
                                         </cells>
                                         <connections>

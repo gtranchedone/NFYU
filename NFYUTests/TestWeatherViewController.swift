@@ -32,7 +32,7 @@ class TestWeatherViewController: XCTestCase {
         // ???: how to test this? Setting viewController to nil doesn't seem to call -deinit
     }
     
-    // MARK: Initial UI State
+    // MARK: - Initial UI State
     
     func testViewControllerCanBeCorrectlyInitialized() {
         XCTAssertNotNil(viewController)
@@ -100,7 +100,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertFalse(viewController!.settingsButton.hidden)
     }
     
-    // MARK: Using Device Location
+    // MARK: - Using Device Location
     
     func testViewControllerUpdatesUserDefaultsForHavingSetupLocationsIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
@@ -125,7 +125,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerDoesNotShowErrorMessageIfLocationServicesAreDisabledButHasFavouriteCities() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = false
-        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
         XCTAssertNil(viewController!.backgroundMessageLabel.text)
     }
@@ -207,7 +207,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual(expectedErrorMessage, viewController!.backgroundMessageLabel.text)
     }
     
-    // MARK: Selecting Cities
+    // MARK: - Selecting Cities
     
     func testViewControllerPresentsSettingScreenWhenSelectCitiesButtonIsPressed() {
         loadViewControllerView()
@@ -220,7 +220,7 @@ class TestWeatherViewController: XCTestCase {
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
-    // MARK: Settings
+    // MARK: - Settings
     
     func testViewControllerSetsItselfAsSettingsViewControllerDelegateWhenPresentingItViaSegue() {
         let segueIdentifier = WeatherViewController.SegueIdentifiers.Settings.rawValue
@@ -359,7 +359,7 @@ class TestWeatherViewController: XCTestCase {
     }
     
     func testViewControllerReloadsDataOnCollectionViewWhenSettingsViewControllerIsDone() {
-        // TODO: for MVP just reload everything... later on, perform only required changes
+        // for MVP just reload everything... later on, perform only required changes
         loadViewControllerView()
         let fakeCollectionView = FakeCollectionView()
         viewController?.collectionView = fakeCollectionView
@@ -367,7 +367,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(fakeCollectionView.didReloadData)
     }
     
-    // MARK: Loading Forecasts
+    // MARK: - Loading Forecasts
     
     func testViewControllerLoadsForecastsForUserLocationAfterFindingIt() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
@@ -420,15 +420,13 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(fakeCollectionView.didReloadData)
     }
     
-    // MARK: - UI
+    // MARK: - UI Tests
     // MARK: Page Control
     
     func testViewControllersDisplaysCorrectNumberOfPagesWhenLocationServicesAreDisabled() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = false
-        let testLocation = Location(coordinate: CLLocationCoordinate2D())
-        let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
-        viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
         XCTAssertEqual(2, viewController?.pageControl.numberOfPages)
     }
@@ -436,9 +434,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllersDisplaysCorrectNumberOfPagesWhenLocationServicesAreEnabled() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = true
-        let testLocation = Location(coordinate: CLLocationCoordinate2D())
-        let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
-        viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
         XCTAssertEqual(3, viewController?.pageControl.numberOfPages)
     }
@@ -459,9 +455,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllersDisplaysCorrectNumberOfCollectionViewCellsWhenLocationServicesAreDisabled() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = false
-        let testLocation = Location(coordinate: CLLocationCoordinate2D())
-        let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
-        viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
         let numberOfCells = viewController?.collectionView(viewController!.collectionView, numberOfItemsInSection: 0)
         XCTAssertEqual(2, numberOfCells)
@@ -470,9 +464,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllersDisplaysCorrectNumberOfCollectionViewCellsWhenLocationServicesAreEnabled() {
         let locationManager = viewController!.locationManager as! FakeLocationFinder
         locationManager.allowUseOfLocationServices = true
-        let testLocation = Location(coordinate: CLLocationCoordinate2D())
-        let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
-        viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
         let numberOfCells = viewController?.collectionView(viewController!.collectionView, numberOfItemsInSection: 0)
         XCTAssertEqual(3, numberOfCells)
@@ -532,7 +524,35 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual(1, viewController?.pageControl.currentPage)
     }
     
-    // MARK: Helpers
+    // MARK: Forecasts Cells
+    
+    func testViewControllerDisplaysTemplateForecastWhileLoadingForecast() {
+        viewController?.apiClient = nil
+        viewController?.locationManager = nil
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        XCTAssertEqual("London, GB", cell?.locationNameLabel.text)
+        XCTAssertEqual("-", cell?.weatherConditionLabel.text)
+        XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
+    }
+    
+    func testViewControllerDisplaysForecastInformationWhenAvailable() {
+        viewController?.apiClient = nil
+        viewController?.locationManager = nil
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        addStubForecastsToCities()
+        viewController?.collectionView.reloadData()
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        XCTAssertEqual("London, GB", cell?.locationNameLabel.text)
+        XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
+        XCTAssertEqual("16º", cell?.currentTemperatureLabel.text)
+    }
+    
+    // MARK: - Helpers
     
     private func loadViewControllerView() {
         viewController!.beginAppearanceTransition(true, animated: false)
@@ -540,9 +560,16 @@ class TestWeatherViewController: XCTestCase {
     }
     
     private func insertStubCitiesInUserDefaults() {
-        let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "UK")
+        let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "GB")
         let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA")
         viewController?.userDefaults?.favouriteLocations = [london, sf]
+    }
+    
+    private func addStubForecastsToCities() {
+        let london = viewController?.locations.first
+        london?.forecasts = [Forecast(date: NSDate(), cityID: "123", weather: .Rain, minTemperature: 15, maxTemperature: 17, currentTemperature: 16)]
+        let sf = viewController?.locations.last
+        sf?.forecasts = [Forecast(date: NSDate(), cityID: "234", weather: .Mist, minTemperature: 17, maxTemperature: 19, currentTemperature: 18)]
     }
     
 }

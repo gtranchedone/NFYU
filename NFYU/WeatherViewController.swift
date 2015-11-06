@@ -14,10 +14,6 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         case Settings = "SettingsSegueIdentifier"
     }
     
-    enum CellIdentifiers: String {
-        case WeatherCell = "WeatherCell"
-    }
-    
     var apiClient: APIClient?
     var userDefaults: UserDefaults?
     var locationManager: LocationFinder?
@@ -185,9 +181,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellIdentifiers.WeatherCell.rawValue, forIndexPath: indexPath)
-        cell.backgroundColor = UIColor(red: CGFloat(random() % 255) / CGFloat(255.0), green: CGFloat(random() % 255) / CGFloat(255.0), blue: CGFloat(random() % 255) / CGFloat(255.0), alpha: 1)
-        return cell
+        let location = locations[indexPath.item]
+        return LocationViewModel().collectionViewCellForLocation(location, collectionView: collectionView, indexPath: indexPath)
     }
     
     // MARK: UICollectionViewDelegateFlowLayout
