@@ -11,6 +11,7 @@ import UIKit
 class FakeCollectionView: UICollectionView {
     
     private(set) var didReloadData = false
+    private(set) var reloadedIndexPaths: [NSIndexPath]?
     
     convenience init() {
         self.init(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -18,6 +19,10 @@ class FakeCollectionView: UICollectionView {
     
     override func reloadData() {
         didReloadData = true
+    }
+    
+    override func reloadItemsAtIndexPaths(indexPaths: [NSIndexPath]) {
+        reloadedIndexPaths = indexPaths
     }
     
 }

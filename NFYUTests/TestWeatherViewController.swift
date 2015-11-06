@@ -399,11 +399,36 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual(expectedRequestedCoordinates, apiClient.requestedCoordinates)
     }
     
-    // TODO: test OpenWeatherAPIClient
-    // TODO: test OpenWeatherAPIResponseParser
-    // TODO: test WeatherViewController updates the locations forecasts <- room for refactoring: extract this logic out of the WeatherViewController
-    // TODO: test UI
-    // TODO: test that when scrolling to a location, the forecast for that location gets updated if not updated within the last hour
+    func testWeatherViewControllerUpdatesLocationWithForecastsAfterLoadingThem() {
+        let testLocation = Location(coordinate: CLLocationCoordinate2D())
+        viewController?.userDefaults?.favouriteLocations = [testLocation]
+        let apiClient = viewController?.apiClient as? FakeAPIClient
+        let forecast = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        apiClient?.stubForecasts = [forecast]
+        loadViewControllerView()
+        let location = viewController?.locations.first
+        XCTAssertEqual(location!.forecasts, [forecast])
+    }
+    
+    func testWeatherViewControllerReloadsLocationCollectionViewCellWhenForecastsAreLoaded() {
+        let testLocation = Location(coordinate: CLLocationCoordinate2D())
+        viewController?.userDefaults?.favouriteLocations = [testLocation]
+        loadViewControllerView()
+        let fakeCollectionView = FakeCollectionView()
+        viewController!.collectionView = fakeCollectionView
+        viewController!.fetchForecastsForLocation(viewController!.locations.first!)
+        XCTAssertTrue(fakeCollectionView.didReloadData)
+    }
+    
+    // MARK: UI
+    
+    func testWeatherViewControllersDisplaysCorrectNumberOfPages() {
+        let testLocation = Location(coordinate: CLLocationCoordinate2D())
+        let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
+        viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
+        loadViewControllerView()
+        XCTAssertEqual(2, viewController?.pageControl.numberOfPages)
+    }
     
     // MARK: Helpers
     

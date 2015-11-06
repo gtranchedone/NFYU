@@ -24,7 +24,8 @@ class Location: NSObject, NSCoding {
     let city: String?
     let name: String?
     
-    var isUserLocation = false
+    var forecasts: [Forecast] = []
+    var isUserLocation: Bool = false
     
     var displayableName: String {
         get {
@@ -75,7 +76,7 @@ class Location: NSObject, NSCoding {
         let name = aDecoder.decodeObjectForKey(NSCodingKeys.Name.rawValue) as? String
         let city = aDecoder.decodeObjectForKey(NSCodingKeys.City.rawValue) as? String
         let state = aDecoder.decodeObjectForKey(NSCodingKeys.State.rawValue) as? String
-        let country = aDecoder.decodeObjectForKey(NSCodingKeys.Country.rawValue) as! String
+        let country = aDecoder.decodeObjectForKey(NSCodingKeys.Country.rawValue) as? String
         let latitude = aDecoder.decodeDoubleForKey(NSCodingKeys.Latitude.rawValue)
         let longitude = aDecoder.decodeDoubleForKey(NSCodingKeys.Longitude.rawValue)
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

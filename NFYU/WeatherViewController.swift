@@ -18,7 +18,11 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     var userDefaults: UserDefaults?
     var locationManager: LocationFinder?
     
-    private(set) var locations: [Location] = []
+    private(set) var locations: [Location] = [] {
+        didSet {
+            pageControl.numberOfPages = locations.count
+        }
+    }
     
     @IBOutlet weak var initialSetupView: SetupView!
     @IBOutlet weak var backgroundMessageLabel: UILabel!
@@ -37,11 +41,11 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
         super.viewDidLoad()
         updateLocations()
         setInitialViewState()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        let notificationName = UIApplicationDidBecomeActiveNotification
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: notificationName, object: nil)
     }
     
     private func setInitialViewState() {
-        pageControl.numberOfPages = 0
         backgroundMessageLabel.hidden = true
         initialSetupView.hidden = userDefaults?.didSetUpLocations ?? false
         settingsButton.hidden = !initialSetupView.hidden
@@ -68,6 +72,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
             newLocations.insert(currentLocation, atIndex: 0)
         }
         locations = newLocations
+        collectionView.reloadData()
     }
     
     private func currentLocation() -> Location? {
@@ -111,15 +116,18 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate 
     
     // MARK: - Fetching Forecasts
     
-    private func loadForecastsForAllLocations() {
+    func loadForecastsForAllLocations() {
         for location in locations {
             fetchForecastsForLocation(location)
         }
     }
     
-    private func fetchForecastsForLocation(location: Location) {
-        apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { (error, forecasts, locationInfo) -> () in
-            // TODO: do something here
+    func fetchForecastsForLocation(location: Location) {
+        apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { [weak self] (error, forecasts, locationInfo) -> () in
+            if let forecasts = forecasts {
+                location.forecasts = forecasts
+            }
+            self?.collectionView.reloadData()
         }
     }
     
