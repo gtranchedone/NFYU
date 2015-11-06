@@ -21,7 +21,7 @@ enum WeatherCondition {
     // TODO: add method to get description
 }
 
-struct Forecast: Equatable {
+struct Forecast: Equatable, CustomStringConvertible {
     
     typealias CelsiusDegrees = Int
     
@@ -31,6 +31,20 @@ struct Forecast: Equatable {
     let minTemperature: CelsiusDegrees
     let maxTemperature: CelsiusDegrees
     let currentTemperature: CelsiusDegrees
+    
+    // MARK: CustomDebugStringConvertible
+    var description: String {
+        get {
+            // use dictionary description for pretty printing
+            let dictionaryValue: [String : Any] = ["date": date,
+                                                   "cityID": cityID,
+                                                   "weather": weather,
+                                                   "minTemp": minTemperature,
+                                                   "maxTemp": maxTemperature,
+                                                   "currentTemp": currentTemperature]
+            return dictionaryValue.description
+        }
+    }
     
 }
 

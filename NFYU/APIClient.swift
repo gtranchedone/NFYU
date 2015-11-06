@@ -57,11 +57,13 @@ class APIClient: AnyObject {
     }
     
     private func logRequest(request: NSURLRequest) {
-        debugPrint("Performing \(request.HTTPMethod!) request to \(request.URL!)", terminator: "\n\n")
+        // use print instead of debugPrint for pretty printing
+        print("Performing \(request.HTTPMethod!) request to \(request.URL!)", terminator: "\n\n")
     }
     
     private func logResponse(response: NSURLResponse?, error: NSError?, forecasts: [Forecast]?, locationInfo: LocationInfo?) {
-        debugPrint("Received response for URL \(response?.URL!) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
+        // use print instead of debugPrint for pretty printing
+        print("Received response for URL \(response?.URL!) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
     }
     
 }
