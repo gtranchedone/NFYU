@@ -32,12 +32,12 @@
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Z5h-vI-eDj">
-                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="itemSize" width="580" height="500"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
-                                        <view key="backgroundView" contentMode="scaleToFill" id="SYD-3M-zpy" userLabel="BackgroundView">
+                                        <view key="backgroundView" hidden="YES" contentMode="scaleToFill" id="SYD-3M-zpy" userLabel="BackgroundView">
                                             <rect key="frame" x="0.0" y="0.0" width="584" height="518"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
@@ -129,15 +129,48 @@
                                         </view>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="WeatherCell" id="lfg-Jy-ced">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="0.0" y="9" width="580" height="500"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="580" height="500"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GST-Po-yvR">
+                                                            <rect key="frame" x="220" y="28" width="141" height="24"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20º" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWV-5x-hcU">
+                                                            <rect key="frame" x="248" y="86" width="94" height="72"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather Condition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7CZ-kp-TVc">
+                                                            <rect key="frame" x="219" y="57" width="143" height="21"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
                                                     <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <animations/>
+                                                <constraints>
+                                                    <constraint firstItem="GST-Po-yvR" firstAttribute="top" secondItem="lfg-Jy-ced" secondAttribute="topMargin" constant="20" id="6nJ-Ba-0AQ"/>
+                                                    <constraint firstItem="7CZ-kp-TVc" firstAttribute="top" secondItem="GST-Po-yvR" secondAttribute="bottom" constant="5" id="C4K-xO-G1h"/>
+                                                    <constraint firstItem="GST-Po-yvR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lfg-Jy-ced" secondAttribute="leadingMargin" id="HyX-5M-FPI"/>
+                                                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="GST-Po-yvR" secondAttribute="trailing" id="IMk-ll-jqy"/>
+                                                    <constraint firstItem="GST-Po-yvR" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" id="Nh4-GK-wWv"/>
+                                                    <constraint firstItem="dWV-5x-hcU" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" constant="5" id="eWI-VY-3Bc"/>
+                                                    <constraint firstItem="7CZ-kp-TVc" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" id="gZw-qs-2b9"/>
+                                                    <constraint firstItem="dWV-5x-hcU" firstAttribute="top" secondItem="7CZ-kp-TVc" secondAttribute="bottom" constant="8" symbolic="YES" id="klc-Ez-gAo"/>
+                                                </constraints>
                                             </collectionViewCell>
                                         </cells>
                                         <connections>
@@ -200,7 +233,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SimpleCityCell" textLabel="dzk-6z-xNe" style="IBUITableViewCellStyleDefault" id="uUA-OU-cew">
                                 <rect key="frame" x="0.0" y="94" width="600" height="44"/>
@@ -234,7 +267,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -294,7 +327,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>

@@ -46,6 +46,7 @@ class APIClient: AnyObject {
         self.responseSerializer = responseSerializer
     }
     
+    // The completion block is always called on the main queue
     func fetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D, completionBlock: (NSError?, [Forecast]?, LocationInfo?) -> ()) {
         let request = requestSerializer.buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate)
         let task = session.dataTaskWithRequest(request) { [weak self] (data, response, error) -> Void in
@@ -58,14 +59,21 @@ class APIClient: AnyObject {
                 forecasts = parsedResponse?.forecasts
                 finalError = parsedResponse?.error
             }
-            completionBlock(finalError, forecasts, locationInfo)
+            self?.logResponse(response, error: finalError, forecasts: forecasts, locationInfo: locationInfo)
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                completionBlock(finalError, forecasts, locationInfo)
+            })
         }
         logRequest(request)
         task.resume()
     }
     
     private func logRequest(request: NSURLRequest) {
-        debugPrint("- Performing \(request.HTTPMethod!) request to \(request.URL!)")
+        debugPrint("Performing \(request.HTTPMethod!) request to \(request.URL!)", terminator: "\n\n")
+    }
+    
+    private func logResponse(response: NSURLResponse?, error: NSError?, forecasts: [Forecast]?, locationInfo: LocationInfo?) {
+        debugPrint("Received response for URL \(response?.URL!) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
     }
     
 }

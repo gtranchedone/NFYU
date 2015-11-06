@@ -57,20 +57,25 @@ class TestAPIClient: XCTestCase {
     
     func testAPIClientCallsCompletionBlockWithErrorIfTaskCompletesWithError() {
         var receivedError: NSError?
+        let expectation = expectationWithDescription("Expect API client to call its completion block")
         apiClient?.fetchForecastsForLocationWithCoordinate(CLLocationCoordinate2D()) { (error, forecasts, locationInfo) in
             receivedError = error
+            expectation.fulfill()
         }
         let session = apiClient?.session as? FakeURLSession
         let task = session?.lastCreatedDataTask as? FakeURLSessionDataTask
         let stubError = NSError(domain: "testDomain", code: 400, userInfo: nil)
         task?.completionHandler?(nil, nil, stubError)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
         XCTAssertEqual(stubError, receivedError)
     }
     
     func testAPIClientCallsCompletionBlockWithForecastsParsedByResponseSerializer() {
         var receivedForecasts: [Forecast]?
+        let expectation = expectationWithDescription("Expect API client to call its completion block")
         apiClient?.fetchForecastsForLocationWithCoordinate(CLLocationCoordinate2D()) { (error, forecasts, locationInfo) in
             receivedForecasts = forecasts
+            expectation.fulfill()
         }
         let session = apiClient?.session as? FakeURLSession
         let task = session?.lastCreatedDataTask as? FakeURLSessionDataTask
@@ -78,32 +83,39 @@ class TestAPIClient: XCTestCase {
         let forecast = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
         responseSerializer?.stubForecasts = [forecast]
         task?.completionHandler?(NSData(), nil, nil)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
         XCTAssertEqual(responseSerializer!.stubForecasts!, receivedForecasts!)
     }
     
     func testAPIClientCallsCompletionBlockWithCityLocationParsedByResponseSerializer() {
         var receivedLocationInfo: LocationInfo?
+        let expectation = expectationWithDescription("Expect API client to call its completion block")
         apiClient?.fetchForecastsForLocationWithCoordinate(CLLocationCoordinate2D()) { (error, forecasts, locationInfo) in
             receivedLocationInfo = locationInfo
+            expectation.fulfill()
         }
         let session = apiClient?.session as? FakeURLSession
         let task = session?.lastCreatedDataTask as? FakeURLSessionDataTask
         let responseSerializer = apiClient?.responseSerializer as? FakeResponseSerializer
         responseSerializer?.stubLocationInfo = LocationInfo(cityID: "testID", cityName: "testCity", cityCountry: "testCountry")
         task?.completionHandler?(NSData(), nil, nil)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
         XCTAssertEqual(responseSerializer!.stubLocationInfo, receivedLocationInfo)
     }
     
     func testAPIClientCallsCompletionBlockWithErrorParsedByResponseSerializer() {
         var receivedError: NSError?
+        let expectation = expectationWithDescription("Expect API client to call its completion block")
         apiClient?.fetchForecastsForLocationWithCoordinate(CLLocationCoordinate2D()) { (error, forecasts, locationInfo) in
             receivedError = error
+            expectation.fulfill()
         }
         let session = apiClient?.session as? FakeURLSession
         let task = session?.lastCreatedDataTask as? FakeURLSessionDataTask
         let responseSerializer = apiClient?.responseSerializer as? FakeResponseSerializer
         responseSerializer?.stubError = NSError(domain: "testError", code: 404, userInfo: nil)
         task?.completionHandler?(NSData(), nil, nil)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
         XCTAssertEqual(responseSerializer!.stubError, receivedError)
     }
 
