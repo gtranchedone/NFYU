@@ -10,15 +10,15 @@ import XCTest
 import CoreLocation
 @testable import NFYU
 
-class TestSystemLocationFinder: XCTestCase {
+class TestSystemUserLocationManager: XCTestCase {
 
-    var systemLocationFinder: SystemLocationFinder?
+    var systemLocationFinder: SystemUserLocationFinder?
     var fakeLocationManager: FakeLocationManager?
     
     override func setUp() {
         super.setUp()
         fakeLocationManager = FakeLocationManager()
-        systemLocationFinder = SystemLocationFinder(locationManager: fakeLocationManager)
+        systemLocationFinder = SystemUserLocationFinder(locationManager: fakeLocationManager)
     }
     
     override func tearDown() {

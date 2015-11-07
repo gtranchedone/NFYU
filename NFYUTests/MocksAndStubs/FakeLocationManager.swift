@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 @testable import NFYU
 
-class FakeLocationFinder: LocationFinder {
+class FakeUserLocationFinder: UserLocationManager {
     
     private(set) var didRequestCurrentLocation = false
     

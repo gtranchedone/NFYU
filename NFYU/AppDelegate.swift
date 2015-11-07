@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var apiClient: APIClient = APIClient(requestSerializer: OpenWeatherAPIClientRequestSerializer(),
                                          responseSerializer: OpenWeatherAPIClientResponseSerializer())
     var userDefaults: UserDefaults = NSUserDefaults.standardUserDefaults()
-    var locationManager: LocationFinder = SystemLocationFinder()
+    var locationManager: UserLocationManager = SystemUserLocationFinder()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let viewController = window?.rootViewController as? WeatherViewController

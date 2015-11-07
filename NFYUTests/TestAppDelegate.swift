@@ -38,7 +38,7 @@ class TestAppDelegate: XCTestCase {
     }
     
     func testAppDelegateHasSystemLocationManagerWhenInitialized() {
-        let locationManager = appDelegate!.locationManager as? SystemLocationFinder
+        let locationManager = appDelegate!.locationManager as? SystemUserLocationFinder
         XCTAssertNotNil(locationManager)
     }
     

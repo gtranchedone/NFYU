@@ -16,7 +16,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     var apiClient: APIClient?
     var userDefaults: UserDefaults?
-    var locationManager: LocationFinder?
+    var locationManager: UserLocationManager?
     
     private(set) var locations: [Location] = [] {
         didSet {
