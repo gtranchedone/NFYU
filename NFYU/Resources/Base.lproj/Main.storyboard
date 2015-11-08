@@ -37,7 +37,7 @@
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
-                                        <view key="backgroundView" hidden="YES" contentMode="scaleToFill" id="SYD-3M-zpy" userLabel="BackgroundView">
+                                        <view key="backgroundView" contentMode="scaleToFill" id="SYD-3M-zpy" userLabel="BackgroundView">
                                             <rect key="frame" x="0.0" y="0.0" width="584" height="518"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
@@ -153,7 +153,7 @@
                                                             <rect key="frame" x="219" y="57" width="143" height="21"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -241,7 +241,7 @@
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SimpleCityCell" textLabel="dzk-6z-xNe" style="IBUITableViewCellStyleDefault" id="uUA-OU-cew">
-                                <rect key="frame" x="0.0" y="94" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="93.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uUA-OU-cew" id="fC0-1j-9nt">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -261,7 +261,7 @@
                                 <animations/>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="AddCityCell" textLabel="wYl-vd-RoA" style="IBUITableViewCellStyleDefault" id="lqM-Xx-jcN">
-                                <rect key="frame" x="0.0" y="138" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="137.5" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lqM-Xx-jcN" id="zYD-Ov-gKP">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>

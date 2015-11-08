@@ -79,19 +79,22 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     }
     
     private func currentLocation() -> Location? {
-        guard locationManager?.locationServicesEnabled() == true else { return nil }
+        guard locationManager?.locationServicesEnabled == true else { return nil }
+        guard userDefaults?.didSetUpLocations == true else { return nil }
         var location = locations.filter({ (location) -> Bool in
             return location.isUserLocation
         }).first
         if location == nil {
             location = Location(coordinate: CLLocationCoordinate2D())
+            location?.isUserLocation = true
         }
         return location
     }
     
     func updateCurrentLocationIfPossible() {
-        let canUseUserLocation = locationManager?.locationServicesEnabled() ?? false
-        if canUseUserLocation {
+        let didSetUpLocations = userDefaults?.didSetUpLocations == true
+        let canUseUserLocation = locationManager?.locationServicesEnabled == true
+        if didSetUpLocations && canUseUserLocation {
             activityIndicator.startAnimating()
             locationManager?.requestCurrentLocation() { [weak self] error, location in
                 self?.activityIndicator.stopAnimating()
@@ -102,7 +105,9 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
                 else if let userLocation = location {
                     var currentLocation = self?.currentLocation()
                     if let currentLocation = currentLocation {
-                        self?.locations.removeAtIndex(self!.locations.indexOf(currentLocation)!)
+                        if self?.locations.contains(currentLocation) == true {
+                            self?.locations.removeAtIndex(self!.locations.indexOf(currentLocation)!)
+                        }
                     }
                     currentLocation = Location(coordinate: userLocation.coordinate)
                     currentLocation!.isUserLocation = true
@@ -132,6 +137,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     func fetchForecastsForLocation(location: Location) {
         // TODO: don't load if last successful update is < 4h ago
+        guard !(location.isUserLocation && location.coordinate == CLLocationCoordinate2D()) else { return }
         apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { [weak self] (error, forecasts, locationInfo) -> () in
             // don't display any error message in case of error: showing the forecast template will suffice for now
             var needsReload = false
@@ -146,10 +152,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
                 needsReload = true
             }
             if needsReload {
-                let indexOfLocation = self?.locations.indexOf(location)
-                if let indexOfLocation = indexOfLocation {
-                    self?.collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: indexOfLocation, inSection: 0)])
-                }
+                self?.collectionView?.reloadData()
             }
         }
     }
@@ -175,7 +178,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     func settingsViewControllerDidFinish(viewController: SettingsViewController) {
         var hasValidData = hasCities()
         if let locationManager = locationManager {
-            hasValidData = hasValidData || locationManager.locationServicesEnabled()
+            hasValidData = hasValidData || locationManager.locationServicesEnabled
         }
         userDefaults?.didSetUpLocations = hasValidData
         if hasValidData {
@@ -188,11 +191,12 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     // MARK: UICollectionViewDataSource
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        guard userDefaults?.didSetUpLocations == true else { return 0 }
         return 1
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let canUseLocationServices = locationManager?.locationServicesEnabled() ?? false
+        let canUseLocationServices = locationManager?.locationServicesEnabled ?? false
         let numberOfFavouriteCities = userDefaults?.favouriteLocations.count ?? 0
         if canUseLocationServices {
             return numberOfFavouriteCities + 1

@@ -10,8 +10,9 @@ import Foundation
 import CoreLocation
 @testable import NFYU
 
-class FakeUserLocationFinder: UserLocationManager {
+class FakeUserLocationManager: UserLocationManager {
     
+    private(set) var didRequestPermissions = false
     private(set) var didRequestCurrentLocation = false
     
     var allowUseOfLocationServices = true
@@ -19,8 +20,12 @@ class FakeUserLocationFinder: UserLocationManager {
     var stubLocation: CLLocation?
     var stubError: NSError?
     
-    func locationServicesEnabled() -> Bool {
-        return allowUseOfLocationServices
+    var locationServicesEnabled: Bool {
+        get { return allowUseOfLocationServices }
+    }
+    
+    func requestUserAuthorizationForUsingLocationServices() {
+        didRequestPermissions = true
     }
     
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {

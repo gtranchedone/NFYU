@@ -12,18 +12,18 @@ import CoreLocation
 
 class TestSystemUserLocationManager: XCTestCase {
 
-    var systemLocationFinder: SystemUserLocationFinder?
+    var systemLocationManager: SystemUserLocationManager?
     var fakeLocationManager: FakeLocationManager?
     
     override func setUp() {
         super.setUp()
         fakeLocationManager = FakeLocationManager()
-        systemLocationFinder = SystemUserLocationFinder(locationManager: fakeLocationManager)
+        systemLocationManager = SystemUserLocationManager(locationManager: fakeLocationManager)
     }
     
     override func tearDown() {
         FakeLocationManager.stubAuthorizationStatus = .NotDetermined
-        systemLocationFinder = nil
+        systemLocationManager = nil
         super.tearDown()
     }
     
@@ -31,113 +31,123 @@ class TestSystemUserLocationManager: XCTestCase {
         XCTAssertNotNil(NSBundle.mainBundle().objectForInfoDictionaryKey("NSLocationWhenInUseUsageDescription"))
     }
     
-    func testSystemLocationFinderSetsItselfAsTheLocationManagerDelegate() {
-        XCTAssertTrue(fakeLocationManager!.delegate === systemLocationFinder)
+    func testSystemLocationManagerSetsItselfAsTheLocationManagerDelegate() {
+        XCTAssertTrue(fakeLocationManager!.delegate === systemLocationManager)
     }
 
     // MARK: Authorization for Use of Location Services
     
-    func testSystemLocationFinderReturnsTheLocationManagerInfoAboutTheAppCapabilityOfUsingLocationServices() {
-        XCTAssertFalse(systemLocationFinder!.locationServicesEnabled())
+    func testSystemLocationManagerAllowsUsageOfLocationServicesWhenPermissionIsNotDetermined() {
+        XCTAssertTrue(systemLocationManager!.locationServicesEnabled)
     }
     
-    func testSystemLocationFinderReturnsTheLocationManagerInfoAboutTheAppCapabilityOfUsingLocationServices2() {
+    func testSystemLocationManagerAllowsUsageOfLocationServicesWhenPermissionIsGranted() {
         FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
-        XCTAssertTrue(systemLocationFinder!.locationServicesEnabled())
+        XCTAssertTrue(systemLocationManager!.locationServicesEnabled)
     }
     
-    func testSystemLocationFinderRequestsLocationUsageAuthorizationIfNeeded() {
-        systemLocationFinder?.requestCurrentLocation { _, _ in }
-        XCTAssertTrue(fakeLocationManager!.didRequestAuthorizationForInUse)
-    }
-    
-    func testSystemLocationFinderRequestsLocationUsageAuthorizationIfAlreadyAuthorized() {
-        FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
-        systemLocationFinder?.requestCurrentLocation { _, _ in }
-        XCTAssertFalse(fakeLocationManager!.didRequestAuthorizationForInUse)
-    }
-    
-    func testSystemLocationFinderRequestsLocationUsageAuthorizationIfAlreadyDenied() {
+    func testSystemLocationManagerDoesNotAllowUsageOfLocationServicesWhenPermissionIsDenied() {
         FakeLocationManager.stubAuthorizationStatus = .Denied
-        systemLocationFinder?.requestCurrentLocation { _, _ in }
-        XCTAssertFalse(fakeLocationManager!.didRequestAuthorizationForInUse)
+        XCTAssertFalse(systemLocationManager!.locationServicesEnabled)
+    }
+    
+    func testSystemLocationManagerDoesNotAllowUsageOfLocationServicesWhenPermissionIsRestricted() {
+        FakeLocationManager.stubAuthorizationStatus = .Restricted
+        XCTAssertFalse(systemLocationManager!.locationServicesEnabled)
     }
     
     // MARK: Requesting Location Updates
     
-    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationServicesAuthorizationIsDenied() {
-        FakeLocationManager.stubAuthorizationStatus = .Denied
-        let expectation = expectationWithDescription("Location update request calls completion block")
-        systemLocationFinder?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
-            expectation.fulfill()
-        }
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+    func testSystemLocationManagerRequestsLocationUsageAuthorizationIfNeeded() {
+        systemLocationManager?.requestCurrentLocation { _, _ in }
+        XCTAssertTrue(fakeLocationManager!.didRequestAuthorizationForInUse)
     }
     
-    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationServicesAuthorizationIsRestricted() {
-        FakeLocationManager.stubAuthorizationStatus = .Restricted
-        let expectation = expectationWithDescription("Location update request calls completion block")
-        systemLocationFinder?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
-            expectation.fulfill()
-        }
-        waitForExpectationsWithTimeout(1.0, handler: nil)
-    }
-    
-    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationServicesAuthorizationBecomesDenied() {
-        let expectation = expectationWithDescription("Location update request calls completion block")
-        systemLocationFinder?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
-            expectation.fulfill()
-        }
-        FakeLocationManager.stubAuthorizationStatus = .Denied
-        systemLocationFinder?.locationManager(fakeLocationManager!, didChangeAuthorizationStatus: .Denied)
-        waitForExpectationsWithTimeout(1.0, handler: nil)
-    }
-    
-    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationServicesAuthorizationBecomesRestricted() {
-        let expectation = expectationWithDescription("Location update request calls completion block")
-        systemLocationFinder?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
-            expectation.fulfill()
-        }
-        FakeLocationManager.stubAuthorizationStatus = .Restricted
-        systemLocationFinder?.locationManager(fakeLocationManager!, didChangeAuthorizationStatus: .Restricted)
-        waitForExpectationsWithTimeout(1.0, handler: nil)
-    }
-    
-    func testSystemLocationFinderForwardsRequestForUpdatingCurrentLocationToLocationManager() {
+    func testSystemLocationManagerRequestsLocationUsageAuthorizationIfAlreadyAuthorized() {
         FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
-        systemLocationFinder?.requestCurrentLocation { _, _ in }
+        systemLocationManager?.requestCurrentLocation { _, _ in }
+        XCTAssertFalse(fakeLocationManager!.didRequestAuthorizationForInUse)
+    }
+    
+    func testSystemLocationManagerDoesNotRequestLocationUsageAuthorizationIfAlreadyDenied() {
+        FakeLocationManager.stubAuthorizationStatus = .Denied
+        systemLocationManager?.requestCurrentLocation { _, _ in }
+        XCTAssertFalse(fakeLocationManager!.didRequestAuthorizationForInUse)
+    }
+    
+    func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationIsDenied() {
+        FakeLocationManager.stubAuthorizationStatus = .Denied
+        let expectation = expectationWithDescription("Location update request calls completion block")
+        systemLocationManager?.requestCurrentLocation { error, location in
+            XCTAssertNotNil(error)
+            XCTAssertNil(location)
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationIsRestricted() {
+        FakeLocationManager.stubAuthorizationStatus = .Restricted
+        let expectation = expectationWithDescription("Location update request calls completion block")
+        systemLocationManager?.requestCurrentLocation { error, location in
+            XCTAssertNotNil(error)
+            XCTAssertNil(location)
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationBecomesDenied() {
+        let expectation = expectationWithDescription("Location update request calls completion block")
+        systemLocationManager?.requestCurrentLocation { error, location in
+            XCTAssertNotNil(error)
+            XCTAssertNil(location)
+            expectation.fulfill()
+        }
+        FakeLocationManager.stubAuthorizationStatus = .Denied
+        systemLocationManager?.locationManager(fakeLocationManager!, didChangeAuthorizationStatus: .Denied)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationBecomesRestricted() {
+        let expectation = expectationWithDescription("Location update request calls completion block")
+        systemLocationManager?.requestCurrentLocation { error, location in
+            XCTAssertNotNil(error)
+            XCTAssertNil(location)
+            expectation.fulfill()
+        }
+        FakeLocationManager.stubAuthorizationStatus = .Restricted
+        systemLocationManager?.locationManager(fakeLocationManager!, didChangeAuthorizationStatus: .Restricted)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSystemLocationManagerForwardsRequestForUpdatingCurrentLocationToLocationManager() {
+        FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
+        systemLocationManager?.requestCurrentLocation { _, _ in }
         XCTAssertTrue(fakeLocationManager!.didRequestLocation)
     }
     
-    func testSystemLocationFinderCallsCompletionBlockWithErrorIfLocationManagerFailsToUpdateLocation() {
+    func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationManagerFailsToUpdateLocation() {
         let expectation = expectationWithDescription("Location update request calls completion block")
-        systemLocationFinder?.requestCurrentLocation { error, location in
+        systemLocationManager?.requestCurrentLocation { error, location in
             XCTAssertNotNil(error)
             XCTAssertNil(location)
             expectation.fulfill()
         }
         let error = NSError(domain: "testDomain", code: 400, userInfo: nil)
-        systemLocationFinder?.locationManager(fakeLocationManager!, didFailWithError: error)
+        systemLocationManager?.locationManager(fakeLocationManager!, didFailWithError: error)
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
-    func testSystemLocationFinderCallsCompletionBlockWithLastFoundLocationIfLocationManagerSucceedsInUpdatingLocation() {
+    func testSystemLocationManagerCallsCompletionBlockWithLastFoundLocationIfLocationManagerSucceedsInUpdatingLocation() {
         let expectation = expectationWithDescription("Location update request calls completion block")
-        systemLocationFinder?.requestCurrentLocation { error, location in
+        systemLocationManager?.requestCurrentLocation { error, location in
             XCTAssertNil(error)
             XCTAssertNotNil(location)
             expectation.fulfill()
         }
         let locations: [CLLocation] = [CLLocation(latitude: 0, longitude: 0)]
-        systemLocationFinder?.locationManager(fakeLocationManager!, didUpdateLocations: locations)
+        systemLocationManager?.locationManager(fakeLocationManager!, didUpdateLocations: locations)
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
 

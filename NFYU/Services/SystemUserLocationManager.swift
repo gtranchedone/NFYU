@@ -6,7 +6,7 @@
 import Foundation
 import CoreLocation
 
-class SystemUserLocationFinder: NSObject, UserLocationManager, CLLocationManagerDelegate {
+class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManagerDelegate {
 
     private let locationManager: CLLocationManager
     private var completionBlock: ((NSError?, CLLocation?) -> ())?
@@ -22,16 +22,22 @@ class SystemUserLocationFinder: NSObject, UserLocationManager, CLLocationManager
     private func authorizationStatus() -> CLAuthorizationStatus {
         return locationManager.dynamicType.authorizationStatus()
     }
-
-    func locationServicesEnabled() -> Bool {
-        return authorizationStatus() == .AuthorizedWhenInUse
+    
+    var locationServicesEnabled: Bool {
+        get {
+            return authorizationStatus() == .AuthorizedWhenInUse || authorizationStatus() == .NotDetermined
+        }
+    }
+    
+    func requestUserAuthorizationForUsingLocationServices() {
+        locationManager.requestWhenInUseAuthorization()
     }
 
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {
         self.completionBlock = completionBlock
         let authorizationStatus = self.authorizationStatus()
         if authorizationStatus == .NotDetermined {
-            locationManager.requestWhenInUseAuthorization()
+            requestUserAuthorizationForUsingLocationServices()
         }
         else if authorizationStatus != .AuthorizedWhenInUse {
             let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")]

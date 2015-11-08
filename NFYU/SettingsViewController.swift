@@ -14,6 +14,9 @@ protocol SettingsViewControllerDelegate: AnyObject {
     
 }
 
+// TODO: allow sorting cities
+// TODO: add switch for enabling user location usage
+
 class SettingsViewController: BaseTableViewController, CitySearchViewControllerDelegate {
     
     enum Segues: String {

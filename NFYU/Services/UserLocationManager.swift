@@ -14,7 +14,9 @@ let UserLocationManagerErrorDomain = "UserLocationManagerErrorDomain"
 // NOTE: this really hasn't the best name. Need something better.
 protocol UserLocationManager: AnyObject {
 
-    func locationServicesEnabled() -> Bool
+    var locationServicesEnabled: Bool { get }
+    
+    func requestUserAuthorizationForUsingLocationServices()
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ())
 
 }
