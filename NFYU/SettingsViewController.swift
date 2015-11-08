@@ -14,7 +14,6 @@ protocol SettingsViewControllerDelegate: AnyObject {
     
 }
 
-// TODO: allow sorting cities
 // TODO: add switch for enabling user location usage
 
 class SettingsViewController: BaseTableViewController, CitySearchViewControllerDelegate {
@@ -53,7 +52,8 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     // MARK: - UITableViewDataSource
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 + (userDefaults?.favouriteLocations.count ?? 0)
+        let numberOfLocations = (userDefaults?.favouriteLocations.count ?? 0)
+        return numberOfLocations + 1
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -65,7 +65,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
         }
         else {
             cellIdentifier = CellIdentifiers.SimpleCityCell.rawValue
-            let city = userDefaults!.favouriteLocations[indexPath.row - 1]
+            let city = locationAtIndexPath(indexPath)
             rowTitle = city.displayableName
         }
         
@@ -96,6 +96,23 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if isAddCityIndexPath(indexPath) {
             performSegueWithIdentifier(Segues.AddLocationSegue.rawValue, sender: indexPath)
+        }
+    }
+    
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return !isAddCityIndexPath(indexPath)
+    }
+    
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        guard sourceIndexPath != destinationIndexPath else { return }
+        guard !isAddCityIndexPath(sourceIndexPath) && !isAddCityIndexPath(destinationIndexPath) else { return }
+        if let userDefaults = userDefaults {
+            var locations = userDefaults.favouriteLocations
+            guard sourceIndexPath.row <= locations.count && destinationIndexPath.row <= locations.count else { return }
+            
+            let locationToMove = locations.removeAtIndex(sourceIndexPath.row - 1)
+            locations.insert(locationToMove, atIndex: destinationIndexPath.row - 1)
+            userDefaults.favouriteLocations = locations
         }
     }
     
@@ -131,6 +148,11 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     func isAddCityIndexPath(indexPath: NSIndexPath) -> Bool {
         return indexPath.row == 0
+    }
+    
+    func locationAtIndexPath(indexPath: NSIndexPath) -> Location {
+        let locations = userDefaults!.favouriteLocations
+        return locations[indexPath.row - 1]
     }
     
 }

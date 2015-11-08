@@ -247,6 +247,101 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(UIBarButtonItemStyle.Done, viewController?.navigationItem.rightBarButtonItem?.style)
     }
     
+    // MARK: - Sorting Cities
+    
+    func testSettingsViewControllerDoesNotAllowSortingAddCityRow() {
+        loadViewControllerView()
+        XCTAssertFalse(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0)))
+    }
+    
+    func testSettingsViewControllerAllowsSortingCities() {
+        loadViewControllerView()
+        XCTAssertTrue(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 1, inSection: 0)))
+    }
+    
+    func testSettingsViewControllerCanActuallySortCities() {
+        let location1 = Location(coordinate: CLLocationCoordinate2D(), name: "Cupertino")
+        let location2 = Location(coordinate: CLLocationCoordinate2D(), name: "San Diego")
+        let location3 = Location(coordinate: CLLocationCoordinate2D(), name: "Mountain View")
+        
+        let initialLocations = [location1, location2, location3]
+        let expectedLocations = [location3, location2, location1].map { (location) -> String in
+            return location.name!
+        }
+        
+        viewController?.userDefaults?.favouriteLocations = initialLocations
+        loadViewControllerView()
+        
+        moveLocationFromIndex(3, toIndex: 1)
+        moveLocationFromIndex(2, toIndex: 3)
+        let actualLocations = viewController!.userDefaults!.favouriteLocations.map { (location) -> String in
+            return location.name!
+        }
+        XCTAssertEqual(expectedLocations, actualLocations)
+    }
+    
+    func testSettingsViewControllerDoesNotMoveAddCityRow() {
+        let location1 = Location(coordinate: CLLocationCoordinate2D(), name: "Cupertino")
+        let location2 = Location(coordinate: CLLocationCoordinate2D(), name: "San Diego")
+        let location3 = Location(coordinate: CLLocationCoordinate2D(), name: "Mountain View")
+        
+        let initialLocations = [location1, location2, location3]
+        let expectedLocations = initialLocations.map { (location) -> String in
+            return location.name!
+        }
+        
+        viewController?.userDefaults?.favouriteLocations = initialLocations
+        loadViewControllerView()
+        
+        moveLocationFromIndex(3, toIndex: 0)
+        moveLocationFromIndex(0, toIndex: 3)
+        let actualLocations = viewController!.userDefaults!.favouriteLocations.map { (location) -> String in
+            return location.name!
+        }
+        XCTAssertEqual(expectedLocations, actualLocations)
+    }
+    
+    func testSettingsViewControllerDoesNotMoveLocationToSameIndexWhereItIsAlreadyLocated() {
+        let location1 = Location(coordinate: CLLocationCoordinate2D(), name: "Cupertino")
+        let location2 = Location(coordinate: CLLocationCoordinate2D(), name: "San Diego")
+        let location3 = Location(coordinate: CLLocationCoordinate2D(), name: "Mountain View")
+        
+        let initialLocations = [location1, location2, location3]
+        let expectedLocations = initialLocations.map { (location) -> String in
+            return location.name!
+        }
+        
+        viewController?.userDefaults?.favouriteLocations = initialLocations
+        loadViewControllerView()
+        
+        moveLocationFromIndex(3, toIndex: 3)
+        let actualLocations = viewController!.userDefaults!.favouriteLocations.map { (location) -> String in
+            return location.name!
+        }
+        XCTAssertEqual(expectedLocations, actualLocations)
+    }
+    
+    func testSettingsViewControllerDoesNotMoveLocationToAnIndexOutOfBounds() {
+        let location1 = Location(coordinate: CLLocationCoordinate2D(), name: "Cupertino")
+        let location2 = Location(coordinate: CLLocationCoordinate2D(), name: "San Diego")
+        let location3 = Location(coordinate: CLLocationCoordinate2D(), name: "Mountain View")
+        
+        let initialLocations = [location1, location2, location3]
+        let expectedLocations = initialLocations.map { (location) -> String in
+            return location.name!
+        }
+        
+        viewController?.userDefaults?.favouriteLocations = initialLocations
+        loadViewControllerView()
+        
+        moveLocationFromIndex(3, toIndex: 4)
+        moveLocationFromIndex(4, toIndex: 3)
+        let actualLocations = viewController!.userDefaults!.favouriteLocations.map { (location) -> String in
+            return location.name!
+        }
+        XCTAssertEqual(expectedLocations, actualLocations)
+    }
+    
     // MARK: - Helpers
     
     private func loadViewControllerView() {
@@ -255,9 +350,17 @@ class TestSettingsViewController: XCTestCase {
     }
     
     private func insertStubCitiesInUserDefaults() {
-        let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "UK")
-        let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA", state: "CA")
+        let londonCoordinate = CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664)
+        let london = Location(coordinate: londonCoordinate, name: "London", country: "UK")
+        let sfCoordinate = CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119)
+        let sf = Location(coordinate: sfCoordinate, name: "San Francisco", country: "USA", state: "CA")
         viewController?.userDefaults?.favouriteLocations = [london, sf]
+    }
+    
+    private func moveLocationFromIndex(fromIndex: Int, toIndex: Int) {
+        let toIndexPath = NSIndexPath(forRow: toIndex, inSection: 0)
+        let fromIndexPath = NSIndexPath(forRow: fromIndex, inSection: 0)
+        viewController?.tableView(viewController!.tableView, moveRowAtIndexPath: fromIndexPath, toIndexPath: toIndexPath)
     }
 
 }
