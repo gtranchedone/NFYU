@@ -25,7 +25,7 @@ API Key but it would be best if you changed it to your own.
 - [x] ~~Add favourite cities input in setup screen~~
 - [x] ~~Fetch weather data from OpenWeatherMap APIs~~
 - [x] ~~Display current forecast data on screen~~
-- [ ] Add support for C and F temperature units
+- [x] ~~Add support for C and F temperature units~~
 - [ ] Add hourly forecast
 
 -- After MVP --

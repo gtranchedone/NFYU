@@ -21,6 +21,7 @@ protocol UserDefaults: AnyObject {
 struct UserDefaultsKeys {
     static let DidSetUpLocations = "com.gtranchedone.NFYU.DidSetUpLocations"
     static let FavouriteLocations = "com.gtranchedone.NFYU.FavouriteLocations"
+    static let UseFahrenheitDegrees = "com.gtranchedone.NFYU.UseFahrenheitDegrees"
 }
 
 extension UserDefaults {
@@ -47,6 +48,15 @@ extension UserDefaults {
                 return NSKeyedArchiver.archivedDataWithRootObject(location)
             }
             setObject(locationsData, forKey: UserDefaultsKeys.FavouriteLocations)
+        }
+    }
+    
+    var useFahrenheitDegrees: Bool {
+        get {
+            return boolForKey(UserDefaultsKeys.UseFahrenheitDegrees)
+        }
+        set {
+            setBool(newValue, forKey:UserDefaultsKeys.UseFahrenheitDegrees)
         }
     }
     

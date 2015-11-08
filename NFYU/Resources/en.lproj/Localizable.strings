@@ -20,6 +20,7 @@
 "SETTINGS_TITLE" = "Settings";
 "ADD_CITY_CELL_TITLE" = "Add city";
 "TOGGLE_USER_LOCATION_ENABLED" = "Current location";
+"USE_FAHRENHEIT_DEGREES" = "Use Fahrenheit degrees";
 
 "INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE" = "Warning";
 "INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE" = "This app cannot access your location but you can change this in the Settings app. Please go to Settings -> Privacy -> Location -> NFYU to do so";

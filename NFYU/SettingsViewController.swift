@@ -66,7 +66,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == kSectionForUserSettings {
-            return 1
+            return 2
         }
         let numberOfLocations = (userDefaults?.favouriteLocations.count ?? 0)
         return numberOfLocations + 1
@@ -79,8 +79,16 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
         if indexPath.section == kSectionForUserSettings {
             cellIdentifier = CellIdentifiers.SwitchCell.rawValue
             let switchCell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
-            switchCell.textLabel?.text = NSLocalizedString("TOGGLE_USER_LOCATION_ENABLED", comment: "")
-            switchCell.switchControl.on = locationManager?.locationServicesEnabled ?? false
+            
+            if indexPath.row == 0 {
+                switchCell.textLabel?.text = NSLocalizedString("TOGGLE_USER_LOCATION_ENABLED", comment: "")
+                switchCell.switchControl.on = locationManager?.locationServicesEnabled ?? false
+            }
+            else {
+                switchCell.textLabel?.text = NSLocalizedString("USE_FAHRENHEIT_DEGREES", comment: "")
+                switchCell.switchControl.on = userDefaults?.useFahrenheitDegrees ?? false
+            }
+            
             switchCell.delegate = self
             cell = switchCell
         }
@@ -173,20 +181,26 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     // MARK: - SwitchTableViewCellDelegate
     
     func switchCellDidChangeSwitchValue(cell: SwitchTableViewCell) {
-        guard locationManager != nil else { return }
-        if cell.switchControl.on {
-            if !(locationManager!.requestUserAuthorizationForUsingLocationServices()) {
-                let title = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
-                let message = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
+        let indexPathOfCell = tableView!.indexPathForCell(cell)
+        if indexPathOfCell!.row == 0 {
+            guard locationManager != nil else { return }
+            if cell.switchControl.on {
+                if !(locationManager!.requestUserAuthorizationForUsingLocationServices()) {
+                    let title = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
+                    let message = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
+                    presentAlertWithTitle(title, message: message)
+                    cell.switchControl.on = false
+                }
+            }
+            else {
+                let title = NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
+                let message = NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
                 presentAlertWithTitle(title, message: message)
-                cell.switchControl.on = false
+                cell.switchControl.on = true
             }
         }
         else {
-            let title = NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
-            let message = NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
-            presentAlertWithTitle(title, message: message)
-            cell.switchControl.on = true
+            userDefaults?.useFahrenheitDegrees = cell.switchControl.on
         }
     }
     

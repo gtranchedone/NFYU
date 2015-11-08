@@ -16,13 +16,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                          responseSerializer: OpenWeatherAPIClientResponseSerializer())
     var userDefaults: UserDefaults = NSUserDefaults.standardUserDefaults()
     var locationManager: UserLocationManager = SystemUserLocationManager()
+    var currentLocale: NSLocale = NSLocale.autoupdatingCurrentLocale()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        updateRootViewController()
+        updateDefaultSettings()
+        return true
+    }
+    
+    private func updateDefaultSettings() {
+        let measurementSystem = currentLocale.objectForKey(NSLocaleMeasurementSystem) as! String
+        userDefaults.useFahrenheitDegrees = (measurementSystem == "U.S.") // this is what iOS gives us
+    }
+    
+    private func updateRootViewController() {
         let viewController = window?.rootViewController as? WeatherViewController
         viewController?.locationManager = locationManager
         viewController?.userDefaults = userDefaults
         viewController?.apiClient = apiClient
-        return true
     }
-
+    
 }

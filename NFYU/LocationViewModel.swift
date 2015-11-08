@@ -25,12 +25,23 @@ protocol LocationViewModelProtocol {
 
 class LocationViewModel: LocationViewModelProtocol {
     
+    let userDefaults: UserDefaults?
+    
+    init(userDefaults: UserDefaults?) {
+        self.userDefaults = userDefaults
+    }
+    
     func collectionViewCellForLocation(location: Location, collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
         let cellIdentifier = CellIdentifiers.ForecastCell.rawValue
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! LocationCollectionViewCell
         let forecast = location.forecasts.first
         if let forecast = forecast {
-            cell.currentTemperatureLabel.text = "\(forecast.currentTemperature)º"
+            if userDefaults?.useFahrenheitDegrees == true {
+                cell.currentTemperatureLabel.text = "\(forecast.currentTemperature.toFahrenheit())ºF"
+            }
+            else {
+                cell.currentTemperatureLabel.text = "\(forecast.currentTemperature)ºC"
+            }
         }
         else {
             cell.currentTemperatureLabel.text = "-º"

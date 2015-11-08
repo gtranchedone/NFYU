@@ -71,10 +71,10 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(2, numberOfSections)
     }
     
-    func testSettingsViewControllerHasOneRowInFirstSectionForChangingDeviceLocationUsage() {
+    func testSettingsViewControllerHasTwoRowsInFirstSectionForChangingDeviceLocationUsageAndTemperatureUnit() {
         loadViewControllerView()
         let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
-        XCTAssertEqual(1, numberOfRows)
+        XCTAssertEqual(2, numberOfRows)
     }
     
     func testSettingsViewControllerHasOneRowToAddCitiesIfUserHasNoFavouriteCities() {
@@ -90,11 +90,11 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(1, numberOfRows)
     }
     
-    func testSettingsViewControllerHasOneRowInFirstSectionForChangingDeviceLocationUsageEvenWhenUserHasSavedFavouriteLocations() {
+    func testSettingsViewControllerHasTwoRowsInFirstSectionForChangingDeviceLocationAndChangingUnitsUsageEvenWhenUserHasSavedFavouriteLocations() {
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
         let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
-        XCTAssertEqual(1, numberOfRows)
+        XCTAssertEqual(2, numberOfRows)
     }
     
     func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUserLocationUsage() {
@@ -139,9 +139,8 @@ class TestSettingsViewController: XCTestCase {
         viewController?.locationManager = FakeUserLocationManager()
         allowLocationServices()
         loadViewControllerView()
-        let tableView = viewController!.tableView
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        let cell = viewController!.tableView.cellForRowAtIndexPath(indexPath) as? SwitchTableViewCell
         cell?.switchControl.on = false
         let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
         expectationForNotification(notificationName, object: viewController) { (notification) -> Bool in
@@ -161,9 +160,8 @@ class TestSettingsViewController: XCTestCase {
         viewController?.locationManager = locationManager
         loadViewControllerView()
         disallowLocationServices()
-        let tableView = viewController!.tableView
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        let cell = viewController!.tableView.cellForRowAtIndexPath(indexPath) as? SwitchTableViewCell
         cell?.switchControl.on = true
         let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
         expectationForNotification(notificationName, object: viewController) { (notification) -> Bool in
@@ -182,9 +180,8 @@ class TestSettingsViewController: XCTestCase {
         locationManager.stubDidRequestPermissions = true
         viewController?.locationManager = locationManager
         loadViewControllerView()
-        let tableView = viewController!.tableView
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        let cell = viewController!.tableView.cellForRowAtIndexPath(indexPath) as? SwitchTableViewCell
         cell?.switchControl.on = true
         cell?.switchControl.sendActionsForControlEvents(.ValueChanged)
         XCTAssertTrue(locationManager.didRequestPermissions)
@@ -228,6 +225,54 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertEqual(UITableViewCellSelectionStyle.None, cell2.selectionStyle)
         XCTAssertEqual(UITableViewCellAccessoryType.None, cell2.accessoryType)
         XCTAssertEqual("San Francisco, CA", cell2.textLabel?.text)
+    }
+    
+    func testSettingsViewControllerDisplaysRowForChangingDefaultTemperatureUnit() {
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertTrue(cell!.switchControl.isKindOfClass(UISwitch.self))
+        XCTAssertEqual(UITableViewCellSelectionStyle.None, cell!.selectionStyle)
+        XCTAssertEqual(NSLocalizedString("USE_FAHRENHEIT_DEGREES", comment: ""), cell?.textLabel?.text)
+    }
+    
+    func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUseOfFahrenheitDegreesWithSwitchOffBasedOnUserDefaults() {
+        viewController?.userDefaults?.useFahrenheitDegrees = false
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertFalse(cell!.switchControl.on)
+    }
+    
+    func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUseOfFahrenheitDegreesWithSwitchOnBasedOnUserDefaults() {
+        viewController?.userDefaults?.useFahrenheitDegrees = true
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertTrue(cell!.switchControl.on)
+    }
+    
+    func testSettingsViewControllerSavesUserSettingsWhenUserDecidesToUseFahrenheitDegrees() {
+        viewController?.userDefaults?.useFahrenheitDegrees = false
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let cell = viewController!.tableView.cellForRowAtIndexPath(indexPath) as? SwitchTableViewCell
+        cell!.switchControl.on = true
+        cell!.switchControl.sendActionsForControlEvents(.ValueChanged)
+        XCTAssertTrue(viewController!.userDefaults!.useFahrenheitDegrees)
+    }
+    
+    func testSettingsViewControllerSavesUserSettingsWhenUserDecidesNotToUseFahrenheitDegrees() {
+        viewController?.userDefaults?.useFahrenheitDegrees = true
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let cell = viewController!.tableView.cellForRowAtIndexPath(indexPath) as? SwitchTableViewCell
+        cell!.switchControl.on = false
+        cell!.switchControl.sendActionsForControlEvents(.ValueChanged)
+        XCTAssertFalse(viewController!.userDefaults!.useFahrenheitDegrees)
     }
     
     // MARK: - UITableViewDelegate

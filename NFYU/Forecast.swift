@@ -25,9 +25,26 @@ enum WeatherCondition: String {
     // TODO: add method to get icon
 }
 
-struct Forecast: Equatable, CustomStringConvertible {
+typealias CelsiusDegrees = Int
+typealias FahrenheitDegrees = Int
+
+extension CelsiusDegrees {
     
-    typealias CelsiusDegrees = Int
+    func toFahrenheit() -> FahrenheitDegrees {
+        return FahrenheitDegrees(round((Double(self) * (9.0 / 5.0)) + 32))
+    }
+    
+}
+
+//extension FahrenheitDegrees {
+//    
+//    func toCelsius() -> CelsiusDegrees {
+//        return CelsiusDegrees(round(Double(self - 32) * (5.0 / 9.0)))
+//    }
+//    
+//}
+
+struct Forecast: Equatable, CustomStringConvertible {
     
     let date: NSDate
     let cityID: String

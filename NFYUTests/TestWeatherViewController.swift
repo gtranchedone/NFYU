@@ -583,7 +583,22 @@ class TestWeatherViewController: XCTestCase {
         let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
-        XCTAssertEqual("16º", cell?.currentTemperatureLabel.text)
+        XCTAssertEqual("16ºC", cell?.currentTemperatureLabel.text)
+    }
+    
+    func testViewControllerDisplaysForecastInformationWhenAvailableUsingFahrenheitDegreesIfNeeded() {
+        viewController?.userDefaults?.useFahrenheitDegrees = true
+        viewController?.apiClient = nil
+        disallowLocationServices()
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        addStubForecastsToCities()
+        viewController?.collectionView.reloadData()
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        XCTAssertEqual("London", cell?.locationNameLabel.text)
+        XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
+        XCTAssertEqual("61ºF", cell?.currentTemperatureLabel.text)
     }
     
     func testViewControllerDisplaysTemplateForecastWhileLoadingUserLocation() {

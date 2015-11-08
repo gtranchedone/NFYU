@@ -62,6 +62,22 @@ class TestAppDelegate: XCTestCase {
         XCTAssert(appDelegate?.apiClient === viewController!.apiClient)
     }
     
+    func testAppDelegateHasAnAutoupdatingLocale() {
+        XCTAssertEqual(appDelegate?.currentLocale, NSLocale.autoupdatingCurrentLocale())
+    }
+    
+    func testAppDelegateSetsPreferenceForUsingCelsiusDegreesDependingOnCurrentLocale() {
+        appDelegate?.currentLocale = NSLocale(localeIdentifier: "en_US")
+        appDelegate?.application(UIApplication.sharedApplication(), didFinishLaunchingWithOptions: nil)
+        XCTAssertTrue(appDelegate!.userDefaults.useFahrenheitDegrees)
+    }
+    
+    func testAppDelegateSetsPreferenceForUsingFahrenheitDegreesDependingOnCurrentLocale() {
+        appDelegate?.currentLocale = NSLocale(localeIdentifier: "en_GB")
+        appDelegate?.application(UIApplication.sharedApplication(), didFinishLaunchingWithOptions: nil)
+        XCTAssertFalse(appDelegate!.userDefaults.useFahrenheitDegrees)
+    }
+    
     // MARK: Private
 
     func setUpAppDelegate(appDelegate: AppDelegate) {

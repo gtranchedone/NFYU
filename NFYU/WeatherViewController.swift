@@ -206,7 +206,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let location = locations[indexPath.item]
-        return LocationViewModel().collectionViewCellForLocation(location, collectionView: collectionView, indexPath: indexPath)
+        let viewModel = LocationViewModel(userDefaults: userDefaults)
+        return viewModel.collectionViewCellForLocation(location, collectionView: collectionView, indexPath: indexPath)
     }
     
     // MARK: UICollectionViewDelegateFlowLayout
