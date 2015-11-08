@@ -218,10 +218,10 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerPresentsSettingScreenWhenSelectCitiesButtonIsPressed() {
         loadViewControllerView()
-        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptSegue
+        let notificationName = TestExtensionNotifications.DidAttemptSegue
         expectationForNotification(notificationName, object: viewController) { [weak self] (notification) -> Bool in
-            let segueIdentifier = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as! String
-            let sender = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueSender]
+            let segueIdentifier = notification.userInfo![TestExtensionNotificationsKeys.SegueIdentifier] as! String
+            let sender = notification.userInfo![TestExtensionNotificationsKeys.SegueSender]
             return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings.rawValue && sender === self?.viewController?.initialSetupView
         }
         viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
@@ -244,8 +244,17 @@ class TestWeatherViewController: XCTestCase {
         let settingsViewController = SettingsViewController()
         let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
         let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
+        viewController?.prepareForSegue(segue, sender: viewController)
+        XCTAssertTrue(settingsViewController.delegate === viewController)
+    }
+    
+    func testViewControllerPassesLocationManagerToSettingsViewControllerWhenPresentingItViaSegue() {
+        let segueIdentifier = WeatherViewController.SegueIdentifiers.Settings.rawValue
+        let settingsViewController = SettingsViewController()
+        let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
+        let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
         viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
-        XCTAssertTrue(settingsViewController.userDefaults === viewController?.userDefaults)
+        XCTAssertTrue(settingsViewController.locationManager === viewController?.locationManager)
     }
     
     func testViewControllerDoesNotHideInitialSetupViewWhenSettingsViewControllerIsDoneAndHasNoCitiesAndUserLocationIsDisabled() {
@@ -336,7 +345,7 @@ class TestWeatherViewController: XCTestCase {
         let locationManager = viewController!.locationManager as! FakeUserLocationManager
         locationManager.allowUseOfLocationServices = false
         loadViewControllerView()
-        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
+        let notificationName = TestExtensionNotifications.DidAttemptDismissingViewController
         let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertFalse(observer.didReceiveNotification)
@@ -344,7 +353,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerDismissesSettingsViewControllerWhenDoneIfHasCurrentLocation() {
         loadViewControllerView()
-        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
+        let notificationName = TestExtensionNotifications.DidAttemptDismissingViewController
         let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(observer.didReceiveNotification)
@@ -352,7 +361,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerDismissesSettingsViewControllerWhenDoneIfHasAtLeastOneLocation() {
         loadViewControllerView()
-        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptDismissingViewController
+        let notificationName = TestExtensionNotifications.DidAttemptDismissingViewController
         let observer = MockNotificationObserver(notificationName: notificationName, sender: viewController)
         viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
@@ -361,8 +370,8 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerPerformsSegueToSettingsScreenWhenUserTapsSettingsButton() {
         loadViewControllerView()
-        expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
-            let segueIdentifier = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as! String
+        expectationForNotification(TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
+            let segueIdentifier = notification.userInfo![TestExtensionNotificationsKeys.SegueIdentifier] as! String
             return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings.rawValue
         }
         viewController!.settingsButton.sendActionsForControlEvents(.TouchUpInside)

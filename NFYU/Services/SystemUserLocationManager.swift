@@ -29,8 +29,10 @@ class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManage
         }
     }
     
-    func requestUserAuthorizationForUsingLocationServices() {
+    func requestUserAuthorizationForUsingLocationServices() -> Bool {
+        guard authorizationStatus() == .NotDetermined else { return false }
         locationManager.requestWhenInUseAuthorization()
+        return true
     }
 
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {

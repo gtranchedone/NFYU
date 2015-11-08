@@ -64,37 +64,145 @@ class TestSettingsViewController: XCTestCase {
     // MARK: - UITableViewDelegate
     // MARK: Cities Display Logic
     
-    func testSettingsViewControllerAlwaysHasOneSectionInTableViewToBeAbleToAddCities() {
+    func testSettingsViewControllerAlwaysHasTwoSectionsInTableViewToBeAbleToAddCitiesAndSelectOtherSettings() {
+        // section 1 will be dedicated to user settings and section 2 to the favourite cities
         loadViewControllerView()
         let numberOfSections = viewController!.numberOfSectionsInTableView(viewController!.tableView)
-        XCTAssertEqual(1, numberOfSections)
+        XCTAssertEqual(2, numberOfSections)
+    }
+    
+    func testSettingsViewControllerHasOneRowInFirstSectionForChangingDeviceLocationUsage() {
+        loadViewControllerView()
+        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
+        XCTAssertEqual(1, numberOfRows)
     }
     
     func testSettingsViewControllerHasOneRowToAddCitiesIfUserHasNoFavouriteCities() {
         loadViewControllerView()
+        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 1)
+        XCTAssertEqual(1, numberOfRows)
+    }
+    
+    func testSettingsViewControllerHasOneRowToAddCitiesIfUserHasNoFavouriteCitiesAndNoUserDefaults() {
+        viewController?.userDefaults = nil
+        loadViewControllerView()
+        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 1)
+        XCTAssertEqual(1, numberOfRows)
+    }
+    
+    func testSettingsViewControllerHasOneRowInFirstSectionForChangingDeviceLocationUsageEvenWhenUserHasSavedFavouriteLocations() {
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
         let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
         XCTAssertEqual(1, numberOfRows)
     }
     
-    func testSettingsViewControllerHasOneRowToAddCitiesIfUserHasNoFavouriteCities2() {
-        viewController?.userDefaults = nil
+    func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUserLocationUsage() {
         loadViewControllerView()
-        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
-        XCTAssertEqual(1, numberOfRows)
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertTrue(cell!.accessoryView!.isKindOfClass(UISwitch.self))
+        XCTAssertEqual(UITableViewCellSelectionStyle.None, cell!.selectionStyle)
+        XCTAssertEqual(NSLocalizedString("TOGGLE_USER_LOCATION_ENABLED", comment: ""), cell?.textLabel?.text)
+    }
+    
+    func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUserLocationUsageWithSwitchOnIfLocationServicesAreEnabled() {
+        viewController?.locationManager = FakeUserLocationManager()
+        allowLocationServices()
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertTrue(cell!.switchControl.on)
+    }
+    
+    func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUserLocationUsageWithSwitchOffIfLocationServicesAreDisabled() {
+        viewController?.locationManager = FakeUserLocationManager()
+        disallowLocationServices()
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertFalse(cell!.switchControl.on)
+    }
+    
+    func testSettingsViewControllerDisplaysRowForEnablingOrDisablingUserLocationUsageWithSwitchOffIfLocationManagerIsNil() {
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        XCTAssertFalse(cell!.switchControl.on)
+    }
+    
+    func testSettingsViewControllerShowsAlertWithInstructionsOnHowToDisableUserLocationIfUserTriesToSwitchOffLocationServices() {
+        viewController?.locationManager = FakeUserLocationManager()
+        allowLocationServices()
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        cell?.switchControl.on = false
+        let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
+        expectationForNotification(notificationName, object: viewController) { (notification) -> Bool in
+            let controllerKey = TestExtensionNotificationsKeys.PresentedViewController
+            let alert = notification.userInfo?[controllerKey] as? UIAlertController
+            let didShowExpectedTitle = alert?.title == NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
+            let didShowExpectedMessage = alert?.message == NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
+            return didShowExpectedTitle && didShowExpectedMessage
+        }
+        cell?.switchControl.sendActionsForControlEvents(.ValueChanged)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSettingsViewControllerShowsAlertWithInstructionsOnHowToEnableUserLocationIfUserTriesToSwitchOnLocationServicesAfterTheyHaveBeenDisabled() {
+        let locationManager = FakeUserLocationManager()
+        locationManager.stubDidRequestPermissions = false
+        viewController?.locationManager = locationManager
+        loadViewControllerView()
+        disallowLocationServices()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        cell?.switchControl.on = true
+        let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
+        expectationForNotification(notificationName, object: viewController) { (notification) -> Bool in
+            let controllerKey = TestExtensionNotificationsKeys.PresentedViewController
+            let alert = notification.userInfo?[controllerKey] as? UIAlertController
+            let didShowExpectedTitle = alert?.title == NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
+            let didShowExpectedMessage = alert?.message == NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
+            return didShowExpectedTitle && didShowExpectedMessage
+        }
+        cell?.switchControl.sendActionsForControlEvents(.ValueChanged)
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSettingsViewControllerAsksForLocationUsagePermissionsIfUserWasNotPromptedForItYet() {
+        let locationManager = FakeUserLocationManager()
+        locationManager.stubDidRequestPermissions = true
+        viewController?.locationManager = locationManager
+        loadViewControllerView()
+        let tableView = viewController!.tableView
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
+        cell?.switchControl.on = true
+        cell?.switchControl.sendActionsForControlEvents(.ValueChanged)
+        XCTAssertTrue(locationManager.didRequestPermissions)
     }
     
     func testSettingsViewControllerHasOneRowForEachFavouriteLocationPlusOneForAddingNewCities() {
-        loadViewControllerView()
         insertStubCitiesInUserDefaults()
-        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 0)
+        loadViewControllerView()
+        let numberOfRows = viewController!.tableView(viewController!.tableView!, numberOfRowsInSection: 1)
         XCTAssertEqual(3, numberOfRows)
     }
     
     func testSettingsViewControllerDisplaysTheRightRowForAddingCitiesWhenNoOtherLocationIsPresent() {
         loadViewControllerView()
         let tableView = viewController!.tableView
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let indexPath = NSIndexPath(forRow: 0, inSection: 1)
         let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        XCTAssertEqual(UITableViewCellSelectionStyle.Default, cell.selectionStyle)
         XCTAssertEqual(UITableViewCellAccessoryType.DisclosureIndicator, cell.accessoryType)
         XCTAssertEqual(NSLocalizedString("ADD_CITY_CELL_TITLE", comment: ""), cell.textLabel?.text)
     }
@@ -103,19 +211,19 @@ class TestSettingsViewController: XCTestCase {
         loadViewControllerView()
         insertStubCitiesInUserDefaults()
         let tableView = viewController!.tableView
-        let indexPath0 = NSIndexPath(forRow: 0, inSection: 0)
+        let indexPath0 = NSIndexPath(forRow: 0, inSection: 1)
         let cell0 = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath0)
         XCTAssertEqual(UITableViewCellAccessoryType.DisclosureIndicator, cell0.accessoryType)
         XCTAssertEqual(NSLocalizedString("ADD_CITY_CELL_TITLE", comment: ""), cell0.textLabel?.text)
         XCTAssertEqual(UITableViewCellSelectionStyle.Default, cell0.selectionStyle)
         
-        let indexPath1 = NSIndexPath(forRow: 1, inSection: 0)
+        let indexPath1 = NSIndexPath(forRow: 1, inSection: 1)
         let cell1 = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath1)
         XCTAssertEqual(UITableViewCellSelectionStyle.None, cell1.selectionStyle)
         XCTAssertEqual(UITableViewCellAccessoryType.None, cell1.accessoryType)
         XCTAssertEqual("London, UK", cell1.textLabel?.text)
         
-        let indexPath2 = NSIndexPath(forRow: 2, inSection: 0)
+        let indexPath2 = NSIndexPath(forRow: 2, inSection: 1)
         let cell2 = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath2)
         XCTAssertEqual(UITableViewCellSelectionStyle.None, cell2.selectionStyle)
         XCTAssertEqual(UITableViewCellAccessoryType.None, cell2.accessoryType)
@@ -131,24 +239,36 @@ class TestSettingsViewController: XCTestCase {
     }
     
     func testSettingsViewControllerAllowsDeletionOfLocationRows() {
-        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let indexPath = NSIndexPath(forRow: 1, inSection: 1)
         let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
         XCTAssertTrue(canDeleteRow)
     }
     
-    func testSettingsViewControllerDoesNotAllowDeletionOfAddLocationRow() {
+    func testSettingsViewControllerDoesNotAllowDeletionOfFirstSection() {
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
         XCTAssertFalse(canDeleteRow)
     }
     
+    func testSettingsViewControllerDoesNotAllowDeletionOfAddLocationRow() {
+        let indexPath = NSIndexPath(forRow: 0, inSection: 1)
+        let canDeleteRow = viewController!.tableView(viewController!.tableView, canEditRowAtIndexPath: indexPath)
+        XCTAssertFalse(canDeleteRow)
+    }
+    
     func testSettingsViewControllerDisplaysEditStyleForDeletingCitiesWhileEditing() {
-        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let indexPath = NSIndexPath(forRow: 1, inSection: 1)
         let editingStyle = viewController!.tableView(viewController!.tableView, editingStyleForRowAtIndexPath: indexPath)
         XCTAssertEqual(UITableViewCellEditingStyle.Delete, editingStyle)
     }
     
     func testSettingsViewControllerDisplaysNoEditStyleForAddingCitiesWhileEditing() {
+        let indexPath = NSIndexPath(forRow: 0, inSection: 1)
+        let editingStyle = viewController!.tableView(viewController!.tableView, editingStyleForRowAtIndexPath: indexPath)
+        XCTAssertEqual(UITableViewCellEditingStyle.None, editingStyle)
+    }
+    
+    func testSettingsViewControllerDisplaysNoEditStyleForFirstSection() {
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         let editingStyle = viewController!.tableView(viewController!.tableView, editingStyleForRowAtIndexPath: indexPath)
         XCTAssertEqual(UITableViewCellEditingStyle.None, editingStyle)
@@ -157,7 +277,7 @@ class TestSettingsViewController: XCTestCase {
     func testSettingsViewControllerDeletesCitiesFromUserDefaultsWhenUserDeletesRow() {
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
-        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let indexPath = NSIndexPath(forRow: 1, inSection: 1)
         viewController!.tableView.reloadData()
         viewController!.tableView(viewController!.tableView, commitEditingStyle: .Delete, forRowAtIndexPath: indexPath)
         XCTAssertEqual(1, viewController!.userDefaults!.favouriteLocations.count)
@@ -168,28 +288,36 @@ class TestSettingsViewController: XCTestCase {
         loadViewControllerView()
         let fakeTableView = FakeTableView()
         viewController?.tableView = fakeTableView
-        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let indexPath = NSIndexPath(forRow: 1, inSection: 1)
         viewController!.tableView(viewController!.tableView, commitEditingStyle: .Delete, forRowAtIndexPath: indexPath)
         XCTAssertEqual([indexPath], fakeTableView.deletedIndexPaths)
     }
     
     // MARK: Cities Addition
     
+    func testSettingsViewControllerDoesNotPresentLocationSearchViewControllerWhenUserTapsOnFirstSectionRows() {
+        let observer = MockNotificationObserver(notificationName: TestExtensionNotifications.DidAttemptSegue, sender: viewController)
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
+        XCTAssertFalse(observer.didReceiveNotification)
+    }
+    
     func testSettingsViewControllerPresentsLocationSearchViewControllerWhenUserTapsOnAddLocationRow() {
         loadViewControllerView()
-        expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
-            let identifier = notification.userInfo?[BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as? String
+        expectationForNotification(TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
+            let identifier = notification.userInfo?[TestExtensionNotificationsKeys.SegueIdentifier] as? String
             return identifier == SettingsViewController.Segues.AddLocationSegue.rawValue
         }
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let indexPath = NSIndexPath(forRow: 0, inSection: 1)
         viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
     func testSettingsViewControllerDoesNotPresentLocationSearchViewControllerWhenUserTapsOnLocationRow() {
         loadViewControllerView()
-        let observer = MockNotificationObserver(notificationName: BaseViewController.TestExtensionNotifications.DidAttemptSegue, sender: viewController)
-        let indexPath = NSIndexPath(forRow: 1, inSection: 0)
+        let observer = MockNotificationObserver(notificationName: TestExtensionNotifications.DidAttemptSegue, sender: viewController)
+        let indexPath = NSIndexPath(forRow: 1, inSection: 1)
         viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: indexPath)
         XCTAssertFalse(observer.didReceiveNotification)
     }
@@ -197,7 +325,7 @@ class TestSettingsViewController: XCTestCase {
     func testSettingsViewControllerSetsItselfAsLocationSearchViewControllerDelegateWhenPresentingIt() {
         let citySearchViewController = CitySearchViewController()
         let segue = UIStoryboardSegue(identifier: SettingsViewController.Segues.AddLocationSegue.rawValue, source: viewController!, destination: citySearchViewController)
-        viewController?.prepareForSegue(segue, sender: NSIndexPath(forRow: 0, inSection: 0))
+        viewController?.prepareForSegue(segue, sender: NSIndexPath(forRow: 0, inSection: 1))
         XCTAssertTrue(viewController === citySearchViewController.delegate)
     }
     
@@ -231,7 +359,7 @@ class TestSettingsViewController: XCTestCase {
         let citySearchViewController = CitySearchViewController()
         let newLocation = Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")
         viewController?.citySearchViewController(citySearchViewController, didFinishWithLocation: newLocation)
-        XCTAssertEqual([NSIndexPath(forRow: 1, inSection: 0)], fakeTableView.insertedIndexPaths)
+        XCTAssertEqual([NSIndexPath(forRow: 1, inSection: 1)], fakeTableView.insertedIndexPaths)
     }
     
     // MARK: - Editing State
@@ -251,12 +379,12 @@ class TestSettingsViewController: XCTestCase {
     
     func testSettingsViewControllerDoesNotAllowSortingAddCityRow() {
         loadViewControllerView()
-        XCTAssertFalse(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0)))
+        XCTAssertFalse(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 1)))
     }
     
     func testSettingsViewControllerAllowsSortingCities() {
         loadViewControllerView()
-        XCTAssertTrue(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 1, inSection: 0)))
+        XCTAssertTrue(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 1, inSection: 1)))
     }
     
     func testSettingsViewControllerCanActuallySortCities() {
@@ -358,9 +486,19 @@ class TestSettingsViewController: XCTestCase {
     }
     
     private func moveLocationFromIndex(fromIndex: Int, toIndex: Int) {
-        let toIndexPath = NSIndexPath(forRow: toIndex, inSection: 0)
-        let fromIndexPath = NSIndexPath(forRow: fromIndex, inSection: 0)
+        let toIndexPath = NSIndexPath(forRow: toIndex, inSection: 1)
+        let fromIndexPath = NSIndexPath(forRow: fromIndex, inSection: 1)
         viewController?.tableView(viewController!.tableView, moveRowAtIndexPath: fromIndexPath, toIndexPath: toIndexPath)
+    }
+    
+    private func allowLocationServices() {
+        let locationManager = viewController?.locationManager as? FakeUserLocationManager
+        locationManager?.allowUseOfLocationServices = true
+    }
+    
+    private func disallowLocationServices() {
+        let locationManager = viewController?.locationManager as? FakeUserLocationManager
+        locationManager?.allowUseOfLocationServices = false
     }
 
 }

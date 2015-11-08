@@ -6,6 +6,10 @@
   Copyright © 2015 Gianluca Tranchedone. All rights reserved.
 */
 
+/* General */
+
+"ALERT_BUTTON_DISMISS" = "Dismiss";
+
 /* WeatherViewController */
 
 "USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED" = "This app cannot use your location because you didn't authorize it's use. You can change this in the Settings app.";
@@ -15,6 +19,13 @@
 
 "SETTINGS_TITLE" = "Settings";
 "ADD_CITY_CELL_TITLE" = "Add city";
+"TOGGLE_USER_LOCATION_ENABLED" = "Current location";
+
+"INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE" = "Warning";
+"INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE" = "This app cannot access your location but you can change this in the Settings app. Please go to Settings -> Privacy -> Location -> NFYU to do so";
+
+"INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE" = "Warning";
+"INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE" = "You can change access settings to your location in the Settings app. To do so, go to Settings -> Privacy -> Location -> NFYU";
 
 /* CitySearchViewController */
 

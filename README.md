@@ -10,7 +10,7 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
  extensible to any other service. To do that, you can create and use
  a new class comforming to the WeatherDataSource protocol.
 
-## Installation
+## Project Setup
 
 This project comes with a shared OpenWeatherMap API Key stored in the
 Xcode's NFYU configuration as environment varialble. You can use this
@@ -21,15 +21,16 @@ API Key but it would be best if you changed it to your own.
 - [x] ~~Create setup screen for using user location~~
 - [x] ~~Make main screen have a way to display settings
  for adding / remoing cities~~
+- [x] ~~Allow user to sort favourite locations~~
 - [x] ~~Add favourite cities input in setup screen~~
 - [x] ~~Fetch weather data from OpenWeatherMap APIs~~
-- [ ] Fill the UI with the forecast data
+- [x] ~~Display current forecast data on screen~~
 - [ ] Add support for C and F temperature units
+- [ ] Add hourly forecast
 
 -- After MVP --
 
 - [ ] Expand UI and APIs usage as needed for 5 days forecast
 - [ ] Cache weather data for offline use (last update date must be clear)
-- [ ] Add API localization support
 - [ ] Use Google Places API instand of CLGeocoder for more results?
 

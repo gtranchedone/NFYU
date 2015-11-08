@@ -16,18 +16,22 @@ protocol SettingsViewControllerDelegate: AnyObject {
 
 // TODO: add switch for enabling user location usage
 
-class SettingsViewController: BaseTableViewController, CitySearchViewControllerDelegate {
+let kSectionForUserSettings = 0
+
+class SettingsViewController: BaseTableViewController, CitySearchViewControllerDelegate, SwitchTableViewCellDelegate {
     
     enum Segues: String {
         case AddLocationSegue = "AddCitySegue"
     }
     
     enum CellIdentifiers: String {
+        case SwitchCell = "SwitchCell"
         case AddCityCell = "AddCityCell"
         case SimpleCityCell = "SimpleCityCell"
     }
     
     var delegate: SettingsViewControllerDelegate?
+    var locationManager: UserLocationManager?
     var userDefaults: UserDefaults?
     
     // MARK: - View Lifecycle
@@ -51,37 +55,54 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     // MARK: - UITableViewDataSource
     
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2
+    }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == kSectionForUserSettings {
+            return 1
+        }
         let numberOfLocations = (userDefaults?.favouriteLocations.count ?? 0)
         return numberOfLocations + 1
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell: UITableViewCell
         let cellIdentifier: String
         let rowTitle: String
-        if isAddCityIndexPath(indexPath) {
-            cellIdentifier = CellIdentifiers.AddCityCell.rawValue
-            rowTitle = NSLocalizedString("ADD_CITY_CELL_TITLE", comment: "")
+        if indexPath.section == kSectionForUserSettings {
+            cellIdentifier = CellIdentifiers.SwitchCell.rawValue
+            let switchCell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! SwitchTableViewCell
+            switchCell.textLabel?.text = NSLocalizedString("TOGGLE_USER_LOCATION_ENABLED", comment: "")
+            switchCell.switchControl.on = locationManager?.locationServicesEnabled ?? false
+            switchCell.delegate = self
+            cell = switchCell
         }
         else {
-            cellIdentifier = CellIdentifiers.SimpleCityCell.rawValue
-            let city = locationAtIndexPath(indexPath)
-            rowTitle = city.displayableName
+            if isAddCityIndexPath(indexPath) {
+                cellIdentifier = CellIdentifiers.AddCityCell.rawValue
+                rowTitle = NSLocalizedString("ADD_CITY_CELL_TITLE", comment: "")
+            }
+            else {
+                cellIdentifier = CellIdentifiers.SimpleCityCell.rawValue
+                let city = locationAtIndexPath(indexPath)
+                rowTitle = city.displayableName
+            }
+            cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
+            cell.textLabel?.text = rowTitle
         }
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        cell.textLabel?.text = rowTitle
         return cell
     }
     
     // MARK: - UITableViewDelegate
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return !isAddCityIndexPath(indexPath)
+        return !isAddCityIndexPath(indexPath) && indexPath.section != kSectionForUserSettings
     }
     
     override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return isAddCityIndexPath(indexPath) ? .None : .Delete
+        return self.tableView(tableView, canEditRowAtIndexPath:indexPath) ? .Delete : .None
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -133,11 +154,31 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
                 var newLocations = userDefaults.favouriteLocations
                 newLocations.append(location)
                 userDefaults.favouriteLocations = newLocations
-                let newIndexPath = NSIndexPath(forRow: userDefaults.favouriteLocations.count, inSection: 0)
+                let newIndexPath = NSIndexPath(forRow: userDefaults.favouriteLocations.count, inSection: 1)
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
             }
         }
         navigationController?.popViewControllerAnimated(true)
+    }
+    
+    // MARK: - SwitchTableViewCellDelegate
+    
+    func switchCellDidChangeSwitchValue(cell: SwitchTableViewCell) {
+        guard locationManager != nil else { return }
+        if cell.switchControl.on {
+            if !(locationManager!.requestUserAuthorizationForUsingLocationServices()) {
+                let title = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
+                let message = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
+                presentAlertWithTitle(title, message: message)
+                cell.switchControl.on = false
+            }
+        }
+        else {
+            let title = NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
+            let message = NSLocalizedString("INSTRUCTIONS_FOR_DISABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
+            presentAlertWithTitle(title, message: message)
+            cell.switchControl.on = true
+        }
     }
     
     // MARK: - Other
@@ -147,12 +188,18 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     }
     
     func isAddCityIndexPath(indexPath: NSIndexPath) -> Bool {
-        return indexPath.row == 0
+        return indexPath.row == 0 && indexPath.section != kSectionForUserSettings
     }
     
-    func locationAtIndexPath(indexPath: NSIndexPath) -> Location {
+    private func locationAtIndexPath(indexPath: NSIndexPath) -> Location {
         let locations = userDefaults!.favouriteLocations
         return locations[indexPath.row - 1]
+    }
+    
+    private func presentAlertWithTitle(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DISMISS", comment: ""), style: .Cancel, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
     
 }

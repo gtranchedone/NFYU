@@ -9,17 +9,19 @@
 import UIKit
 @testable import NFYU
 
+struct TestExtensionNotifications {
+    static let DidAttemptSegue = "TestExtensionNotificationsDidAttemptSegue"
+    static let DidAttemptPresentingViewController = "TestExtensionNotificationsDidAttemptPresentingViewController"
+    static let DidAttemptDismissingViewController = "TestExtensionNotificationsDidAttemptDismissingViewController"
+}
+
+struct TestExtensionNotificationsKeys {
+    static let SegueSender = "TestExtensionNotificationsKeysSegueSender"
+    static let SegueIdentifier = "TestExtensionNotificationsKeysSegueIdentifier"
+    static let PresentedViewController = "TestExtensionNotificationsKeysPresentedViewController"
+}
+
 extension BaseViewController {
-    
-    struct TestExtensionNotifications {
-        static let DidAttemptSegue = "TestExtensionNotificationsDidAttemptSegue"
-        static let DidAttemptDismissingViewController = "TestExtensionNotificationsDidAttemptDismissingViewController"
-    }
-    
-    struct TestExtensionNotificationsKeys {
-        static let SegueIdentifier = "TestExtensionNotificationsKeysSegueIdentifier"
-        static let SegueSender = "TestExtensionNotificationsKeysSegueSender"
-    }
     
     override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
         var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
@@ -31,6 +33,12 @@ extension BaseViewController {
     
     override func dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?) {
         NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptDismissingViewController, object: self)
+    }
+    
+    override func presentViewController(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
+        let userInfo: [String : UIViewController] = [TestExtensionNotificationsKeys.PresentedViewController: viewControllerToPresent]
+        let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
+        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: self, userInfo: userInfo)
     }
     
 }
@@ -39,16 +47,6 @@ extension BaseViewController {
 
 extension BaseTableViewController {
     
-    struct TestExtensionNotifications {
-        static let DidAttemptSegue = "TestExtensionNotificationsDidAttemptSegue"
-        static let DidAttemptDismissingViewController = "TestExtensionNotificationsDidAttemptDismissingViewController"
-    }
-    
-    struct TestExtensionNotificationsKeys {
-        static let SegueIdentifier = "TestExtensionNotificationsKeysSegueIdentifier"
-        static let SegueSender = "TestExtensionNotificationsKeysSegueSender"
-    }
-    
     override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
         var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
         if let sender = sender {
@@ -59,6 +57,12 @@ extension BaseTableViewController {
     
     override func dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?) {
         NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptDismissingViewController, object: self)
+    }
+    
+    override func presentViewController(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
+        let userInfo: [String : UIViewController] = [TestExtensionNotificationsKeys.PresentedViewController: viewControllerToPresent]
+        let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
+        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: self, userInfo: userInfo)
     }
     
 }

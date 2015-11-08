@@ -226,6 +226,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         if segue.identifier == SegueIdentifiers.Settings.rawValue {
             let destinationViewController = segue.destinationViewController as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
+            settingsViewController?.locationManager = locationManager
             settingsViewController?.userDefaults = userDefaults
             settingsViewController?.delegate = self
         }

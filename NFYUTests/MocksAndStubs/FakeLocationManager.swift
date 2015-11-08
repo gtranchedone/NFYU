@@ -17,6 +17,7 @@ class FakeUserLocationManager: UserLocationManager {
     
     var allowUseOfLocationServices = true
     var shouldCallCompletionBlock = true
+    var stubDidRequestPermissions = true
     var stubLocation: CLLocation?
     var stubError: NSError?
     
@@ -24,8 +25,9 @@ class FakeUserLocationManager: UserLocationManager {
         get { return allowUseOfLocationServices }
     }
     
-    func requestUserAuthorizationForUsingLocationServices() {
-        didRequestPermissions = true
+    func requestUserAuthorizationForUsingLocationServices() -> Bool {
+        didRequestPermissions = stubDidRequestPermissions
+        return stubDidRequestPermissions
     }
     
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {
