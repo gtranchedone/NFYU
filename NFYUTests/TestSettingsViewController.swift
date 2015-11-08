@@ -382,6 +382,33 @@ class TestSettingsViewController: XCTestCase {
         XCTAssertFalse(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 1)))
     }
     
+    func testSettingsViewControllerDoesNotAllowMovingLocationRowsToBeInPlaceOfAddCityRow() {
+        loadViewControllerView()
+        let fromIndexPath = NSIndexPath(forItem: 1, inSection: 1)
+        let indexPathOfAddLocation = NSIndexPath(forItem: 0, inSection: 1)
+        let targetIndexPath = viewController!.tableView(viewController!.tableView, targetIndexPathForMoveFromRowAtIndexPath: fromIndexPath, toProposedIndexPath: indexPathOfAddLocation)
+        let expectedTargetIndexPath = fromIndexPath
+        XCTAssertEqual(expectedTargetIndexPath, targetIndexPath)
+    }
+    
+    func testSettingsViewControllerAllowsMovingLocationRowsToBeSomewhereInPlaceOfAddCityRow() {
+        loadViewControllerView()
+        let fromIndexPath = NSIndexPath(forItem: 1, inSection: 1)
+        let proposedIndexPath = NSIndexPath(forItem: 2, inSection: 1)
+        let targetIndexPath = viewController!.tableView(viewController!.tableView, targetIndexPathForMoveFromRowAtIndexPath: fromIndexPath, toProposedIndexPath: proposedIndexPath)
+        let expectedTargetIndexPath = proposedIndexPath
+        XCTAssertEqual(expectedTargetIndexPath, targetIndexPath)
+    }
+    
+    func testSettingsViewControllerDoesNotAllowMovingLocationRowsToBeInPlaceOfAddCityRow2() {
+        loadViewControllerView()
+        let fromIndexPath = NSIndexPath(forItem: 2, inSection: 1)
+        let indexPathOfAddLocation = NSIndexPath(forItem: 0, inSection: 1)
+        let targetIndexPath = viewController!.tableView(viewController!.tableView, targetIndexPathForMoveFromRowAtIndexPath: fromIndexPath, toProposedIndexPath: indexPathOfAddLocation)
+        let expectedTargetIndexPath = fromIndexPath
+        XCTAssertEqual(expectedTargetIndexPath, targetIndexPath)
+    }
+    
     func testSettingsViewControllerAllowsSortingCities() {
         loadViewControllerView()
         XCTAssertTrue(viewController!.tableView(viewController!.tableView, canMoveRowAtIndexPath: NSIndexPath(forRow: 1, inSection: 1)))

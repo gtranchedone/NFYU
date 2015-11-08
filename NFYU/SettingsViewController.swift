@@ -24,6 +24,11 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
         case AddLocationSegue = "AddCitySegue"
     }
     
+    enum UserSettings {
+        case LocationServicesEnabled
+        case UseFahrenheitDegrees
+    }
+    
     enum CellIdentifiers: String {
         case SwitchCell = "SwitchCell"
         case AddCityCell = "AddCityCell"
@@ -122,6 +127,10 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
     
     override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return !isAddCityIndexPath(indexPath)
+    }
+    
+    override func tableView(tableView: UITableView, targetIndexPathForMoveFromRowAtIndexPath sourceIndexPath: NSIndexPath, toProposedIndexPath proposedDestinationIndexPath: NSIndexPath) -> NSIndexPath {
+        return isAddCityIndexPath(proposedDestinationIndexPath) ? sourceIndexPath : proposedDestinationIndexPath
     }
     
     override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
