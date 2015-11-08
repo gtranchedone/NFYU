@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherViewController: BaseViewController, SettingsViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
@@ -21,6 +22,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     private(set) var locations: [Location] = [] {
         didSet {
             pageControl.numberOfPages = collectionView(collectionView, numberOfItemsInSection: 0)
+            collectionView.reloadData()
         }
     }
     
@@ -57,13 +59,15 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         loadForecastsForAllLocations()
     }
     
-    // MARK: - Other Business Logic
+    // MARK: - App Events
     
     func applicationDidBecomeActive() {
         updateCurrentLocationIfPossible()
         updateLocations()
         loadForecastsForAllLocations()
     }
+    
+    // MARK: - Location Updates
     
     private func updateLocations() {
         let currentLocation = self.currentLocation()
@@ -72,13 +76,17 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
             newLocations.insert(currentLocation, atIndex: 0)
         }
         locations = newLocations
-        collectionView.reloadData()
     }
     
     private func currentLocation() -> Location? {
-        return locations.filter({ (location) -> Bool in
+        guard locationManager?.locationServicesEnabled() == true else { return nil }
+        var location = locations.filter({ (location) -> Bool in
             return location.isUserLocation
         }).first
+        if location == nil {
+            location = Location(coordinate: CLLocationCoordinate2D())
+        }
+        return location
     }
     
     func updateCurrentLocationIfPossible() {
@@ -125,11 +133,24 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     func fetchForecastsForLocation(location: Location) {
         // TODO: don't load if last successful update is < 4h ago
         apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { [weak self] (error, forecasts, locationInfo) -> () in
-            // TODO: handle error
+            // don't display any error message in case of error: showing the forecast template will suffice for now
+            var needsReload = false
+            if let locationInfo = locationInfo {
+                // update the location info only if the information about the location's city is missing
+                // in most cases this operation will only be performed to update the user location info
+                location.locationInfo = location.locationInfo.city != nil ? location.locationInfo : locationInfo
+                needsReload = true
+            }
             if let forecasts = forecasts {
                 location.forecasts = forecasts
+                needsReload = true
             }
-            self?.collectionView.reloadData()
+            if needsReload {
+                let indexOfLocation = self?.locations.indexOf(location)
+                if let indexOfLocation = indexOfLocation {
+                    self?.collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: indexOfLocation, inSection: 0)])
+                }
+            }
         }
     }
     
@@ -162,7 +183,6 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
             dismissViewControllerAnimated(true, completion: nil)
         }
         updateLocations()
-        collectionView.reloadData()
     }
     
     // MARK: UICollectionViewDataSource

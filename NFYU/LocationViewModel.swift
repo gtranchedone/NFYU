@@ -26,17 +26,17 @@ protocol LocationViewModelProtocol {
 class LocationViewModel: LocationViewModelProtocol {
     
     func collectionViewCellForLocation(location: Location, collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellIdentifiers.ForecastCell.rawValue, forIndexPath: indexPath) as! LocationCollectionViewCell
-        if location.forecasts.count > 0 {
-            let forecast = location.forecasts.first!
+        let cellIdentifier = CellIdentifiers.ForecastCell.rawValue
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! LocationCollectionViewCell
+        let forecast = location.forecasts.first
+        if let forecast = forecast {
             cell.currentTemperatureLabel.text = "\(forecast.currentTemperature)º"
-            cell.weatherConditionLabel.text = forecast.weather.localizedDescription
         }
         else {
             cell.currentTemperatureLabel.text = "-º"
-            cell.weatherConditionLabel.text = "-"
         }
-        cell.locationNameLabel.text = location.city
+        cell.weatherConditionLabel.text = forecast?.weather.localizedDescription ?? "-"
+        cell.locationNameLabel.text = location.city ?? "-"
         return cell
     }
     

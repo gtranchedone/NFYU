@@ -30,27 +30,6 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         case Country = "country"
     }
     
-    /*
-    "dt": 1446573600,
-    "main": {
-    "temp": 11.93,
-    "temp_min": 11.93,
-    "temp_max": 12.86,
-    "pressure": 1017.32,
-    "sea_level": 1027.41,
-    "grnd_level": 1017.32,
-    "humidity": 97,
-    "temp_kf": -0.93
-    },
-    "weather": [
-    {
-    "id": 500,
-    "main": "Rain",
-    "description": "light rain",
-    "icon": "10n"
-    }
-    ],
-    */
     enum ForecastInfoKeys: String {
         case Date = "dt"
         case MainInfo = "main"
@@ -78,7 +57,7 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
             return (nil, forecasts, locationInfo)
         }
         catch {
-            return (error as NSError, nil, nil)
+            return (error as NSError , nil, nil)
         }
     }
     

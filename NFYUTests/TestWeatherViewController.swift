@@ -115,16 +115,14 @@ class TestWeatherViewController: XCTestCase {
     }
     
     func testViewControllerShowsErrorMessageIfAfterInitialSetupTheUserHaChoosenToUseCurrentLocationButDisabledLocationServices() {
-        let locationManager = viewController!.locationManager as! FakeUserLocationFinder
-        locationManager.allowUseOfLocationServices = false
+        disallowLocationServices()
         loadViewControllerView()
         viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
         XCTAssertEqual(NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: ""), viewController!.backgroundMessageLabel.text)
     }
     
     func testViewControllerDoesNotShowErrorMessageIfLocationServicesAreDisabledButHasFavouriteCities() {
-        let locationManager = viewController!.locationManager as! FakeUserLocationFinder
-        locationManager.allowUseOfLocationServices = false
+        disallowLocationServices()
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
         XCTAssertNil(viewController!.backgroundMessageLabel.text)
@@ -211,7 +209,8 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerPresentsSettingScreenWhenSelectCitiesButtonIsPressed() {
         loadViewControllerView()
-        expectationForNotification(BaseViewController.TestExtensionNotifications.DidAttemptSegue, object: viewController) { [weak self] (notification) -> Bool in
+        let notificationName = BaseViewController.TestExtensionNotifications.DidAttemptSegue
+        expectationForNotification(notificationName, object: viewController) { [weak self] (notification) -> Bool in
             let segueIdentifier = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueIdentifier] as! String
             let sender = notification.userInfo![BaseViewController.TestExtensionNotificationsKeys.SegueSender]
             return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings.rawValue && sender === self?.viewController?.initialSetupView
@@ -256,7 +255,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasAtLeastOneLocation() {
         loadViewControllerView()
-        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        insertStubCitiesInUserDefaults()
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(viewController!.initialSetupView.hidden)
     }
@@ -286,14 +285,16 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasAtLeastOneLocation() {
         loadViewControllerView()
-        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        insertStubCitiesInUserDefaults()
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
     
     func testViewControllerUpdatesLocationsWhenSettingsViewControllerIsDoneIfHasAtLeastOneLocation() {
+        disallowLocationServices()
         loadViewControllerView()
-        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        let stubLocations = [Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
+        viewController?.userDefaults?.favouriteLocations = stubLocations
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         XCTAssertEqual(viewController!.locations, viewController!.userDefaults!.favouriteLocations)
     }
@@ -301,8 +302,8 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerUpdatesLocationsCorrectlyIfCurrentLocationWasAlreadyFoundWhenSettingsViewControllerIsDoneIfHasAtLeastOneLocation() {
         let locationManager = viewController!.locationManager as! FakeUserLocationFinder
         locationManager.stubLocation = CLLocation(latitude: 0.1234, longitude: 23.3456)
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
-        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
         let currentLocation = Location(coordinate: locationManager.stubLocation!.coordinate)
         let expectedLocations = [currentLocation] + viewController!.userDefaults!.favouriteLocations
@@ -312,7 +313,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerUpdatesLocationsCorrectlyIfCurrentLocationWasAlreadyFoundWhenReloadingUserLocation() {
         let locationManager = viewController!.locationManager as! FakeUserLocationFinder
         locationManager.stubLocation = CLLocation(latitude: 0.1234, longitude: 23.3456)
-        viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), name: "", country: "")]
+        insertStubCitiesInUserDefaults()
         loadViewControllerView()
         locationManager.stubLocation = CLLocation(latitude: 0.2345, longitude: 32.5648)
         let currentLocation = Location(coordinate: locationManager.stubLocation!.coordinate)
@@ -380,6 +381,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerLoadsForecastsForFavouriteLocationsWhenTheViewIsLoaded() {
         let apiClient = viewController!.apiClient as! FakeAPIClient
         insertStubCitiesInUserDefaults()
+        disallowLocationServices()
         loadViewControllerView()
         let expectedRequestedCoordinates = viewController!.userDefaults!.favouriteLocations.map { (location) -> CLLocationCoordinate2D in
             return location.coordinate
@@ -389,6 +391,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerLoadsForecastsForFavouriteLocationsWhenAppBecomesActive() {
         insertStubCitiesInUserDefaults()
+        disallowLocationServices()
         loadViewControllerView()
         let expectedRequestedCoordinates = viewController!.userDefaults!.favouriteLocations.map { (location) -> CLLocationCoordinate2D in
             return location.coordinate
@@ -402,30 +405,29 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerUpdatesLocationWithForecastsAfterLoadingThem() {
         let testLocation = Location(coordinate: CLLocationCoordinate2D())
         viewController?.userDefaults?.favouriteLocations = [testLocation]
-        let apiClient = viewController?.apiClient as? FakeAPIClient
-        let forecast = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
-        apiClient?.stubForecasts = [forecast]
+        let stubForecasts = stubAPIReturnedForecasts()
         loadViewControllerView()
         let location = viewController?.locations.first
-        XCTAssertEqual(location!.forecasts, [forecast])
+        XCTAssertEqual(location!.forecasts, stubForecasts)
     }
     
     func testViewControllerReloadsLocationCollectionViewCellWhenForecastsAreLoaded() {
         let testLocation = Location(coordinate: CLLocationCoordinate2D())
         viewController?.userDefaults?.favouriteLocations = [testLocation]
+        disallowLocationServices()
         loadViewControllerView()
+        stubAPIReturnedForecasts()
         let fakeCollectionView = FakeCollectionView()
         viewController!.collectionView = fakeCollectionView
         viewController!.fetchForecastsForLocation(viewController!.locations.first!)
-        XCTAssertTrue(fakeCollectionView.didReloadData)
+        XCTAssertTrue(fakeCollectionView.reloadedIndexPaths! == [NSIndexPath(forItem: 0, inSection: 0)])
     }
     
     // MARK: - UI Tests
     // MARK: Page Control
     
     func testViewControllersDisplaysCorrectNumberOfPagesWhenLocationServicesAreDisabled() {
-        let locationManager = viewController!.locationManager as! FakeUserLocationFinder
-        locationManager.allowUseOfLocationServices = false
+        disallowLocationServices()
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
         XCTAssertEqual(2, viewController?.pageControl.numberOfPages)
@@ -519,7 +521,8 @@ class TestWeatherViewController: XCTestCase {
         let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
         viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
         loadViewControllerView()
-        viewController?.collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 1, inSection: 0), atScrollPosition: .CenteredHorizontally, animated: false)
+        let indexPath = NSIndexPath(forItem: 1, inSection: 0)
+        viewController?.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
         viewController?.scrollViewDidEndDecelerating(viewController!.collectionView) // need to manually call this as it relates to actual user interactions
         XCTAssertEqual(1, viewController?.pageControl.currentPage)
     }
@@ -528,7 +531,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerDisplaysTemplateForecastWhileLoadingForecast() {
         viewController?.apiClient = nil
-        viewController?.locationManager = nil
+        disallowLocationServices()
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
         let indexPath = NSIndexPath(forItem: 0, inSection: 0)
@@ -540,7 +543,7 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerDisplaysForecastInformationWhenAvailable() {
         viewController?.apiClient = nil
-        viewController?.locationManager = nil
+        disallowLocationServices()
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
         addStubForecastsToCities()
@@ -552,14 +555,57 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual("16º", cell?.currentTemperatureLabel.text)
     }
     
-    // TODO: test cells with location when location is loading and after location is loaded
-    // TODO: test changing page from start to end doesn't crash app when location is loading and after location is loaded
+    func testViewControllerDisplaysTemplateForecastWhileLoadingUserLocation() {
+        viewController?.apiClient = nil
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        XCTAssertEqual("-", cell?.locationNameLabel.text)
+        XCTAssertEqual("-", cell?.weatherConditionLabel.text)
+        XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
+    }
+    
+    func testViewControllerDisplaysTemplateForecastAfterUserLocationHasBeenLoaded() {
+        let apiClient = viewController?.apiClient as? FakeAPIClient
+        apiClient?.stubLocationInfo = LocationInfo(id: "123", name: "Naples", city: "Naples", country: "Italy")
+        loadViewControllerView()
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        XCTAssertEqual("Naples", cell?.locationNameLabel.text)
+        XCTAssertEqual("-", cell?.weatherConditionLabel.text)
+        XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
+    }
+    
+    func testViewControllerDoesNotCrashAppWhenMovingFromPageToPageIfLocationIsEnabled() {
+        insertStubCitiesInUserDefaults()
+        loadViewControllerView()
+        let currentLocationIndexPath = NSIndexPath(forItem: 1, inSection: 0)
+        viewController?.collectionView.scrollToItemAtIndexPath(currentLocationIndexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        let firstCityIndexPath = NSIndexPath(forItem: 1, inSection: 0)
+        viewController?.collectionView.scrollToItemAtIndexPath(firstCityIndexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        let lastCityIndexPath = NSIndexPath(forItem: 2, inSection: 0)
+        viewController?.collectionView.scrollToItemAtIndexPath(lastCityIndexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        // NOTE: no need for assertions: if the app crashes the test will fail
+    }
     
     // MARK: - Helpers
     
     private func loadViewControllerView() {
         viewController!.beginAppearanceTransition(true, animated: false)
         viewController!.endAppearanceTransition()
+    }
+    
+    private func disallowLocationServices() {
+        let locationManager = viewController?.locationManager as? FakeUserLocationFinder
+        locationManager?.allowUseOfLocationServices = false
+    }
+    
+    private func stubAPIReturnedForecasts() -> [Forecast] {
+        let apiClient = viewController?.apiClient as? FakeAPIClient
+        let forecast = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let stubForecasts = [forecast]
+        apiClient?.stubForecasts = stubForecasts
+        return stubForecasts
     }
     
     private func insertStubCitiesInUserDefaults() {

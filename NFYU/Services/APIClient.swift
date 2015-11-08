@@ -63,7 +63,7 @@ class APIClient: AnyObject {
     
     private func logResponse(response: NSURLResponse?, error: NSError?, forecasts: [Forecast]?, locationInfo: LocationInfo?) {
         // use print instead of debugPrint for pretty printing
-        print("Received response for URL \(response?.URL!) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
+        print("Received response for URL \(response?.URL) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
     }
     
 }

@@ -10,6 +10,12 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
  extensible to any other service. To do that, you can create and use
  a new class comforming to the WeatherDataSource protocol.
 
+## Installation
+
+This project comes with a shared OpenWeatherMap API Key stored in the
+Xcode's NFYU configuration as environment varialble. You can use this
+API Key but it would be best if you changed it to your own.
+
 ## TODO
 
 - [x] ~~Create setup screen for using user location~~
