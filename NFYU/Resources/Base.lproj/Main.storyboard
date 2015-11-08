@@ -300,7 +300,7 @@
                                 </tableViewCellContentView>
                                 <animations/>
                                 <connections>
-                                    <outlet property="accessoryView" destination="pbl-g1-LJF" id="nT4-qy-VVw"/>
+                                    <outlet property="switchControl" destination="pbl-g1-LJF" id="34w-dV-dba"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

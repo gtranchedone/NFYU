@@ -17,17 +17,15 @@ protocol SwitchTableViewCellDelegate {
 class SwitchTableViewCell: UITableViewCell {
 
     var delegate: SwitchTableViewCellDelegate?
-    var switchControl: UISwitch! {
-        get {
-            return self.accessoryView as! UISwitch
+    @IBOutlet var switchControl: UISwitch! {
+        didSet {
+            switchControl.addTarget(self, action: "switchValueChanged", forControlEvents: .ValueChanged)
         }
     }
-    override var accessoryView: UIView? {
-        didSet {
-            if let accessory = accessoryView as? UISwitch {
-                accessory.addTarget(self, action: "switchValueChanged", forControlEvents: .ValueChanged)
-            }
-        }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        textLabel!.backgroundColor = .clearColor()
     }
     
     func switchValueChanged() {

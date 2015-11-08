@@ -102,7 +102,7 @@ class TestSettingsViewController: XCTestCase {
         let tableView = viewController!.tableView
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         let cell = viewController!.tableView(tableView, cellForRowAtIndexPath: indexPath) as? SwitchTableViewCell
-        XCTAssertTrue(cell!.accessoryView!.isKindOfClass(UISwitch.self))
+        XCTAssertTrue(cell!.switchControl.isKindOfClass(UISwitch.self))
         XCTAssertEqual(UITableViewCellSelectionStyle.None, cell!.selectionStyle)
         XCTAssertEqual(NSLocalizedString("TOGGLE_USER_LOCATION_ENABLED", comment: ""), cell?.textLabel?.text)
     }
