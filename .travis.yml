@@ -1,4 +1,5 @@
 language: objective-c #swift isn't available as option yet
 osx_image: xcode7.1
 script:
-  xctool -reporter pretty -scheme "NFYU" -sdk iphonesimulator clean test
+  xcodebuild -scheme "NFYU" -sdk iphonesimulator clean test
+    | xcpretty --color --report junit
