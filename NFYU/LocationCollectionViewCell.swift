@@ -13,5 +13,6 @@ class LocationCollectionViewCell: UICollectionViewCell {
     @IBOutlet var locationNameLabel: UILabel!
     @IBOutlet var weatherConditionLabel: UILabel!
     @IBOutlet var currentTemperatureLabel: UILabel!
-
+    @IBOutlet var hourlyTodayConditionsLabel: UILabel!
+    
 }

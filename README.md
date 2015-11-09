@@ -26,11 +26,11 @@ API Key but it would be best if you changed it to your own.
 - [x] ~~Fetch weather data from OpenWeatherMap APIs~~
 - [x] ~~Display current forecast data on screen~~
 - [x] ~~Add support for C and F temperature units~~
-- [ ] Add hourly forecast
+- [x] ~~Add hourly forecast~~
 
 -- After MVP --
 
-- [ ] Expand UI and APIs usage as needed for 5 days forecast
+- [ ] Improve UI and add 5 days forecast
 - [ ] Cache weather data for offline use (last update date must be clear)
 - [ ] Use Google Places API instand of CLGeocoder for more results?
 

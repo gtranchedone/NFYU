@@ -26,9 +26,13 @@ protocol LocationViewModelProtocol {
 class LocationViewModel: LocationViewModelProtocol {
     
     let userDefaults: UserDefaults?
+    let hourlyDateFormatter: NSDateFormatter
     
     init(userDefaults: UserDefaults?) {
         self.userDefaults = userDefaults
+        hourlyDateFormatter = NSDateFormatter()
+        hourlyDateFormatter.dateFormat = .None
+        hourlyDateFormatter.timeStyle = .ShortStyle
     }
     
     func collectionViewCellForLocation(location: Location, collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -48,6 +52,14 @@ class LocationViewModel: LocationViewModelProtocol {
         }
         cell.weatherConditionLabel.text = forecast?.weather.localizedDescription ?? "-"
         cell.locationNameLabel.text = location.city ?? "-"
+        
+        // temporary hourly conditions -> to be changed to something similar to the Weather app
+        let formattedForecasts = location.forecastsForToday.map { (forecast) -> String in
+            return "\(hourlyDateFormatter.stringFromDate(forecast.date)): \(forecast.weather.localizedDescription)"
+        }
+        let hourlyConditions = formattedForecasts.joinWithSeparator("\n")
+        cell.hourlyTodayConditionsLabel.text = hourlyConditions
+        
         return cell
     }
     

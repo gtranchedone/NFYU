@@ -570,6 +570,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("-", cell?.weatherConditionLabel.text)
         XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
+        XCTAssertEqual("", cell?.hourlyTodayConditionsLabel.text)
     }
     
     func testViewControllerDisplaysForecastInformationWhenAvailable() {
@@ -584,6 +585,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
         XCTAssertEqual("16ºC", cell?.currentTemperatureLabel.text)
+        XCTAssertEqual("9:00 AM: Rain", cell?.hourlyTodayConditionsLabel.text)
     }
     
     func testViewControllerDisplaysForecastInformationWhenAvailableUsingFahrenheitDegreesIfNeeded() {
@@ -599,6 +601,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
         XCTAssertEqual("61ºF", cell?.currentTemperatureLabel.text)
+        XCTAssertEqual("9:00 AM: Rain", cell?.hourlyTodayConditionsLabel.text)
     }
     
     func testViewControllerDisplaysTemplateForecastWhileLoadingUserLocation() {
@@ -609,6 +612,7 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertEqual("-", cell?.locationNameLabel.text)
         XCTAssertEqual("-", cell?.weatherConditionLabel.text)
         XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
+        XCTAssertEqual("", cell?.hourlyTodayConditionsLabel.text)
     }
     
     func testViewControllerDisplaysTemplateForecastAfterUserLocationHasBeenLoaded() {
@@ -668,10 +672,14 @@ class TestWeatherViewController: XCTestCase {
     }
     
     private func addStubForecastsToCities() {
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Day, .Month, .Year, .Hour], fromDate: NSDate())
+        components.hour = 9
+        let todayAtNine = calendar.dateFromComponents(components)!
         let london = viewController?.locations.first
-        london?.forecasts = [Forecast(date: NSDate(), cityID: "123", weather: .Rain, minTemperature: 15, maxTemperature: 17, currentTemperature: 16)]
+        london?.forecasts = [Forecast(date: todayAtNine, cityID: "123", weather: .Rain, minTemperature: 15, maxTemperature: 17, currentTemperature: 16)]
         let sf = viewController?.locations.last
-        sf?.forecasts = [Forecast(date: NSDate(), cityID: "234", weather: .Mist, minTemperature: 17, maxTemperature: 19, currentTemperature: 18)]
+        sf?.forecasts = [Forecast(date: todayAtNine, cityID: "234", weather: .Mist, minTemperature: 17, maxTemperature: 19, currentTemperature: 18)]
     }
     
 }

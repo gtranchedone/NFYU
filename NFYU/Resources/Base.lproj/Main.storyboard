@@ -143,17 +143,24 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20º" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWV-5x-hcU">
-                                                            <rect key="frame" x="248" y="86" width="94" height="72"/>
+                                                            <rect key="frame" x="248" y="85.5" width="94" height="72"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="60"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather Condition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7CZ-kp-TVc">
-                                                            <rect key="frame" x="219" y="57" width="143" height="21"/>
+                                                            <rect key="frame" x="219.5" y="57" width="142.5" height="20.5"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzL-HV-4e3">
+                                                            <rect key="frame" x="8" y="182.5" width="564" height="20.5"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -162,17 +169,22 @@
                                                 </view>
                                                 <animations/>
                                                 <constraints>
+                                                    <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="pzL-HV-4e3" secondAttribute="bottom" id="01O-9w-SGS"/>
                                                     <constraint firstItem="GST-Po-yvR" firstAttribute="top" secondItem="lfg-Jy-ced" secondAttribute="topMargin" constant="20" id="6nJ-Ba-0AQ"/>
+                                                    <constraint firstAttribute="trailingMargin" secondItem="pzL-HV-4e3" secondAttribute="trailing" id="88a-6H-Lqp"/>
                                                     <constraint firstItem="7CZ-kp-TVc" firstAttribute="top" secondItem="GST-Po-yvR" secondAttribute="bottom" constant="5" id="C4K-xO-G1h"/>
                                                     <constraint firstItem="GST-Po-yvR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lfg-Jy-ced" secondAttribute="leadingMargin" id="HyX-5M-FPI"/>
                                                     <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="GST-Po-yvR" secondAttribute="trailing" id="IMk-ll-jqy"/>
                                                     <constraint firstItem="GST-Po-yvR" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" id="Nh4-GK-wWv"/>
+                                                    <constraint firstItem="pzL-HV-4e3" firstAttribute="leading" secondItem="lfg-Jy-ced" secondAttribute="leadingMargin" id="ZaI-3D-oAW"/>
                                                     <constraint firstItem="dWV-5x-hcU" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" constant="5" id="eWI-VY-3Bc"/>
                                                     <constraint firstItem="7CZ-kp-TVc" firstAttribute="centerX" secondItem="lfg-Jy-ced" secondAttribute="centerX" id="gZw-qs-2b9"/>
+                                                    <constraint firstItem="pzL-HV-4e3" firstAttribute="top" secondItem="dWV-5x-hcU" secondAttribute="bottom" constant="25" id="gs9-Mv-GnM"/>
                                                     <constraint firstItem="dWV-5x-hcU" firstAttribute="top" secondItem="7CZ-kp-TVc" secondAttribute="bottom" constant="8" symbolic="YES" id="klc-Ez-gAo"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="currentTemperatureLabel" destination="dWV-5x-hcU" id="HC3-2S-ieu"/>
+                                                    <outlet property="hourlyTodayConditionsLabel" destination="pzL-HV-4e3" id="K2m-qa-ms5"/>
                                                     <outlet property="locationNameLabel" destination="GST-Po-yvR" id="bjQ-Xg-sl9"/>
                                                     <outlet property="weatherConditionLabel" destination="7CZ-kp-TVc" id="WDE-pr-doz"/>
                                                 </connections>

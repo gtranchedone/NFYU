@@ -22,6 +22,14 @@ class Location: NSObject, NSCoding {
     let coordinate: CLLocationCoordinate2D
     
     var forecasts: [Forecast] = []
+    var forecastsForToday: [Forecast] {
+        get {
+            return forecasts.filter { (forecast) -> Bool in
+                return NSCalendar.currentCalendar().isDateInToday(forecast.date)
+            }
+        }
+    }
+    
     var isUserLocation: Bool = false
     
     var country: String? {
