@@ -41,7 +41,7 @@
 		9997BABC1BEA88A900368DD9 /* TestCitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */; };
 		99B7CD651BEC1F0C00B68407 /* open-weather-api-sample-weather-codes.json in Resources */ = {isa = PBXBuildFile; fileRef = 99B7CD641BEC1F0C00B68407 /* open-weather-api-sample-weather-codes.json */; };
 		99B7CD671BEC23F900B68407 /* open-weather-api-sample-no-forecasts.json in Resources */ = {isa = PBXBuildFile; fileRef = 99B7CD661BEC23F900B68407 /* open-weather-api-sample-no-forecasts.json */; };
-		99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */; };
+		99C69F571BE8D01600188A78 /* TestSystemLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C69F561BE8D01600188A78 /* TestSystemLocationManager.swift */; };
 		99D5EBD91BEB491E002149D7 /* FakeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBD81BEB491E002149D7 /* FakeNavigationController.swift */; };
 		99D5EBDD1BEB4DD2002149D7 /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBDC1BEB4DD2002149D7 /* Forecast.swift */; };
 		99D5EBDF1BEB502D002149D7 /* FakeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D5EBDE1BEB502D002149D7 /* FakeAPIClient.swift */; };
@@ -105,7 +105,7 @@
 		9997BABB1BEA88A900368DD9 /* TestCitySearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCitySearchViewController.swift; sourceTree = "<group>"; };
 		99B7CD641BEC1F0C00B68407 /* open-weather-api-sample-weather-codes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "open-weather-api-sample-weather-codes.json"; sourceTree = "<group>"; };
 		99B7CD661BEC23F900B68407 /* open-weather-api-sample-no-forecasts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "open-weather-api-sample-no-forecasts.json"; sourceTree = "<group>"; };
-		99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationFinder.swift; sourceTree = "<group>"; };
+		99C69F561BE8D01600188A78 /* TestSystemLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSystemLocationManager.swift; sourceTree = "<group>"; };
 		99D5EBD81BEB491E002149D7 /* FakeNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeNavigationController.swift; sourceTree = "<group>"; };
 		99D5EBDC1BEB4DD2002149D7 /* Forecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
 		99D5EBDE1BEB502D002149D7 /* FakeAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeAPIClient.swift; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 				99D5EBEC1BEBC7B7002149D7 /* TestOpenWeatherAPIRequestSerializer.swift */,
 				99D5EBEE1BEBCFC4002149D7 /* TestOpenWeatherAPIResponseSerializer.swift */,
 				996EE95D1BEA3E880016C73D /* TestSettingsViewController.swift */,
-				99C69F561BE8D01600188A78 /* TestSystemLocationFinder.swift */,
+				99C69F561BE8D01600188A78 /* TestSystemLocationManager.swift */,
 				994458E51BE63B7F00DE0CF6 /* TestWeatherViewController.swift */,
 				994458EB1BE6695100DE0CF6 /* MocksAndStubs */,
 				99D5EBF01BEBD86D002149D7 /* TestResources */,
@@ -402,7 +402,7 @@
 				99D5EBE51BEBA506002149D7 /* TestAPIClient.swift in Sources */,
 				996EE95E1BEA3E880016C73D /* TestSettingsViewController.swift in Sources */,
 				99D5EBED1BEBC7B7002149D7 /* TestOpenWeatherAPIRequestSerializer.swift in Sources */,
-				99C69F571BE8D01600188A78 /* TestSystemLocationFinder.swift in Sources */,
+				99C69F571BE8D01600188A78 /* TestSystemLocationManager.swift in Sources */,
 				99D5EBE71BEBA626002149D7 /* FakeURLSession.swift in Sources */,
 				994458F51BE67BDB00DE0CF6 /* MockNotificationObserver.swift in Sources */,
 				99D5EBDF1BEB502D002149D7 /* FakeAPIClient.swift in Sources */,

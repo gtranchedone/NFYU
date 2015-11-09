@@ -15,9 +15,10 @@ let UserLocationManagerErrorDomain = "UserLocationManagerErrorDomain"
 protocol UserLocationManager: AnyObject {
 
     var locationServicesEnabled: Bool { get }
+    var didRequestAuthorization: Bool { get }
     
     // returns true if it asked for user authorization, false if the user was already prompted once
-    func requestUserAuthorizationForUsingLocationServices() -> Bool
+    func requestUserAuthorizationForUsingLocationServices(completionBlock: (() -> ())?) -> Bool
     func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ())
 
 }

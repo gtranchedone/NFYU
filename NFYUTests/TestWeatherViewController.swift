@@ -117,6 +117,12 @@ class TestWeatherViewController: XCTestCase {
         XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
     
+    func testViewControllerRequestsLocationPermissionsIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
+        loadViewControllerView()
+        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        XCTAssertTrue(viewController!.locationManager!.didRequestAuthorization)
+    }
+    
     func testViewControllerHidesInitialSetupViewIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
         viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
@@ -226,6 +232,13 @@ class TestWeatherViewController: XCTestCase {
         }
         viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
         waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testViewControllerShowsSettingButtonWhenSelectCitiesButtonIsPressed() {
+        viewController?.userDefaults?.didSetUpLocations = false
+        loadViewControllerView()
+        viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
+        XCTAssertFalse(viewController!.settingsButton.hidden)
     }
     
     // MARK: - Settings

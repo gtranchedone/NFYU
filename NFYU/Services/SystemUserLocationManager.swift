@@ -7,9 +7,10 @@ import Foundation
 import CoreLocation
 
 class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManagerDelegate {
-
+    
     private let locationManager: CLLocationManager
     private var completionBlock: ((NSError?, CLLocation?) -> ())?
+    private var permissionsCompletionBlock: (() -> ())?
 
     init(locationManager: CLLocationManager? = nil) {
         self.locationManager = locationManager ?? CLLocationManager()
@@ -25,12 +26,19 @@ class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManage
     
     var locationServicesEnabled: Bool {
         get {
-            return authorizationStatus() == .AuthorizedWhenInUse || authorizationStatus() == .NotDetermined
+            return authorizationStatus() == .AuthorizedWhenInUse
         }
     }
     
-    func requestUserAuthorizationForUsingLocationServices() -> Bool {
+    var didRequestAuthorization: Bool {
+        get {
+            return authorizationStatus() != .NotDetermined
+        }
+    }
+    
+    func requestUserAuthorizationForUsingLocationServices(completionBlock: (() -> ())?) -> Bool {
         guard authorizationStatus() == .NotDetermined else { return false }
+        permissionsCompletionBlock = completionBlock
         locationManager.requestWhenInUseAuthorization()
         return true
     }
@@ -39,7 +47,9 @@ class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManage
         self.completionBlock = completionBlock
         let authorizationStatus = self.authorizationStatus()
         if authorizationStatus == .NotDetermined {
-            requestUserAuthorizationForUsingLocationServices()
+            requestUserAuthorizationForUsingLocationServices() { [weak self] in
+                self?.requestCurrentLocation(completionBlock)
+            }
         }
         else if authorizationStatus != .AuthorizedWhenInUse {
             let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")]
@@ -55,8 +65,8 @@ class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManage
     // MARK: - CLLocationManagerDelegate
 
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if let completionBlock = completionBlock {
-            requestCurrentLocation(completionBlock)
+        if let completionBlock = permissionsCompletionBlock {
+            completionBlock()
         }
     }
 

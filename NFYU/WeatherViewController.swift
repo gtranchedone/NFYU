@@ -161,10 +161,13 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     @IBAction func useCurrentLocation() {
         didSetupLocations()
-        updateCurrentLocationIfPossible()
+        locationManager?.requestUserAuthorizationForUsingLocationServices { [weak self] () -> () in
+            self?.updateCurrentLocationIfPossible()
+        }
     }
     
     @IBAction func selectCities() {
+        settingsButton.hidden = false
         initialSetupView.hidden = true
         performSegueWithIdentifier(SegueIdentifiers.Settings.rawValue, sender: initialSetupView)
     }

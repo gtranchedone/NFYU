@@ -25,8 +25,13 @@ class FakeUserLocationManager: UserLocationManager {
         get { return allowUseOfLocationServices }
     }
     
-    func requestUserAuthorizationForUsingLocationServices() -> Bool {
+    var didRequestAuthorization: Bool {
+        get { return didRequestPermissions }
+    }
+    
+    func requestUserAuthorizationForUsingLocationServices(completionBlock: (() -> ())?) -> Bool {
         didRequestPermissions = stubDidRequestPermissions
+        completionBlock?()
         return stubDidRequestPermissions
     }
     

@@ -185,7 +185,7 @@ class SettingsViewController: BaseTableViewController, CitySearchViewControllerD
         if indexPathOfCell!.row == 0 {
             guard locationManager != nil else { return }
             if cell.switchControl.on {
-                if !(locationManager!.requestUserAuthorizationForUsingLocationServices()) {
+                if !(locationManager!.requestUserAuthorizationForUsingLocationServices(nil)) {
                     let title = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_TITLE", comment: "")
                     let message = NSLocalizedString("INSTRUCTIONS_FOR_ENABLING_USE_OF_DEVICE_LOCATION_ALERT_MESSAGE", comment: "")
                     presentAlertWithTitle(title, message: message)

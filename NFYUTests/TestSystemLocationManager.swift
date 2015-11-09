@@ -37,8 +37,42 @@ class TestSystemUserLocationManager: XCTestCase {
 
     // MARK: Authorization for Use of Location Services
     
-    func testSystemLocationManagerAllowsUsageOfLocationServicesWhenPermissionIsNotDetermined() {
-        XCTAssertTrue(systemLocationManager!.locationServicesEnabled)
+    func testSystemLocationManagerDidNotRequestAuthorizationIfPermissionsAreNotDetermined() {
+        XCTAssertFalse(systemLocationManager!.didRequestAuthorization)
+    }
+    
+    func testSystemLocationManagerDidNotRequestAuthorizationIfPermissionsAreGranted() {
+        FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
+        XCTAssertTrue(systemLocationManager!.didRequestAuthorization)
+    }
+    
+    func testSystemLocationManagerDidNotRequestAuthorizationIfPermissionsAreDenied() {
+        FakeLocationManager.stubAuthorizationStatus = .Denied
+        XCTAssertTrue(systemLocationManager!.didRequestAuthorization)
+    }
+    
+    func testSystemLocationManagerDidNotRequestAuthorizationIfPermissionsAreRestricted() {
+        FakeLocationManager.stubAuthorizationStatus = .Restricted
+        XCTAssertTrue(systemLocationManager!.didRequestAuthorization)
+    }
+    
+    func testSystemLocationManagerShouldNotRequestAuthorizationIfPermissionsAreGranted() {
+        FakeLocationManager.stubAuthorizationStatus = .AuthorizedWhenInUse
+        XCTAssertFalse(systemLocationManager!.requestUserAuthorizationForUsingLocationServices(nil))
+    }
+    
+    func testSystemLocationManagerShouldNotRequestAuthorizationIfPermissionsAreDenied() {
+        FakeLocationManager.stubAuthorizationStatus = .Denied
+        XCTAssertFalse(systemLocationManager!.requestUserAuthorizationForUsingLocationServices(nil))
+    }
+    
+    func testSystemLocationManagerShouldNotRequestAuthorizationIfPermissionsAreRestricted() {
+        FakeLocationManager.stubAuthorizationStatus = .Restricted
+        XCTAssertFalse(systemLocationManager!.requestUserAuthorizationForUsingLocationServices(nil))
+    }
+    
+    func testSystemLocationManagerDoesNotAllowUsageOfLocationServicesWhenPermissionIsNotDetermined() {
+        XCTAssertFalse(systemLocationManager!.locationServicesEnabled)
     }
     
     func testSystemLocationManagerAllowsUsageOfLocationServicesWhenPermissionIsGranted() {
