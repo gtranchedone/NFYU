@@ -10,6 +10,10 @@ NFYU uses OpenWeatherMap APIs to fetch the forcast data but is
  extensible to any other service. To do that, you can create and use
  a new class comforming to the WeatherDataSource protocol.
 
+The project intentionally has some design trade-offs due to time
+constraints as it would in a real-life project. For example, the
+SettingsViewController has lots of room for improvement.
+
 ## Project Setup
 
 This project comes with a shared OpenWeatherMap API Key stored in the
