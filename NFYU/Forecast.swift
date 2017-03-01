@@ -19,7 +19,7 @@ enum WeatherCondition: String {
     case Danger = "WEATHER_CONDITION_DANGER"
     
     var localizedDescription: String {
-        get { return NSLocalizedString(self.rawValue, comment: "") }
+        return NSLocalizedString(self.rawValue, comment: "")
     }
     
     // TODO: add method to get icon
@@ -55,16 +55,14 @@ struct Forecast: Equatable, CustomStringConvertible {
     
     // MARK: CustomDebugStringConvertible
     var description: String {
-        get {
-            // use dictionary description for pretty printing
-            let dictionaryValue: [String : Any] = ["date": date,
-                                                   "cityID": cityID,
-                                                   "weather": weather,
-                                                   "minTemp": minTemperature,
-                                                   "maxTemp": maxTemperature,
-                                                   "currentTemp": currentTemperature]
-            return dictionaryValue.description
-        }
+        // use dictionary description for pretty printing
+        let dictionaryValue: [String : Any] = ["date": date,
+                                               "cityID": cityID,
+                                               "weather": weather,
+                                               "minTemp": minTemperature,
+                                               "maxTemp": maxTemperature,
+                                               "currentTemp": currentTemperature]
+        return dictionaryValue.description
     }
     
 }

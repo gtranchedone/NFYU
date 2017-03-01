@@ -69,7 +69,10 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         updateLocations()
         setInitialViewState()
         let notificationName = NSNotification.Name.UIApplicationDidBecomeActive
-        NotificationCenter.default.addObserver(self, selector: #selector(WeatherViewController.applicationDidBecomeActive), name: notificationName, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(WeatherViewController.applicationDidBecomeActive),
+                                               name: notificationName,
+                                               object: nil)
     }
     
     fileprivate func setInitialViewState() {
@@ -121,23 +124,25 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         let canUseUserLocation = locationManager?.locationServicesEnabled == true
         if didSetUpLocations && canUseUserLocation {
             activityIndicator.startAnimating()
-            locationManager?.requestCurrentLocation() { [weak self] error, location in
-                self?.activityIndicator.stopAnimating()
-                if let error = error {
-                    self?.backgroundMessageLabel.text = error.localizedDescription
-                    self?.backgroundMessageLabel.isHidden = false
-                }
-                else if let userLocation = location {
+            locationManager?.requestCurrentLocation() { [weak self] result in
+                guard let strongSelf = self else { return }
+                strongSelf.activityIndicator.stopAnimating()
+                switch result {
+                case .error(let error):
+                    strongSelf.backgroundMessageLabel.text = error.localizedDescription
+                    strongSelf.backgroundMessageLabel.isHidden = false
+                
+                case .success(let userLocation):
                     var currentLocation = self?.currentLocation()
                     if let currentLocation = currentLocation {
-                        if self?.locations.contains(currentLocation) == true {
-                            self?.locations.remove(at: self!.locations.index(of: currentLocation)!)
+                        if strongSelf.locations.contains(currentLocation) == true {
+                            strongSelf.locations.remove(at: self!.locations.index(of: currentLocation)!)
                         }
                     }
                     currentLocation = Location(coordinate: userLocation.coordinate)
                     currentLocation!.isUserLocation = true
-                    self?.locations.insert(currentLocation!, at: 0)
-                    self?.loadForecastsForAllLocations()
+                    strongSelf.locations.insert(currentLocation!, at: 0)
+                    strongSelf.loadForecastsForAllLocations()
                 }
             }
         }
@@ -160,7 +165,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         }
     }
     
-    func fetchForecastsForLocation(_ location: Location) {
+    func fetchForecastsForLocation(_ location: Location, completion: (() -> ())? = nil) {
         // TODO: don't load if last successful update is < 4h ago
         guard !(location.isUserLocation && location.coordinate == CLLocationCoordinate2D()) else { return }
         apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { [weak self] (error, forecasts, locationInfo) -> () in
@@ -179,6 +184,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
             if needsReload {
                 self?.collectionView?.reloadData()
             }
+            completion?()
         }
     }
     

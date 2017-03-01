@@ -15,11 +15,13 @@ class FakeGeocoder: CLGeocoder {
     var stubPlacemarks: [CLPlacemark]?
     var stubError: NSError?
     
-    fileprivate(set) var lastGeocodedString: String?
-    fileprivate(set) var didCancelGeocode = false
-    fileprivate(set) var _geocoding = false
+    private(set) var lastGeocodedString: String?
+    private(set) var didCancelGeocode = false
+    private(set) var _geocoding = false
     
-    override var isGeocoding: Bool { get { return _geocoding } }
+    override var isGeocoding: Bool {
+        return _geocoding
+    }
     
     override func geocodeAddressString(_ addressString: String, completionHandler: @escaping CLGeocodeCompletionHandler) {
         _geocoding = true

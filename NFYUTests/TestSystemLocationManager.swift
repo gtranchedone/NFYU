@@ -93,28 +93,32 @@ class TestSystemUserLocationManager: XCTestCase {
     // MARK: Requesting Location Updates
     
     func testSystemLocationManagerRequestsLocationUsageAuthorizationIfNeeded() {
-        systemLocationManager?.requestCurrentLocation { _, _ in }
+        systemLocationManager?.requestCurrentLocation { _ in }
         XCTAssertTrue(fakeLocationManager!.didRequestAuthorizationForInUse)
     }
     
     func testSystemLocationManagerRequestsLocationUsageAuthorizationIfAlreadyAuthorized() {
         FakeLocationManager.stubAuthorizationStatus = .authorizedWhenInUse
-        systemLocationManager?.requestCurrentLocation { _, _ in }
+        systemLocationManager?.requestCurrentLocation { _ in }
         XCTAssertFalse(fakeLocationManager!.didRequestAuthorizationForInUse)
     }
     
     func testSystemLocationManagerDoesNotRequestLocationUsageAuthorizationIfAlreadyDenied() {
         FakeLocationManager.stubAuthorizationStatus = .denied
-        systemLocationManager?.requestCurrentLocation { _, _ in }
+        systemLocationManager?.requestCurrentLocation { _ in }
         XCTAssertFalse(fakeLocationManager!.didRequestAuthorizationForInUse)
     }
     
     func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationIsDenied() {
         FakeLocationManager.stubAuthorizationStatus = .denied
         let expectation = self.expectation(description: "Location update request calls completion block")
-        systemLocationManager?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
+        systemLocationManager?.requestCurrentLocation { result in
+            switch result {
+            case .error(_):
+                break
+            default:
+                XCTFail()
+            }
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
@@ -123,9 +127,13 @@ class TestSystemUserLocationManager: XCTestCase {
     func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationIsRestricted() {
         FakeLocationManager.stubAuthorizationStatus = .restricted
         let expectation = self.expectation(description: "Location update request calls completion block")
-        systemLocationManager?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
+        systemLocationManager?.requestCurrentLocation { result in
+            switch result {
+            case .error(_):
+                break
+            default:
+                XCTFail()
+            }
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
@@ -133,9 +141,13 @@ class TestSystemUserLocationManager: XCTestCase {
     
     func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationBecomesDenied() {
         let expectation = self.expectation(description: "Location update request calls completion block")
-        systemLocationManager?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
+        systemLocationManager?.requestCurrentLocation { result in
+            switch result {
+            case .error(_):
+                break
+            default:
+                XCTFail()
+            }
             expectation.fulfill()
         }
         FakeLocationManager.stubAuthorizationStatus = .denied
@@ -145,9 +157,13 @@ class TestSystemUserLocationManager: XCTestCase {
     
     func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationServicesAuthorizationBecomesRestricted() {
         let expectation = self.expectation(description: "Location update request calls completion block")
-        systemLocationManager?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
+        systemLocationManager?.requestCurrentLocation { result in
+            switch result {
+            case .error(_):
+                break
+            default:
+                XCTFail()
+            }
             expectation.fulfill()
         }
         FakeLocationManager.stubAuthorizationStatus = .restricted
@@ -157,15 +173,19 @@ class TestSystemUserLocationManager: XCTestCase {
     
     func testSystemLocationManagerForwardsRequestForUpdatingCurrentLocationToLocationManager() {
         FakeLocationManager.stubAuthorizationStatus = .authorizedWhenInUse
-        systemLocationManager?.requestCurrentLocation { _, _ in }
+        systemLocationManager?.requestCurrentLocation { _ in }
         XCTAssertTrue(fakeLocationManager!.didRequestLocation)
     }
     
     func testSystemLocationManagerCallsCompletionBlockWithErrorIfLocationManagerFailsToUpdateLocation() {
         let expectation = self.expectation(description: "Location update request calls completion block")
-        systemLocationManager?.requestCurrentLocation { error, location in
-            XCTAssertNotNil(error)
-            XCTAssertNil(location)
+        systemLocationManager?.requestCurrentLocation { result in
+            switch result {
+            case .error(_):
+                break
+            default:
+                XCTFail()
+            }
             expectation.fulfill()
         }
         let error = NSError(domain: "testDomain", code: 400, userInfo: nil)
@@ -175,9 +195,13 @@ class TestSystemUserLocationManager: XCTestCase {
     
     func testSystemLocationManagerCallsCompletionBlockWithLastFoundLocationIfLocationManagerSucceedsInUpdatingLocation() {
         let expectation = self.expectation(description: "Location update request calls completion block")
-        systemLocationManager?.requestCurrentLocation { error, location in
-            XCTAssertNil(error)
-            XCTAssertNotNil(location)
+        systemLocationManager?.requestCurrentLocation { result in
+            switch result {
+            case .success(_):
+                break
+            default:
+                XCTFail()
+            }
             expectation.fulfill()
         }
         let locations: [CLLocation] = [CLLocation(latitude: 0, longitude: 0)]

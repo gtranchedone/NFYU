@@ -9,7 +9,7 @@ import CoreLocation
 class SystemUserLocationManager: NSObject {
     
     fileprivate let locationManager: CLLocationManager
-    fileprivate var completionBlock: ((NSError?, CLLocation?) -> ())?
+    fileprivate var completionBlock: ((UserLocationManagerResult) -> ())?
     fileprivate var permissionsCompletionBlock: (() -> ())?
     
     init(locationManager: CLLocationManager? = nil) {
@@ -41,7 +41,7 @@ extension SystemUserLocationManager: UserLocationManager {
         return true
     }
     
-    func requestCurrentLocation(_ completionBlock: @escaping (NSError?, CLLocation?) -> ()) {
+    func requestCurrentLocation(_ completionBlock: @escaping (UserLocationManagerResult) -> ()) {
         self.completionBlock = completionBlock
         let authorizationStatus = self.authorizationStatus()
         if authorizationStatus == .notDetermined {
@@ -52,7 +52,7 @@ extension SystemUserLocationManager: UserLocationManager {
         else if authorizationStatus != .authorizedWhenInUse {
             let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")]
             let error = NSError(domain: UserLocationManagerErrorDomain, code: 0, userInfo: userInfo)
-            completionBlock(error, nil)
+            completionBlock(.error(error))
             self.completionBlock = nil
         }
         else {
@@ -71,14 +71,18 @@ extension SystemUserLocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        completionBlock?(nil, locations.first)
+        guard let location = locations.first else {
+            completionBlock?(.error(NSError()))
+            return
+        }
+        completionBlock?(.success(Location(coordinate: location.coordinate)))
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // bacause the description of the default error isn't great...
         let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("CANNOT_FIND_CURRENT_LOCATION", comment: "")]
         let finalError = NSError(domain: error._domain, code: error._code, userInfo: userInfo)
-        completionBlock?(finalError, nil)
+        completionBlock?(.error(finalError))
     }
     
 }

@@ -15,7 +15,7 @@ class FakeURLSessionDataTask: URLSessionDataTask {
     
     let stubOriginalRequest: URLRequest
     override var originalRequest: URLRequest {
-        get { return stubOriginalRequest }
+        return stubOriginalRequest
     }
     
     init(stubRequest: URLRequest, completionHandler: ((Data?, URLResponse?, NSError?) -> Void)? = nil) {
@@ -31,7 +31,7 @@ class FakeURLSessionDataTask: URLSessionDataTask {
 
 class FakeURLSession: URLSession {
     
-    fileprivate(set) var lastCreatedDataTask: URLSessionDataTask?
+    private(set) var lastCreatedDataTask: URLSessionDataTask?
     
     override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         lastCreatedDataTask = FakeURLSessionDataTask(stubRequest: request, completionHandler: completionHandler)

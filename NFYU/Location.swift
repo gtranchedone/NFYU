@@ -23,57 +23,55 @@ class Location: NSObject, NSCoding {
     
     var forecasts: [Forecast] = []
     var forecastsForToday: [Forecast] {
-        get {
-            return forecasts.filter { (forecast) -> Bool in
-                return Calendar.current.isDateInToday(forecast.date as Date)
-            }
+        return forecasts.filter { (forecast) -> Bool in
+            return Calendar.current.isDateInToday(forecast.date as Date)
         }
     }
     
     var isUserLocation: Bool = false
     
     var country: String? {
-        get { return locationInfo.country }
+        return locationInfo.country
     }
     var state: String? {
-        get { return locationInfo.state }
+        return locationInfo.state
     }
     var city: String? {
-        get { return locationInfo.city ?? locationInfo.name }
+        return locationInfo.city ?? locationInfo.name
     }
     var name: String? {
-        get { return locationInfo.name }
+        return locationInfo.name
     }
     
     var displayableName: String {
-        get {
-            var placeName = city ?? ""
-            if let name = name, let city = city {
-                if !name.contains(city) {
-                    placeName = "\(name), \(city)"
-                }
+        var placeName = city ?? ""
+        if let name = name, let city = city {
+            if !name.contains(city) {
+                placeName = "\(name), \(city)"
             }
-            if let country = country {
-                if country == "United States" || country == "USA" {
-                    if let state = state {
-                        return "\(placeName), \(state)"
-                    }
-                }
-                return "\(placeName), \(country)"
-            }
-            return placeName
         }
+        if let country = country {
+            if country == "United States" || country == "USA" {
+                if let state = state {
+                    return "\(placeName), \(state)"
+                }
+            }
+            return "\(placeName), \(country)"
+        }
+        return placeName
     }
     
     override var hashValue: Int {
-        get {
-            return coordinate.longitude.hashValue
-        }
+        return coordinate.longitude.hashValue
     }
     
     init(coordinate: CLLocationCoordinate2D, locationInfo: LocationInfo) {
         self.coordinate = coordinate
         self.locationInfo = locationInfo
+    }
+    
+    convenience init(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+        self.init(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
     }
     
     convenience init(coordinate: CLLocationCoordinate2D, name: String? = nil, country: String? = nil, state: String? = nil, city: String? = nil) {
