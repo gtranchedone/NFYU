@@ -46,7 +46,7 @@ extension CelsiusDegrees {
 
 struct Forecast: Equatable, CustomStringConvertible {
     
-    let date: NSDate
+    let date: Date
     let cityID: String
     let weather: WeatherCondition
     let minTemperature: CelsiusDegrees

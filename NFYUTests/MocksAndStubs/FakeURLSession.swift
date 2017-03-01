@@ -8,17 +8,17 @@
 
 import Foundation
 
-class FakeURLSessionDataTask: NSURLSessionDataTask {
+class FakeURLSessionDataTask: URLSessionDataTask {
     
-    private(set) var started = false
-    let completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)?
+    fileprivate(set) var started = false
+    let completionHandler: ((Data?, URLResponse?, NSError?) -> Void)?
     
-    let stubOriginalRequest: NSURLRequest
-    override var originalRequest: NSURLRequest {
+    let stubOriginalRequest: URLRequest
+    override var originalRequest: URLRequest {
         get { return stubOriginalRequest }
     }
     
-    init(stubRequest: NSURLRequest, completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)? = nil) {
+    init(stubRequest: URLRequest, completionHandler: ((Data?, URLResponse?, NSError?) -> Void)? = nil) {
         stubOriginalRequest = stubRequest
         self.completionHandler = completionHandler
     }
@@ -29,11 +29,11 @@ class FakeURLSessionDataTask: NSURLSessionDataTask {
     
 }
 
-class FakeURLSession: NSURLSession {
+class FakeURLSession: URLSession {
     
-    private(set) var lastCreatedDataTask: NSURLSessionDataTask?
+    fileprivate(set) var lastCreatedDataTask: URLSessionDataTask?
     
-    override func dataTaskWithRequest(request: NSURLRequest, completionHandler: (NSData?, NSURLResponse?, NSError?) -> Void) -> NSURLSessionDataTask {
+    override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         lastCreatedDataTask = FakeURLSessionDataTask(stubRequest: request, completionHandler: completionHandler)
         return lastCreatedDataTask!
     }

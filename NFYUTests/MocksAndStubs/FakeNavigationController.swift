@@ -10,9 +10,9 @@ import UIKit
 
 class FakeNavigationController: UINavigationController {
     
-    private(set) var didAttemptPoppingViewController = false
+    fileprivate(set) var didAttemptPoppingViewController = false
     
-    override func popViewControllerAnimated(animated: Bool) -> UIViewController? {
+    override func popViewController(animated: Bool) -> UIViewController? {
         didAttemptPoppingViewController = true
         return nil
     }

@@ -18,7 +18,7 @@ protocol UserLocationManager: AnyObject {
     var didRequestAuthorization: Bool { get }
     
     // returns true if it asked for user authorization, false if the user was already prompted once
-    func requestUserAuthorizationForUsingLocationServices(completionBlock: (() -> ())?) -> Bool
-    func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ())
+    @discardableResult func requestUserAuthorizationForUsingLocationServices(_ completionBlock: @escaping () -> ()) -> Bool
+    @discardableResult func requestCurrentLocation(_ completionBlock: @escaping (NSError?, CLLocation?) -> ())
 
 }

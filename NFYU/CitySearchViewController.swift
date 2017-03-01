@@ -11,14 +11,14 @@ import CoreLocation
 
 protocol CitySearchViewControllerDelegate: AnyObject {
     
-    func citySearchViewController(viewController: CitySearchViewController, didFinishWithLocation location: Location?)
+    func citySearchViewController(_ viewController: CitySearchViewController, didFinishWithLocation location: Location?)
     
 }
 
 // TODO: new API in iOS 7 or 8 improves UISearchController to make it a UIViewController. Use it.
 class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
 
-    private enum CellIdentifiers: String {
+    fileprivate enum CellIdentifiers: String {
         case CitySearchResultCell = "CitySearchResultCell"
     }
     
@@ -28,7 +28,7 @@ class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableVi
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
-    private var locations: [Location] = []
+    fileprivate var locations: [Location] = []
     
     // MARK: - View Lifecycle
     
@@ -37,16 +37,16 @@ class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableVi
         title = NSLocalizedString("CITY_SEARCH_VIEW_TITLE", comment: "")
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchBar.becomeFirstResponder()
     }
     
     // MARK: - UISearchBarDelegate
     
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard searchText.characters.count > 1 else { return }
-        if geocoder.geocoding {
+        if geocoder.isGeocoding {
             geocoder.cancelGeocode()
         }
         // TODO: CLGeocoder still doesn't give great results. Move to Google Places API -> change geocoder to protocol, extend CLGeocoder and create GoogleGeocoder
@@ -69,16 +69,16 @@ class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableVi
     
     // MARK: - UITableViewDataSource
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return locations.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifiers.CitySearchResultCell.rawValue, forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.CitySearchResultCell.rawValue, for: indexPath)
         let city = locations[indexPath.row]
         cell.textLabel?.text = city.displayableName
         return cell
@@ -86,7 +86,7 @@ class CitySearchViewController: UIViewController, UISearchBarDelegate, UITableVi
     
     // MARK: - UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.citySearchViewController(self, didFinishWithLocation: locations[indexPath.row])
     }
     

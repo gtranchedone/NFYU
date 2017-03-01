@@ -18,14 +18,14 @@ class OpenWeatherAPIClientRequestSerializer: APIRequestSerializer {
         static let ForecastEndpoint = "forecast"
     }
     
-    func buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D) -> NSURLRequest {
+    func buildURLRequestToFetchForecastsForLocationWithCoordinate(_ coordinate: CLLocationCoordinate2D) -> URLRequest {
         let endpoint = APIConstants.ForecastEndpoint
         let baseURLString = APIConstants.BaseOpenWeatherMapAPIURL
-        let applicationID = NSProcessInfo.processInfo().environment[kOpenWeatherMapAPIKeyEnvironmentVariable]!
+        let applicationID = ProcessInfo.processInfo.environment[kOpenWeatherMapAPIKeyEnvironmentVariable]!
         let basicURLRequestString = "\(baseURLString)\(endpoint)?lat=\(coordinate.latitude)&lon=\(coordinate.longitude)"
         let requestCustomizationFields = "&units=metric&appid=\(applicationID)"
         let requestURLString = "\(basicURLRequestString)\(requestCustomizationFields)"
-        return NSURLRequest(URL: NSURL(string: requestURLString)!)
+        return URLRequest(url: URL(string: requestURLString)!)
     }
     
 }

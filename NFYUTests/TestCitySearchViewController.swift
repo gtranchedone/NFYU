@@ -14,10 +14,10 @@ import AddressBook
 
 class MockCitySearchViewControllerDelegate: CitySearchViewControllerDelegate {
     
-    private(set) var didFinish = false
-    private(set) var returnedCity: Location?
+    fileprivate(set) var didFinish = false
+    fileprivate(set) var returnedCity: Location?
     
-    func citySearchViewController(viewController: CitySearchViewController, didFinishWithLocation location: Location?) {
+    func citySearchViewController(_ viewController: CitySearchViewController, didFinishWithLocation location: Location?) {
         didFinish = true
         returnedCity = location
     }
@@ -28,7 +28,7 @@ class MockCitySearchViewControllerDelegate: CitySearchViewControllerDelegate {
 // because -becomeFirstResponder returns false if the viewController isn't actually being presented
 class FakeSearchBar: UISearchBar {
     
-    private(set) var didBecomeFirstResponder = false
+    fileprivate(set) var didBecomeFirstResponder = false
     
     override func becomeFirstResponder() -> Bool {
         didBecomeFirstResponder = true
@@ -44,7 +44,7 @@ class TestCitySearchViewController: XCTestCase {
     override func setUp() {
         super.setUp()
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        viewController = storyboard.instantiateViewControllerWithIdentifier("CitySearchViewController") as? CitySearchViewController
+        viewController = storyboard.instantiateViewController(withIdentifier: "CitySearchViewController") as? CitySearchViewController
         viewController?.delegate = MockCitySearchViewControllerDelegate()
         viewController?.geocoder = FakeGeocoder()
         viewController?.loadViewIfNeeded()
@@ -117,7 +117,7 @@ class TestCitySearchViewController: XCTestCase {
     }
     
     func testViewControllerHasAlwaysOnlyOneTableViewSectionForDisplayingSearchResults() {
-        XCTAssertEqual(1, viewController!.numberOfSectionsInTableView(viewController!.tableView))
+        XCTAssertEqual(1, viewController!.numberOfSections(in: viewController!.tableView))
     }
     
     func testViewControllerShowsZeroSearchResultsByDefault() {
@@ -135,7 +135,7 @@ class TestCitySearchViewController: XCTestCase {
         let geocoder = viewController?.geocoder as! FakeGeocoder
         geocoder.stubPlacemarks = [placemarkForCupertino()]
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
-        let cell = viewController!.tableView(viewController!.tableView, cellForRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+        let cell = viewController!.tableView(viewController!.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
         XCTAssertEqual("Cupertino, CA", cell.textLabel?.text)
     }
     
@@ -143,7 +143,7 @@ class TestCitySearchViewController: XCTestCase {
         let geocoder = viewController?.geocoder as! FakeGeocoder
         geocoder.stubPlacemarks = [placemarkForLondon()]
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
-        let cell = viewController!.tableView(viewController!.tableView, cellForRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+        let cell = viewController!.tableView(viewController!.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
         XCTAssertEqual("London, UK", cell.textLabel?.text)
     }
     
@@ -151,7 +151,7 @@ class TestCitySearchViewController: XCTestCase {
         let geocoder = viewController?.geocoder as! FakeGeocoder
         geocoder.stubPlacemarks = [placemarkForLondon()]
         viewController?.searchBar(viewController!.searchBar, textDidChange: "Tok")
-        viewController?.tableView(viewController!.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+        viewController?.tableView(viewController!.tableView, didSelectRowAt: IndexPath(row: 0, section: 0))
         let delegate = viewController?.delegate as! MockCitySearchViewControllerDelegate
         let expectedCity = Location(coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 20), name: "London", country: "UK")
         let actualCity = delegate.returnedCity
@@ -162,19 +162,19 @@ class TestCitySearchViewController: XCTestCase {
     
     // NOTE: AddressBook is deprecated but using Contacts keys as suggested in the deprecation warning makes returned CLPlacemark not work as expected
     
-    private func placemarkForCupertino() -> CLPlacemark {
+    fileprivate func placemarkForCupertino() -> CLPlacemark {
         let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
-        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "Cupertino",
-                                                      kABPersonAddressStateKey as String: "CA",
-                                                      kABPersonAddressCountryKey as String: "USA"]
+        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "Cupertino" as AnyObject,
+                                                      kABPersonAddressStateKey as String: "CA" as AnyObject,
+                                                      kABPersonAddressCountryKey as String: "USA" as AnyObject]
         let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
         return placemark
     }
     
-    private func placemarkForLondon() -> CLPlacemark {
+    fileprivate func placemarkForLondon() -> CLPlacemark {
         let placemarkLocation = CLLocationCoordinate2D(latitude: 10, longitude: 20)
-        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "London",
-                                                      kABPersonAddressCountryKey as String: "UK"]
+        let placemarkAddress: [String : AnyObject] = [kABPersonAddressCityKey as String: "London" as AnyObject,
+                                                      kABPersonAddressCountryKey as String: "UK" as AnyObject]
         let placemark = MKPlacemark(coordinate: placemarkLocation, addressDictionary: placemarkAddress)
         return placemark
     }

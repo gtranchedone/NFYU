@@ -8,13 +8,13 @@
 
 import Foundation
 
-protocol UserDefaults: AnyObject {
+protocol UserDefaults: class {
     
-    func objectForKey(defaultName: String) -> AnyObject?
-    func setObject(value: AnyObject?, forKey defaultName: String)
+    func object(forKey defaultName: String) -> Any?
+    func set(_ value: Any?, forKey defaultName: String)
     
-    func boolForKey(defaultName: String) -> Bool
-    func setBool(value: Bool, forKey defaultName: String)
+    func bool(forKey defaultName: String) -> Bool
+    func set(_ value: Bool, forKey defaultName: String)
     
 }
 
@@ -28,38 +28,39 @@ extension UserDefaults {
     
     var didSetUpLocations: Bool {
         get {
-            return boolForKey(UserDefaultsKeys.DidSetUpLocations)
+            return bool(forKey: UserDefaultsKeys.DidSetUpLocations)
         }
         set {
-            setBool(newValue, forKey:UserDefaultsKeys.DidSetUpLocations)
+            set(newValue, forKey:UserDefaultsKeys.DidSetUpLocations)
         }
     }
     
     var favouriteLocations: [Location] {
-        // NOTE: mapping necessary as NSUserDefaults can only store Plist data... probably this should be in an extension of NSUserDefaults, at least in part
+        // NOTE: mapping necessary as Foundation.UserDefaults can only store Plist data
+        // Probably this logic to save Location data should be in an extension of UserDefaults
         get {
-            let locationsData = objectForKey(UserDefaultsKeys.FavouriteLocations) as? [NSData] ?? []
+            let locationsData = object(forKey: UserDefaultsKeys.FavouriteLocations) as? [Data] ?? []
             return locationsData.map { (locationData) -> Location in
-                return NSKeyedUnarchiver.unarchiveObjectWithData(locationData) as! Location
+                return NSKeyedUnarchiver.unarchiveObject(with: locationData) as! Location
             }
         }
         set {
-            let locationsData = newValue.map { (location) -> NSData in
-                return NSKeyedArchiver.archivedDataWithRootObject(location)
+            let locationsData = newValue.map { (location) -> Data in
+                return NSKeyedArchiver.archivedData(withRootObject: location)
             }
-            setObject(locationsData, forKey: UserDefaultsKeys.FavouriteLocations)
+            set(locationsData as AnyObject?, forKey: UserDefaultsKeys.FavouriteLocations)
         }
     }
     
     var useFahrenheitDegrees: Bool {
         get {
-            return boolForKey(UserDefaultsKeys.UseFahrenheitDegrees)
+            return bool(forKey: UserDefaultsKeys.UseFahrenheitDegrees)
         }
         set {
-            setBool(newValue, forKey:UserDefaultsKeys.UseFahrenheitDegrees)
+            set(newValue, forKey:UserDefaultsKeys.UseFahrenheitDegrees)
         }
     }
     
 }
 
-extension NSUserDefaults : UserDefaults {}
+extension Foundation.UserDefaults: UserDefaults {}

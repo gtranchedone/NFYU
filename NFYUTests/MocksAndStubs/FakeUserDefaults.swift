@@ -9,29 +9,29 @@
 import Foundation
 @testable import NFYU
 
-class FakeUserDefaults: NSObject, UserDefaults {
+class FakeUserDefaults: NFYU.UserDefaults {
 
     private var dictionary = NSMutableDictionary()
     
-    func objectForKey(defaultName: String) -> AnyObject? {
-        return dictionary.objectForKey(defaultName)
+    func object(forKey defaultName: String) -> Any? {
+        return dictionary.object(forKey: defaultName)
     }
     
-    func setObject(value: AnyObject?, forKey defaultName: String) {
+    func set(_ value: Any?, forKey defaultName: String) {
         if let value = value {
-            dictionary.setObject(value, forKey: defaultName)
+            dictionary.setObject(value, forKey: defaultName as NSCopying)
         }
         else {
-            dictionary.removeObjectForKey(defaultName)
+            dictionary.removeObject(forKey: defaultName)
         }
     }
     
-    func setBool(value: Bool, forKey defaultName: String) {
-        dictionary.setObject(NSNumber(bool: value), forKey: defaultName)
+    func set(_ value: Bool, forKey defaultName: String) {
+        dictionary.setObject(NSNumber(value: value as Bool), forKey: defaultName as NSCopying)
     }
     
-    func boolForKey(defaultName: String) -> Bool {
-        return dictionary.objectForKey(defaultName)?.boolValue ?? false
+    func bool(forKey defaultName: String) -> Bool {
+        return (dictionary.object(forKey: defaultName) as AnyObject).boolValue ?? false
     }
     
 }

@@ -23,22 +23,22 @@ struct TestExtensionNotificationsKeys {
 
 extension BaseViewController {
     
-    override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
-        var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
+    override open func performSegue(withIdentifier identifier: String, sender: Any?) {
+        var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier as AnyObject]
         if let sender = sender {
-            userInfo[TestExtensionNotificationsKeys.SegueSender] = sender
+            userInfo[TestExtensionNotificationsKeys.SegueSender] = sender as AnyObject?
         }
-        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptSegue, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: TestExtensionNotifications.DidAttemptSegue), object: self, userInfo: userInfo)
     }
     
-    override func dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?) {
-        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptDismissingViewController, object: self)
+    override open func dismiss(animated flag: Bool, completion: (() -> Void)?) {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: TestExtensionNotifications.DidAttemptDismissingViewController), object: self)
     }
     
-    override func presentViewController(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
+    override open func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
         let userInfo: [String : UIViewController] = [TestExtensionNotificationsKeys.PresentedViewController: viewControllerToPresent]
         let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
-        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: self, userInfo: userInfo)
     }
     
 }
@@ -47,22 +47,22 @@ extension BaseViewController {
 
 extension BaseTableViewController {
     
-    override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
-        var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier]
+    override open func performSegue(withIdentifier identifier: String, sender: Any?) {
+        var userInfo: [String : AnyObject] = [TestExtensionNotificationsKeys.SegueIdentifier: identifier as AnyObject]
         if let sender = sender {
-            userInfo[TestExtensionNotificationsKeys.SegueSender] = sender
+            userInfo[TestExtensionNotificationsKeys.SegueSender] = sender as AnyObject?
         }
-        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptSegue, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: TestExtensionNotifications.DidAttemptSegue), object: self, userInfo: userInfo)
     }
     
-    override func dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?) {
-        NSNotificationCenter.defaultCenter().postNotificationName(TestExtensionNotifications.DidAttemptDismissingViewController, object: self)
+    override open func dismiss(animated flag: Bool, completion: (() -> Void)?) {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: TestExtensionNotifications.DidAttemptDismissingViewController), object: self)
     }
     
-    override func presentViewController(viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
+    override open func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?) {
         let userInfo: [String : UIViewController] = [TestExtensionNotificationsKeys.PresentedViewController: viewControllerToPresent]
         let notificationName = TestExtensionNotifications.DidAttemptPresentingViewController
-        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: self, userInfo: userInfo)
     }
     
 }

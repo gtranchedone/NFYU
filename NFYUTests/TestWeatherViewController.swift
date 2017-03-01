@@ -16,7 +16,7 @@ class TestWeatherViewController: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         viewController = storyboard.instantiateInitialViewController() as? WeatherViewController
         viewController?.locationManager = FakeUserLocationManager()
         viewController?.userDefaults = FakeUserDefaults()
@@ -42,64 +42,64 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerHasSetupViewHiddenByDefault() {
         viewController?.userDefaults = nil
         loadViewControllerView()
-        XCTAssertFalse(viewController!.initialSetupView.hidden)
+        XCTAssertFalse(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerHasSettingsButtonHiddenIfLocationsAreNotSetUp() {
         viewController?.userDefaults?.didSetUpLocations = false
         loadViewControllerView()
-        XCTAssertTrue(viewController!.settingsButton.hidden)
+        XCTAssertTrue(viewController!.settingsButton.isHidden)
     }
     
     func testViewControllerShowsSettingsButtonIfLocationsAreSetUp() {
         viewController?.userDefaults?.didSetUpLocations = true
         loadViewControllerView()
-        XCTAssertFalse(viewController!.settingsButton.hidden)
+        XCTAssertFalse(viewController!.settingsButton.isHidden)
     }
     
     func testViewControllerShowsSettingsButtonIfLocationsGetSetUp() {
         loadViewControllerView()
         viewController?.didSetupLocations()
-        XCTAssertFalse(viewController!.settingsButton.hidden)
+        XCTAssertFalse(viewController!.settingsButton.isHidden)
     }
     
     func testViewControllerHasActivityIndicatorHiddenByDefault() {
         loadViewControllerView()
-        XCTAssertTrue(viewController!.activityIndicator.hidden)
+        XCTAssertTrue(viewController!.activityIndicator.isHidden)
     }
     
     func testViewControllerHasBackgroundMessageLabelHiddenByDefault() {
         loadViewControllerView()
-        XCTAssertTrue(viewController!.backgroundMessageLabel.hidden)
+        XCTAssertTrue(viewController!.backgroundMessageLabel.isHidden)
     }
     
     func testViewControllerHasPageControlHiddenByDefault() {
         loadViewControllerView()
-        XCTAssertTrue(viewController!.pageControl.hidden)
+        XCTAssertTrue(viewController!.pageControl.isHidden)
     }
     
     func testViewControllerShowsInitialSetUpViewIfUserDidNotYetSetUpLocations() {
         viewController!.userDefaults!.didSetUpLocations = false
         loadViewControllerView()
-        XCTAssertFalse(viewController!.initialSetupView.hidden)
+        XCTAssertFalse(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerHidesInitialSetUpViewIfUserDidAlreadySetUpLocations() {
         viewController!.userDefaults!.didSetUpLocations = true
         loadViewControllerView()
-        XCTAssertTrue(viewController!.initialSetupView.hidden)
+        XCTAssertTrue(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerHidesSettingsButtonWhenShowingInitialSetupView() {
         viewController!.userDefaults!.didSetUpLocations = false
         loadViewControllerView()
-        XCTAssertTrue(viewController!.settingsButton.hidden)
+        XCTAssertTrue(viewController!.settingsButton.isHidden)
     }
     
     func testViewControllerShowsSettingsButtonWhenNotShowingInitialSetupView() {
         viewController!.userDefaults!.didSetUpLocations = true
         loadViewControllerView()
-        XCTAssertFalse(viewController!.settingsButton.hidden)
+        XCTAssertFalse(viewController!.settingsButton.isHidden)
     }
     
     // MARK: - Using Device Location
@@ -113,26 +113,26 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerUpdatesUserDefaultsForHavingSetupLocationsIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
-        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        viewController!.initialSetupView.useLocationButton.sendActions(for: .touchUpInside)
         XCTAssertTrue(viewController!.userDefaults!.didSetUpLocations)
     }
     
     func testViewControllerRequestsLocationPermissionsIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
-        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        viewController!.initialSetupView.useLocationButton.sendActions(for: .touchUpInside)
         XCTAssertTrue(viewController!.locationManager!.didRequestAuthorization)
     }
     
     func testViewControllerHidesInitialSetupViewIfUserChoosesToUseCurrentLocationForForecastsOnInitialSetUp() {
         loadViewControllerView()
-        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
-        XCTAssertTrue(viewController!.initialSetupView.hidden)
+        viewController!.initialSetupView.useLocationButton.sendActions(for: .touchUpInside)
+        XCTAssertTrue(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerShowsErrorMessageIfAfterInitialSetupTheUserHaChoosenToUseCurrentLocationButDisabledLocationServices() {
         disallowLocationServices()
         loadViewControllerView()
-        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        viewController!.initialSetupView.useLocationButton.sendActions(for: .touchUpInside)
         XCTAssertEqual(NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: ""), viewController!.backgroundMessageLabel.text)
     }
     
@@ -148,7 +148,7 @@ class TestWeatherViewController: XCTestCase {
         locationManager.allowUseOfLocationServices = true
         loadViewControllerView()
         locationManager.allowUseOfLocationServices = false
-        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         XCTAssertEqual(NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: ""), viewController!.backgroundMessageLabel.text)
     }
     
@@ -157,7 +157,7 @@ class TestWeatherViewController: XCTestCase {
         locationManager.allowUseOfLocationServices = false
         loadViewControllerView()
         locationManager.allowUseOfLocationServices = true
-        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         XCTAssertTrue(locationManager.didRequestCurrentLocation)
     }
     
@@ -167,13 +167,13 @@ class TestWeatherViewController: XCTestCase {
         viewController?.userDefaults?.favouriteLocations = [Location(coordinate: CLLocationCoordinate2D(), name: "", country: "")]
         loadViewControllerView()
         locationManager.allowUseOfLocationServices = false
-        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         XCTAssertNil(viewController!.backgroundMessageLabel.text)
     }
     
     func testViewControllerRequestsUserLocationIfUserChoosesToUseItForForecastsOnInitialSetUp() {
         loadViewControllerView()
-        viewController!.initialSetupView.useLocationButton.sendActionsForControlEvents(.TouchUpInside)
+        viewController!.initialSetupView.useLocationButton.sendActions(for: .touchUpInside)
         let locationManager = viewController!.locationManager as! FakeUserLocationManager
         XCTAssertTrue(locationManager.didRequestCurrentLocation)
     }
@@ -197,16 +197,16 @@ class TestWeatherViewController: XCTestCase {
         locationManager.allowUseOfLocationServices = true
         locationManager.shouldCallCompletionBlock = false
         loadViewControllerView()
-        XCTAssertFalse(viewController!.activityIndicator.hidden)
-        XCTAssertTrue(viewController!.activityIndicator!.isAnimating())
+        XCTAssertFalse(viewController!.activityIndicator.isHidden)
+        XCTAssertTrue(viewController!.activityIndicator!.isAnimating)
     }
     
     func testViewControllerHidesLoadingIndicatorAfterLocationHasBeenLoaded() {
         let locationManager = viewController!.locationManager as! FakeUserLocationManager
         locationManager.allowUseOfLocationServices = true
         loadViewControllerView()
-        XCTAssertTrue(viewController!.activityIndicator.hidden)
-        XCTAssertFalse(viewController!.activityIndicator!.isAnimating())
+        XCTAssertTrue(viewController!.activityIndicator.isHidden)
+        XCTAssertFalse(viewController!.activityIndicator!.isAnimating)
     }
     
     func testViewControllerShowsLocalizedErrorMessageFromLocationManagerWhenRequestForLoadingCurrentLocationFails() {
@@ -216,7 +216,7 @@ class TestWeatherViewController: XCTestCase {
         let stubUserInfo = [NSLocalizedDescriptionKey: expectedErrorMessage]
         locationManager.stubError = NSError(domain: "test", code: 400, userInfo: stubUserInfo)
         loadViewControllerView()
-        XCTAssertFalse(viewController!.backgroundMessageLabel.hidden)
+        XCTAssertFalse(viewController!.backgroundMessageLabel.isHidden)
         XCTAssertEqual(expectedErrorMessage, viewController!.backgroundMessageLabel.text)
     }
     
@@ -225,20 +225,20 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerPresentsSettingScreenWhenSelectCitiesButtonIsPressed() {
         loadViewControllerView()
         let notificationName = TestExtensionNotifications.DidAttemptSegue
-        expectationForNotification(notificationName, object: viewController) { [weak self] (notification) -> Bool in
+        expectation(forNotification: notificationName, object: viewController) { [weak self] (notification) -> Bool in
             let segueIdentifier = notification.userInfo![TestExtensionNotificationsKeys.SegueIdentifier] as! String
-            let sender = notification.userInfo![TestExtensionNotificationsKeys.SegueSender]
+            let sender = notification.userInfo![TestExtensionNotificationsKeys.SegueSender] as? NSObject
             return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings.rawValue && sender === self?.viewController?.initialSetupView
         }
-        viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        viewController!.initialSetupView.selectCitiesButton.sendActions(for: .touchUpInside)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func testViewControllerShowsSettingButtonWhenSelectCitiesButtonIsPressed() {
         viewController?.userDefaults?.didSetUpLocations = false
         loadViewControllerView()
-        viewController!.initialSetupView.selectCitiesButton.sendActionsForControlEvents(.TouchUpInside)
-        XCTAssertFalse(viewController!.settingsButton.hidden)
+        viewController!.initialSetupView.selectCitiesButton.sendActions(for: .touchUpInside)
+        XCTAssertFalse(viewController!.settingsButton.isHidden)
     }
     
     // MARK: - Settings
@@ -248,7 +248,7 @@ class TestWeatherViewController: XCTestCase {
         let settingsViewController = SettingsViewController()
         let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
         let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
-        viewController?.prepareForSegue(segue, sender: viewController)
+        viewController?.prepare(for: segue, sender: viewController)
         XCTAssertTrue(settingsViewController.delegate === viewController)
     }
     
@@ -257,7 +257,7 @@ class TestWeatherViewController: XCTestCase {
         let settingsViewController = SettingsViewController()
         let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
         let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
-        viewController?.prepareForSegue(segue, sender: viewController)
+        viewController?.prepare(for: segue, sender: viewController)
         XCTAssertTrue(settingsViewController.delegate === viewController)
     }
     
@@ -266,7 +266,7 @@ class TestWeatherViewController: XCTestCase {
         let settingsViewController = SettingsViewController()
         let navigationController = UINavigationController(rootViewController: settingsViewController) // as in storyboard
         let segue = UIStoryboardSegue(identifier: segueIdentifier, source: viewController!, destination: navigationController)
-        viewController?.prepareForSegue(segue, sender: viewController?.initialSetupView)
+        viewController?.prepare(for: segue, sender: viewController?.initialSetupView)
         XCTAssertTrue(settingsViewController.locationManager === viewController?.locationManager)
     }
     
@@ -275,20 +275,20 @@ class TestWeatherViewController: XCTestCase {
         disallowLocationServices()
         loadViewControllerView()
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
-        XCTAssertFalse(viewController!.initialSetupView.hidden)
+        XCTAssertFalse(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasCurrentLocation() {
         loadViewControllerView()
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
-        XCTAssertTrue(viewController!.initialSetupView.hidden)
+        XCTAssertTrue(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerHidesInitialSetupViewWhenSettingsScreenIsDoneAndHasAtLeastOneLocation() {
         loadViewControllerView()
         insertStubCitiesInUserDefaults()
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
-        XCTAssertTrue(viewController!.initialSetupView.hidden)
+        XCTAssertTrue(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasNoCurrentLocationNorFavouriteCities() {
@@ -304,7 +304,7 @@ class TestWeatherViewController: XCTestCase {
         viewController!.locationManager = nil // should be the same as setting stub to disable location services
         loadViewControllerView()
         viewController?.settingsViewControllerDidFinish(SettingsViewController())
-        XCTAssertFalse(viewController!.initialSetupView.hidden)
+        XCTAssertFalse(viewController!.initialSetupView.isHidden)
     }
     
     func testViewControllerUpdatesUserDefaultsWhenSettingsViewControllerIsDoneIfHasCurrentLocation() {
@@ -383,12 +383,12 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerPerformsSegueToSettingsScreenWhenUserTapsSettingsButton() {
         loadViewControllerView()
-        expectationForNotification(TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
+        expectation(forNotification: TestExtensionNotifications.DidAttemptSegue, object: viewController) { (notification) -> Bool in
             let segueIdentifier = notification.userInfo![TestExtensionNotificationsKeys.SegueIdentifier] as! String
             return segueIdentifier == WeatherViewController.SegueIdentifiers.Settings.rawValue
         }
-        viewController!.settingsButton.sendActionsForControlEvents(.TouchUpInside)
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        viewController!.settingsButton.sendActions(for: .touchUpInside)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func testViewControllerReloadsDataOnCollectionViewWhenSettingsViewControllerIsDone() {
@@ -436,7 +436,7 @@ class TestWeatherViewController: XCTestCase {
         }
         let apiClient = FakeAPIClient() // need new one for thest
         viewController?.apiClient = apiClient
-        NSNotificationCenter.defaultCenter().postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         XCTAssertEqual(expectedRequestedCoordinates, apiClient.requestedCoordinates)
     }
     
@@ -490,13 +490,13 @@ class TestWeatherViewController: XCTestCase {
     
     func testViewControllerDisplaysZeroCollectionViewCellsIfLocationsHaveNotBeenSetUp() {
         viewController?.userDefaults?.didSetUpLocations = false
-        let numberOfSections = viewController?.numberOfSectionsInCollectionView(FakeCollectionView())
+        let numberOfSections = viewController?.numberOfSections(in: FakeCollectionView())
         XCTAssertEqual(0, numberOfSections)
     }
     
     func testViewControllerAlwaysHasOneCollectionViewSectionAfterLocationHaveBeenSetUp() {
         viewController?.userDefaults?.didSetUpLocations = true
-        let numberOfSections = viewController?.numberOfSectionsInCollectionView(FakeCollectionView())
+        let numberOfSections = viewController?.numberOfSections(in: FakeCollectionView())
         XCTAssertEqual(1, numberOfSections)
     }
     
@@ -524,7 +524,7 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerDisplaysCollectionViewWithFlowLayoutWithHorizontalScrollingOption() {
         loadViewControllerView()
         let layout = viewController?.collectionView.collectionViewLayout as? UICollectionViewFlowLayout
-        XCTAssertEqual(UICollectionViewScrollDirection.Horizontal, layout?.scrollDirection)
+        XCTAssertEqual(UICollectionViewScrollDirection.horizontal, layout?.scrollDirection)
     }
     
     func testViewControllerDisplaysCollectionViewWithFlowLayoutWithNoSpaceBetweenCells() {
@@ -537,12 +537,12 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerDisplaysCollectionViewWithFlowLayoutWithNoSectionMargins() {
         loadViewControllerView()
         let layout = viewController?.collectionView.collectionViewLayout as? UICollectionViewFlowLayout
-        XCTAssertEqual(UIEdgeInsetsZero, layout?.sectionInset)
+        XCTAssertEqual(UIEdgeInsets.zero, layout?.sectionInset)
     }
     
     func testViewControllerCollectionViewIsPaginated() {
         loadViewControllerView()
-        XCTAssertTrue(viewController!.collectionView!.pagingEnabled)
+        XCTAssertTrue(viewController!.collectionView!.isPagingEnabled)
     }
     
     func testViewControllerCollectionDoesNotShowScrollingIndicators() {
@@ -555,8 +555,8 @@ class TestWeatherViewController: XCTestCase {
         loadViewControllerView()
         let collectionView = viewController?.collectionView
         let layout = collectionView?.collectionViewLayout
-        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-        let cellSize = viewController?.collectionView(collectionView!, layout: layout!, sizeForItemAtIndexPath: indexPath)
+        let indexPath = IndexPath(item: 0, section: 0)
+        let cellSize = viewController?.collectionView(collectionView!, layout: layout!, sizeForItemAt: indexPath)
         XCTAssertEqual(collectionView?.bounds.size, cellSize)
     }
     
@@ -565,8 +565,8 @@ class TestWeatherViewController: XCTestCase {
         let testLocation2 = Location(coordinate: CLLocationCoordinate2D())
         viewController?.userDefaults?.favouriteLocations = [testLocation, testLocation2]
         loadViewControllerView()
-        let indexPath = NSIndexPath(forItem: 1, inSection: 0)
-        viewController?.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        let indexPath = IndexPath(item: 1, section: 0)
+        viewController?.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
         viewController?.scrollViewDidEndDecelerating(viewController!.collectionView) // need to manually call this as it relates to actual user interactions
         XCTAssertEqual(1, viewController?.pageControl.currentPage)
     }
@@ -578,8 +578,8 @@ class TestWeatherViewController: XCTestCase {
         disallowLocationServices()
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
-        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        let indexPath = IndexPath(item: 0, section: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAt: indexPath) as? LocationCollectionViewCell
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("-", cell?.weatherConditionLabel.text)
         XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
@@ -593,8 +593,8 @@ class TestWeatherViewController: XCTestCase {
         loadViewControllerView()
         addStubForecastsToCities()
         viewController?.collectionView.reloadData()
-        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        let indexPath = IndexPath(item: 0, section: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAt: indexPath) as? LocationCollectionViewCell
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
         XCTAssertEqual("16ºC", cell?.currentTemperatureLabel.text)
@@ -609,8 +609,8 @@ class TestWeatherViewController: XCTestCase {
         loadViewControllerView()
         addStubForecastsToCities()
         viewController?.collectionView.reloadData()
-        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        let indexPath = IndexPath(item: 0, section: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAt: indexPath) as? LocationCollectionViewCell
         XCTAssertEqual("London", cell?.locationNameLabel.text)
         XCTAssertEqual("Rain", cell?.weatherConditionLabel.text)
         XCTAssertEqual("61ºF", cell?.currentTemperatureLabel.text)
@@ -620,8 +620,8 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerDisplaysTemplateForecastWhileLoadingUserLocation() {
         viewController?.apiClient = nil
         loadViewControllerView()
-        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        let indexPath = IndexPath(item: 0, section: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAt: indexPath) as? LocationCollectionViewCell
         XCTAssertEqual("-", cell?.locationNameLabel.text)
         XCTAssertEqual("-", cell?.weatherConditionLabel.text)
         XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
@@ -634,8 +634,8 @@ class TestWeatherViewController: XCTestCase {
         let apiClient = viewController?.apiClient as? FakeAPIClient
         apiClient?.stubLocationInfo = LocationInfo(id: "123", name: "Naples", city: "Naples", country: "Italy")
         loadViewControllerView()
-        let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAtIndexPath: indexPath) as? LocationCollectionViewCell
+        let indexPath = IndexPath(item: 0, section: 0)
+        let cell = viewController?.collectionView(viewController!.collectionView, cellForItemAt: indexPath) as? LocationCollectionViewCell
         XCTAssertEqual("Naples", cell?.locationNameLabel.text)
         XCTAssertEqual("-", cell?.weatherConditionLabel.text)
         XCTAssertEqual("-º", cell?.currentTemperatureLabel.text)
@@ -644,51 +644,53 @@ class TestWeatherViewController: XCTestCase {
     func testViewControllerDoesNotCrashAppWhenMovingFromPageToPageIfLocationIsEnabled() {
         insertStubCitiesInUserDefaults()
         loadViewControllerView()
-        let currentLocationIndexPath = NSIndexPath(forItem: 1, inSection: 0)
-        viewController?.collectionView.scrollToItemAtIndexPath(currentLocationIndexPath, atScrollPosition: .CenteredHorizontally, animated: false)
-        let firstCityIndexPath = NSIndexPath(forItem: 1, inSection: 0)
-        viewController?.collectionView.scrollToItemAtIndexPath(firstCityIndexPath, atScrollPosition: .CenteredHorizontally, animated: false)
-        let lastCityIndexPath = NSIndexPath(forItem: 2, inSection: 0)
-        viewController?.collectionView.scrollToItemAtIndexPath(lastCityIndexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        let currentLocationIndexPath = IndexPath(item: 1, section: 0)
+        viewController?.collectionView.scrollToItem(at: currentLocationIndexPath, at: .centeredHorizontally, animated: false)
+        let firstCityIndexPath = IndexPath(item: 1, section: 0)
+        viewController?.collectionView.scrollToItem(at: firstCityIndexPath, at: .centeredHorizontally, animated: false)
+        let lastCityIndexPath = IndexPath(item: 2, section: 0)
+        viewController?.collectionView.scrollToItem(at: lastCityIndexPath, at: .centeredHorizontally, animated: false)
         // NOTE: no need for assertions: if the app crashes the test will fail
     }
     
-    // MARK: - Helpers
+}
+
+extension TestWeatherViewController {
     
-    private func loadViewControllerView() {
+    fileprivate func loadViewControllerView() {
         viewController!.beginAppearanceTransition(true, animated: false)
         viewController!.endAppearanceTransition()
     }
     
-    private func allowLocationServices() {
+    fileprivate func allowLocationServices() {
         let locationManager = viewController?.locationManager as? FakeUserLocationManager
         locationManager?.allowUseOfLocationServices = true
     }
     
-    private func disallowLocationServices() {
+    fileprivate func disallowLocationServices() {
         let locationManager = viewController?.locationManager as? FakeUserLocationManager
         locationManager?.allowUseOfLocationServices = false
     }
     
-    private func stubAPIReturnedForecasts() -> [Forecast] {
+    @discardableResult fileprivate func stubAPIReturnedForecasts() -> [Forecast] {
         let apiClient = viewController?.apiClient as? FakeAPIClient
-        let forecast = Forecast(date: NSDate(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast = Forecast(date: Date(), cityID: "cityID1", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
         let stubForecasts = [forecast]
         apiClient?.stubForecasts = stubForecasts
         return stubForecasts
     }
     
-    private func insertStubCitiesInUserDefaults() {
+    fileprivate func insertStubCitiesInUserDefaults() {
         let london = Location(coordinate: CLLocationCoordinate2D(latitude: 51.5283063, longitude: -0.3824664), name: "London", country: "GB")
         let sf = Location(coordinate: CLLocationCoordinate2D(latitude: 37.7576792, longitude: -122.5078119), name: "San Francisco", country: "USA")
         viewController?.userDefaults?.favouriteLocations = [london, sf]
     }
     
-    private func addStubForecastsToCities() {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Day, .Month, .Year, .Hour], fromDate: NSDate())
+    fileprivate func addStubForecastsToCities() {
+        let calendar = Calendar.current
+        var components = (calendar as NSCalendar).components([.day, .month, .year, .hour], from: Date())
         components.hour = 9
-        let todayAtNine = calendar.dateFromComponents(components)!
+        let todayAtNine = calendar.date(from: components)!
         let london = viewController?.locations.first
         london?.forecasts = [Forecast(date: todayAtNine, cityID: "123", weather: .Rain, minTemperature: 15, maxTemperature: 17, currentTemperature: 16)]
         let sf = viewController?.locations.last

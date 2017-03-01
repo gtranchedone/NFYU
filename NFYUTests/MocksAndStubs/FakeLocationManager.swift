@@ -29,13 +29,13 @@ class FakeUserLocationManager: UserLocationManager {
         get { return didRequestPermissions }
     }
     
-    func requestUserAuthorizationForUsingLocationServices(completionBlock: (() -> ())?) -> Bool {
+    @discardableResult func requestUserAuthorizationForUsingLocationServices(_ completionBlock: @escaping () -> ()) -> Bool {
         didRequestPermissions = stubDidRequestPermissions
-        completionBlock?()
+        completionBlock()
         return stubDidRequestPermissions
     }
     
-    func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {
+    @discardableResult func requestCurrentLocation(_ completionBlock: @escaping (NSError?, CLLocation?) -> ()) {
         didRequestCurrentLocation = true
         if shouldCallCompletionBlock {
             completionBlock(stubError, stubLocation)
@@ -46,7 +46,7 @@ class FakeUserLocationManager: UserLocationManager {
 
 class FakeLocationManager: CLLocationManager {
     
-    static var stubAuthorizationStatus: CLAuthorizationStatus = .NotDetermined
+    static var stubAuthorizationStatus: CLAuthorizationStatus = .notDetermined
     var didRequestAuthorizationForInUse = false
     var didRequestLocation = false
     

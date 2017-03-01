@@ -13,8 +13,8 @@ let kOpenWeatherAPIClientResponseSerializerErrorDomain = "OpenWeatherAPIClientRe
 class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
     
     enum ErrorCodes: Int {
-        case OK = 200
-        case UnacceptableResponse = 406
+        case ok = 200
+        case unacceptableResponse = 406
     }
     
     enum ResponseKeys: String {
@@ -40,15 +40,15 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         case WeatherCode = "id"
     }
     
-    func parseForecastsAPIResponseData(data: NSData) -> SerializedAPIResponse {
+    func parseForecastsAPIResponseData(_ data: Data) -> SerializedAPIResponse {
         do {
-            let parsedData = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String : AnyObject]
+            let parsedData = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String : AnyObject]
             guard parsedData != nil else { return (errorForUnexpectedResponseFormat(), nil, nil) }
             
             let errorCode = parsedData![ResponseKeys.StatusCode.rawValue] as? String
             guard errorCode != nil else { return (errorForUnexpectedResponseData(), nil, nil) }
             
-            guard Int(errorCode!) == ErrorCodes.OK.rawValue else {
+            guard Int(errorCode!) == ErrorCodes.ok.rawValue else {
                 return (errorForAPIErrorWithInfo(parsedData!, errorCode: errorCode!), nil, nil)
             }
             
@@ -61,7 +61,7 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         }
     }
     
-    private func parseLocationInfoInResponse(response: [String : AnyObject]) -> LocationInfo? {
+    fileprivate func parseLocationInfoInResponse(_ response: [String : AnyObject]) -> LocationInfo? {
         let locationInfoDictionary = response[ResponseKeys.LocationInfo.rawValue]
         guard locationInfoDictionary != nil else { return nil }
         // it's OK to crash if the expected info isn't there for first MVP
@@ -71,7 +71,7 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         return LocationInfo(id: String(cityID), name: cityName, country: cityCountry)
     }
     
-    private func parseForcastsInResponse(response: [String : AnyObject], locationInfo: LocationInfo?) -> [Forecast]? {
+    fileprivate func parseForcastsInResponse(_ response: [String : AnyObject], locationInfo: LocationInfo?) -> [Forecast]? {
         let forecastsData = response[ResponseKeys.ForecastsData.rawValue] as? [[String : AnyObject]]
         guard forecastsData != nil else { return nil }
         return forecastsData!.map { (forecastDictionary) -> Forecast in
@@ -79,10 +79,10 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         }
     }
     
-    private func forecastFromDictionary(dictionary: [String : AnyObject], cityID: String) -> Forecast {
+    fileprivate func forecastFromDictionary(_ dictionary: [String : AnyObject], cityID: String) -> Forecast {
         // it's OK to crash if the expected info isn't there for first MVP
-        let unixTimestamp = dictionary[ForecastInfoKeys.Date.rawValue] as! NSTimeInterval
-        let date = NSDate(timeIntervalSince1970: unixTimestamp)
+        let unixTimestamp = dictionary[ForecastInfoKeys.Date.rawValue] as! TimeInterval
+        let date = Date(timeIntervalSince1970: unixTimestamp)
         let mainSection = dictionary[ForecastInfoKeys.MainInfo.rawValue] as! [String : Float]
         let minTemperature = Int(round(mainSection[ForecastInfoKeys.MinTemperature.rawValue]!))
         let maxTemperature = Int(round(mainSection[ForecastInfoKeys.MaxTemperature.rawValue]!))
@@ -97,7 +97,7 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
                         currentTemperature: currentTemperature)
     }
     
-    private func weatherConditionFromCode(weatherCode: Int) -> WeatherCondition {
+    fileprivate func weatherConditionFromCode(_ weatherCode: Int) -> WeatherCondition {
         // TODO: remove this magic numbers
         if (weatherCode >= 900 && weatherCode < 910) || weatherCode >= 958 {
             return .Danger
@@ -129,19 +129,19 @@ class OpenWeatherAPIClientResponseSerializer: NSObject, APIResponseSerializer {
         return .Thunderstorm
     }
     
-    private func errorForUnexpectedResponseFormat() -> NSError {
+    fileprivate func errorForUnexpectedResponseFormat() -> NSError {
         let userInfo = [NSLocalizedDescriptionKey: "The data couldn’t be read because it isn’t in the expected format."]
-        let error = NSError(domain: kOpenWeatherAPIClientResponseSerializerErrorDomain, code: ErrorCodes.UnacceptableResponse.rawValue, userInfo: userInfo)
+        let error = NSError(domain: kOpenWeatherAPIClientResponseSerializerErrorDomain, code: ErrorCodes.unacceptableResponse.rawValue, userInfo: userInfo)
         return error
     }
     
-    private func errorForUnexpectedResponseData() -> NSError {
+    fileprivate func errorForUnexpectedResponseData() -> NSError {
         let userInfo = [NSLocalizedDescriptionKey: "The data couldn’t be read because it doesn’t contain the expected data."]
-        let error = NSError(domain: kOpenWeatherAPIClientResponseSerializerErrorDomain, code: ErrorCodes.UnacceptableResponse.rawValue, userInfo: userInfo)
+        let error = NSError(domain: kOpenWeatherAPIClientResponseSerializerErrorDomain, code: ErrorCodes.unacceptableResponse.rawValue, userInfo: userInfo)
         return error
     }
     
-    private func errorForAPIErrorWithInfo(errorInfo: [String : AnyObject], errorCode: String) -> NSError {
+    fileprivate func errorForAPIErrorWithInfo(_ errorInfo: [String : AnyObject], errorCode: String) -> NSError {
         let message = errorInfo[ResponseKeys.ErrorMessage.rawValue] as! String
         let userInfo = [NSLocalizedDescriptionKey: message]
         let error = NSError(domain: kOpenWeatherAPIClientResponseSerializerErrorDomain, code: Int(errorCode)!, userInfo: userInfo)

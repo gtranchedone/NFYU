@@ -10,21 +10,21 @@ import UIKit
 
 class FakeCollectionView: UICollectionView {
     
-    private(set) var didReloadData = false
-    private(set) var reloadedIndexPaths: [NSIndexPath]?
+    fileprivate(set) var didReloadData = false
+    fileprivate(set) var reloadedIndexPaths: [IndexPath]?
     
     var stubNumberOfSections = 0
     var stubNumberOfRows = 0
     
     convenience init() {
-        self.init(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+        self.init(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     }
     
-    override func numberOfSections() -> Int {
+    override var numberOfSections : Int {
         return stubNumberOfSections
     }
     
-    override func numberOfItemsInSection(section: Int) -> Int {
+    override func numberOfItems(inSection section: Int) -> Int {
         return stubNumberOfRows
     }
     
@@ -32,7 +32,7 @@ class FakeCollectionView: UICollectionView {
         didReloadData = true
     }
     
-    override func reloadItemsAtIndexPaths(indexPaths: [NSIndexPath]) {
+    override func reloadItems(at indexPaths: [IndexPath]) {
         reloadedIndexPaths = indexPaths
     }
     

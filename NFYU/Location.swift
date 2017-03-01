@@ -25,7 +25,7 @@ class Location: NSObject, NSCoding {
     var forecastsForToday: [Forecast] {
         get {
             return forecasts.filter { (forecast) -> Bool in
-                return NSCalendar.currentCalendar().isDateInToday(forecast.date)
+                return Calendar.current.isDateInToday(forecast.date as Date)
             }
         }
     }
@@ -48,8 +48,8 @@ class Location: NSObject, NSCoding {
     var displayableName: String {
         get {
             var placeName = city ?? ""
-            if let name = name, city = city {
-                if !name.containsString(city) {
+            if let name = name, let city = city {
+                if !name.contains(city) {
                     placeName = "\(name), \(city)"
                 }
             }
@@ -77,13 +77,13 @@ class Location: NSObject, NSCoding {
     }
     
     convenience init(coordinate: CLLocationCoordinate2D, name: String? = nil, country: String? = nil, state: String? = nil, city: String? = nil) {
-        let locationInfo = LocationInfo(name: name, city: city, country: country, state: state)
+        let locationInfo = LocationInfo(name: name, city: city, state: state, country: country)
         self.init(coordinate: coordinate, locationInfo: locationInfo)
     }
     
     // MARK: - NSCoding
     
-    private enum NSCodingKeys: String {
+    fileprivate enum NSCodingKeys: String {
         case Name = "name"
         case City = "city"
         case State = "state"
@@ -93,26 +93,26 @@ class Location: NSObject, NSCoding {
     }
     
     convenience required init?(coder aDecoder: NSCoder) {
-        let name = aDecoder.decodeObjectForKey(NSCodingKeys.Name.rawValue) as? String
-        let city = aDecoder.decodeObjectForKey(NSCodingKeys.City.rawValue) as? String
-        let state = aDecoder.decodeObjectForKey(NSCodingKeys.State.rawValue) as? String
-        let country = aDecoder.decodeObjectForKey(NSCodingKeys.Country.rawValue) as? String
-        let latitude = aDecoder.decodeDoubleForKey(NSCodingKeys.Latitude.rawValue)
-        let longitude = aDecoder.decodeDoubleForKey(NSCodingKeys.Longitude.rawValue)
+        let name = aDecoder.decodeObject(forKey: NSCodingKeys.Name.rawValue) as? String
+        let city = aDecoder.decodeObject(forKey: NSCodingKeys.City.rawValue) as? String
+        let state = aDecoder.decodeObject(forKey: NSCodingKeys.State.rawValue) as? String
+        let country = aDecoder.decodeObject(forKey: NSCodingKeys.Country.rawValue) as? String
+        let latitude = aDecoder.decodeDouble(forKey: NSCodingKeys.Latitude.rawValue)
+        let longitude = aDecoder.decodeDouble(forKey: NSCodingKeys.Longitude.rawValue)
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         self.init(coordinate: coordinate, name: name, country: country, state: state, city: city)
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: NSCodingKeys.Name.rawValue)
-        aCoder.encodeObject(city, forKey: NSCodingKeys.City.rawValue)
-        aCoder.encodeObject(state, forKey: NSCodingKeys.State.rawValue)
-        aCoder.encodeObject(country, forKey: NSCodingKeys.Country.rawValue)
-        aCoder.encodeDouble(coordinate.latitude, forKey: NSCodingKeys.Latitude.rawValue)
-        aCoder.encodeDouble(coordinate.longitude, forKey: NSCodingKeys.Longitude.rawValue)
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: NSCodingKeys.Name.rawValue)
+        aCoder.encode(city, forKey: NSCodingKeys.City.rawValue)
+        aCoder.encode(state, forKey: NSCodingKeys.State.rawValue)
+        aCoder.encode(country, forKey: NSCodingKeys.Country.rawValue)
+        aCoder.encode(coordinate.latitude, forKey: NSCodingKeys.Latitude.rawValue)
+        aCoder.encode(coordinate.longitude, forKey: NSCodingKeys.Longitude.rawValue)
     }
     
-    override func isEqual(object: AnyObject?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         if let object = object as? Location {
             return object == self
         }

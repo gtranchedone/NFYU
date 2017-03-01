@@ -24,7 +24,7 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
     }
     
     func testResponseSerializerReturnsOnlyAnErrorIfResponseFormatInvalidJSON() {
-        let testData = "".dataUsingEncoding(NSUTF8StringEncoding)!
+        let testData = "".data(using: String.Encoding.utf8)!
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         XCTAssertNil(result.locationInfo)
         XCTAssertNil(result.forecasts)
@@ -32,7 +32,7 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
     }
     
     func testResponseSerializerReturnsOnlyAnErrorIfResponseFormatIsValidJSONButUnexpectedFormat() {
-        let testData = "[]".dataUsingEncoding(NSUTF8StringEncoding)!
+        let testData = "[]".data(using: String.Encoding.utf8)!
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         XCTAssertNil(result.locationInfo)
         XCTAssertNil(result.forecasts)
@@ -40,7 +40,7 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
     }
     
     func testResponseSerializerReturnsOnlyAnErrorIfResponseFormatIsValidButDoesNotContainExpectedData() {
-        let testData = "{ \"test\": \"test\" }".dataUsingEncoding(NSUTF8StringEncoding)!
+        let testData = "{ \"test\": \"test\" }".data(using: String.Encoding.utf8)!
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         XCTAssertNil(result.locationInfo)
         XCTAssertNil(result.forecasts)
@@ -80,7 +80,7 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
         let testData = dataForSampleAPIResponseContainingForecastData()
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         let forecast = result.forecasts?.first
-        XCTAssertEqual(forecast?.date, NSDate(timeIntervalSince1970: 1446573600))
+        XCTAssertEqual(forecast?.date, Date(timeIntervalSince1970: 1446573600))
         XCTAssertEqual(forecast?.currentTemperature, 12)
         XCTAssertEqual(forecast?.minTemperature, 12)
         XCTAssertEqual(forecast?.maxTemperature, 13)
@@ -92,7 +92,7 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
         let testData = dataForSampleAPIResponseContainingForecastData()
         let result = responseSerializer!.parseForecastsAPIResponseData(testData)
         let forecast = result.forecasts?[1]
-        XCTAssertEqual(forecast?.date, NSDate(timeIntervalSince1970: 1446584400))
+        XCTAssertEqual(forecast?.date, Date(timeIntervalSince1970: 1446584400))
         XCTAssertEqual(forecast?.currentTemperature, 12)
         XCTAssertEqual(forecast?.minTemperature, 12)
         XCTAssertEqual(forecast?.maxTemperature, 13)
@@ -139,21 +139,21 @@ class TestOpenWeatherAPIResponseSerializer: XCTestCase {
     
     // MARK: - Helpers
     
-    func dataForSampleAPIResponseContainingError() -> NSData {
+    func dataForSampleAPIResponseContainingError() -> Data {
         return dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-error")
     }
     
-    func dataForSampleAPIResponseContainingForecastData() -> NSData {
+    func dataForSampleAPIResponseContainingForecastData() -> Data {
         return dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-success")
     }
     
-    func dataForSampleAPIResponseContainingForecastsWithSampleWeatherCodes() -> NSData {
+    func dataForSampleAPIResponseContainingForecastsWithSampleWeatherCodes() -> Data {
         return dataForSampleAPIResponseFromFileNamed("open-weather-api-sample-weather-codes")
     }
     
-    func dataForSampleAPIResponseFromFileNamed(fileName: String) -> NSData {
-        let filePath = NSBundle(forClass: self.dynamicType).pathForResource(fileName, ofType: "json")
-        let data = NSData(contentsOfFile: filePath!)!
+    func dataForSampleAPIResponseFromFileNamed(_ fileName: String) -> Data {
+        let filePath = Bundle(for: type(of: self)).path(forResource: fileName, ofType: "json")
+        let data = try! Data(contentsOf: URL(fileURLWithPath: filePath!))
         return data
     }
 

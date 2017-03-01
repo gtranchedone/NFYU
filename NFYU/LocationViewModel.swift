@@ -19,25 +19,25 @@ enum CellIdentifiers: String {
 // the same controller with different views for the same model without the controller noticing
 protocol LocationViewModelProtocol {
     
-    func collectionViewCellForLocation(location: Location, collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell
+    func collectionViewCellForLocation(_ location: Location, collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
     
 }
 
 class LocationViewModel: LocationViewModelProtocol {
     
     let userDefaults: UserDefaults?
-    let hourlyDateFormatter: NSDateFormatter
+    let hourlyDateFormatter: DateFormatter
     
     init(userDefaults: UserDefaults?) {
         self.userDefaults = userDefaults
-        hourlyDateFormatter = NSDateFormatter()
-        hourlyDateFormatter.dateFormat = .None
-        hourlyDateFormatter.timeStyle = .ShortStyle
+        hourlyDateFormatter = DateFormatter()
+        hourlyDateFormatter.dateFormat = .none
+        hourlyDateFormatter.timeStyle = .short
     }
     
-    func collectionViewCellForLocation(location: Location, collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionViewCellForLocation(_ location: Location, collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let cellIdentifier = CellIdentifiers.ForecastCell.rawValue
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! LocationCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! LocationCollectionViewCell
         let forecast = location.forecasts.first
         if let forecast = forecast {
             if userDefaults?.useFahrenheitDegrees == true {
@@ -55,9 +55,9 @@ class LocationViewModel: LocationViewModelProtocol {
         
         // temporary hourly conditions -> to be changed to something similar to the Weather app
         let formattedForecasts = location.forecastsForToday.map { (forecast) -> String in
-            return "\(hourlyDateFormatter.stringFromDate(forecast.date)): \(forecast.weather.localizedDescription)"
+            return "\(hourlyDateFormatter.string(from: forecast.date as Date)): \(forecast.weather.localizedDescription)"
         }
-        let hourlyConditions = formattedForecasts.joinWithSeparator("\n")
+        let hourlyConditions = formattedForecasts.joined(separator: "\n")
         cell.hourlyTodayConditionsLabel.text = hourlyConditions
         
         return cell

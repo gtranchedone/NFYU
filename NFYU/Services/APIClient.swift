@@ -11,7 +11,7 @@ import CoreLocation
 
 protocol APIRequestSerializer {
     
-    func buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D) -> NSURLRequest
+    func buildURLRequestToFetchForecastsForLocationWithCoordinate(_ coordinate: CLLocationCoordinate2D) -> URLRequest
     
 }
 
@@ -19,13 +19,13 @@ typealias SerializedAPIResponse = (error: NSError?, forecasts: [Forecast]?, loca
 
 protocol APIResponseSerializer {
     
-    func parseForecastsAPIResponseData(data: NSData) -> SerializedAPIResponse
+    func parseForecastsAPIResponseData(_ data: Data) -> SerializedAPIResponse
     
 }
 
 class APIClient: AnyObject {
     
-    var session = NSURLSession.sharedSession()
+    var session = URLSession.shared
     let requestSerializer: APIRequestSerializer
     let responseSerializer: APIResponseSerializer
     
@@ -35,9 +35,9 @@ class APIClient: AnyObject {
     }
     
     // The completion block is always called on the main queue
-    func fetchForecastsForLocationWithCoordinate(coordinate: CLLocationCoordinate2D, completionBlock: (NSError?, [Forecast]?, LocationInfo?) -> ()) {
+    func fetchForecastsForLocationWithCoordinate(_ coordinate: CLLocationCoordinate2D, completionBlock: @escaping (NSError?, [Forecast]?, LocationInfo?) -> ()) {
         let request = requestSerializer.buildURLRequestToFetchForecastsForLocationWithCoordinate(coordinate)
-        let task = session.dataTaskWithRequest(request) { [weak self] (data, response, error) -> Void in
+        let task = session.dataTask(with: request, completionHandler: { [weak self] (data, response, error) -> Void in
             var locationInfo: LocationInfo?
             var forecasts: [Forecast]?
             var finalError = error
@@ -47,23 +47,23 @@ class APIClient: AnyObject {
                 forecasts = parsedResponse?.forecasts
                 finalError = parsedResponse?.error
             }
-            self?.logResponse(response, error: finalError, forecasts: forecasts, locationInfo: locationInfo)
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                completionBlock(finalError, forecasts, locationInfo)
+            self?.logResponse(response, error: finalError as NSError?, forecasts: forecasts, locationInfo: locationInfo)
+            OperationQueue.main.addOperation({ () -> Void in
+                completionBlock(finalError as NSError?, forecasts, locationInfo)
             })
-        }
+        }) 
         logRequest(request)
         task.resume()
     }
     
-    private func logRequest(request: NSURLRequest) {
+    fileprivate func logRequest(_ request: URLRequest) {
         // use print instead of debugPrint for pretty printing
-        print("Performing \(request.HTTPMethod!) request to \(request.URL!)", terminator: "\n\n")
+        print("Performing \(request.httpMethod!) request to \(request.url!)", terminator: "\n\n")
     }
     
-    private func logResponse(response: NSURLResponse?, error: NSError?, forecasts: [Forecast]?, locationInfo: LocationInfo?) {
+    fileprivate func logResponse(_ response: URLResponse?, error: NSError?, forecasts: [Forecast]?, locationInfo: LocationInfo?) {
         // use print instead of debugPrint for pretty printing
-        print("Received response for URL \(response?.URL) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
+        print("Received response for URL \(response?.url) with error -> \(error)\nlocationInfo -> \(locationInfo)\nforecasts -> \(forecasts)", terminator: "\n\n")
     }
     
 }

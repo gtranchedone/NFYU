@@ -10,7 +10,7 @@ import UIKit
 
 protocol SwitchTableViewCellDelegate {
     
-    func switchCellDidChangeSwitchValue(cell: SwitchTableViewCell)
+    func switchCellDidChangeSwitchValue(_ cell: SwitchTableViewCell)
     
 }
 
@@ -19,13 +19,13 @@ class SwitchTableViewCell: UITableViewCell {
     var delegate: SwitchTableViewCellDelegate?
     @IBOutlet var switchControl: UISwitch! {
         didSet {
-            switchControl.addTarget(self, action: "switchValueChanged", forControlEvents: .ValueChanged)
+            switchControl.addTarget(self, action: #selector(SwitchTableViewCell.switchValueChanged), for: .valueChanged)
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        textLabel!.backgroundColor = .clearColor()
+        textLabel!.backgroundColor = .clear
     }
     
     func switchValueChanged() {

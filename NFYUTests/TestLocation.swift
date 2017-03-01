@@ -109,14 +109,14 @@ class TestLocation: XCTestCase {
     
     func testLocationCanBeEncoded() {
         let city = Location(coordinate: CLLocationCoordinate2D(latitude: 0.10, longitude: 40.2), name: "Brixton", country: "UK", state: "England", city: "London")
-        let data = NSKeyedArchiver.archivedDataWithRootObject(city)
+        let data = NSKeyedArchiver.archivedData(withRootObject: city)
         XCTAssertNotNil(data)
     }
     
     func testLocationCanBeDecoded() {
         let city1 = Location(coordinate: CLLocationCoordinate2D(latitude: 0.10, longitude: 40.2), name: "Brixton", country: "UK", state: "England", city: "London")
-        let data = NSKeyedArchiver.archivedDataWithRootObject(city1)
-        let city2 = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! Location
+        let data = NSKeyedArchiver.archivedData(withRootObject: city1)
+        let city2 = NSKeyedUnarchiver.unarchiveObject(with: data) as! Location
         XCTAssertEqual(city1, city2)
     }
     
@@ -124,10 +124,10 @@ class TestLocation: XCTestCase {
     
     func testLocationReturnsForecastsForToday() {
         let location = Location(coordinate: CLLocationCoordinate2D())
-        let timeIntervalForTomorrow = NSTimeInterval(24 * 60 * 60)
-        let forecast1 = Forecast(date: NSDate(), cityID: "", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
-        let forecast2 = Forecast(date: NSDate(timeIntervalSinceNow: 10), cityID: "", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
-        let forecast3 = Forecast(date: NSDate(timeIntervalSinceNow: timeIntervalForTomorrow), cityID: "", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let timeIntervalForTomorrow = TimeInterval(24 * 60 * 60)
+        let forecast1 = Forecast(date: Date(), cityID: "", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast2 = Forecast(date: Date(timeIntervalSinceNow: 10), cityID: "", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
+        let forecast3 = Forecast(date: Date(timeIntervalSinceNow: timeIntervalForTomorrow), cityID: "", weather: .Clear, minTemperature: 0, maxTemperature: 0, currentTemperature: 0)
         let forecasts = [forecast1, forecast2, forecast3]
         location.forecasts = forecasts
         let expectedForecasts = [forecast1, forecast2]

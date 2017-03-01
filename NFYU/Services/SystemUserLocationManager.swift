@@ -6,52 +6,50 @@
 import Foundation
 import CoreLocation
 
-class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManagerDelegate {
+class SystemUserLocationManager: NSObject {
     
-    private let locationManager: CLLocationManager
-    private var completionBlock: ((NSError?, CLLocation?) -> ())?
-    private var permissionsCompletionBlock: (() -> ())?
-
+    fileprivate let locationManager: CLLocationManager
+    fileprivate var completionBlock: ((NSError?, CLLocation?) -> ())?
+    fileprivate var permissionsCompletionBlock: (() -> ())?
+    
     init(locationManager: CLLocationManager? = nil) {
         self.locationManager = locationManager ?? CLLocationManager()
         super.init()
         self.locationManager.delegate = self
     }
+    
+}
 
-    // MARK: - LocationManager
-
-    private func authorizationStatus() -> CLAuthorizationStatus {
-        return locationManager.dynamicType.authorizationStatus()
+extension SystemUserLocationManager: UserLocationManager {
+    
+    fileprivate func authorizationStatus() -> CLAuthorizationStatus {
+        return type(of: locationManager).authorizationStatus()
     }
     
     var locationServicesEnabled: Bool {
-        get {
-            return authorizationStatus() == .AuthorizedWhenInUse
-        }
+        return authorizationStatus() == .authorizedWhenInUse
     }
     
     var didRequestAuthorization: Bool {
-        get {
-            return authorizationStatus() != .NotDetermined
-        }
+        return authorizationStatus() != .notDetermined
     }
     
-    func requestUserAuthorizationForUsingLocationServices(completionBlock: (() -> ())?) -> Bool {
-        guard authorizationStatus() == .NotDetermined else { return false }
-        permissionsCompletionBlock = completionBlock
+    func requestUserAuthorizationForUsingLocationServices(_ completionBlock: @escaping () -> ()) -> Bool {
+        guard authorizationStatus() == .notDetermined else { return false }
+        self.permissionsCompletionBlock = completionBlock
         locationManager.requestWhenInUseAuthorization()
         return true
     }
-
-    func requestCurrentLocation(completionBlock: (NSError?, CLLocation?) -> ()) {
+    
+    func requestCurrentLocation(_ completionBlock: @escaping (NSError?, CLLocation?) -> ()) {
         self.completionBlock = completionBlock
         let authorizationStatus = self.authorizationStatus()
-        if authorizationStatus == .NotDetermined {
-            requestUserAuthorizationForUsingLocationServices() { [weak self] in
+        if authorizationStatus == .notDetermined {
+            let _ = requestUserAuthorizationForUsingLocationServices() { [weak self] in
                 self?.requestCurrentLocation(completionBlock)
             }
         }
-        else if authorizationStatus != .AuthorizedWhenInUse {
+        else if authorizationStatus != .authorizedWhenInUse {
             let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("USE_OF_LOCATION_SERVICES_NOT_AUTHORIZED", comment: "")]
             let error = NSError(domain: UserLocationManagerErrorDomain, code: 0, userInfo: userInfo)
             completionBlock(error, nil)
@@ -61,28 +59,26 @@ class SystemUserLocationManager: NSObject, UserLocationManager, CLLocationManage
             locationManager.requestLocation()
         }
     }
+    
+}
 
-    // MARK: - CLLocationManagerDelegate
-
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+extension SystemUserLocationManager: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if let completionBlock = permissionsCompletionBlock {
             completionBlock()
         }
     }
-
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let completionBlock = completionBlock {
-            completionBlock(nil, locations.first)
-        }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        completionBlock?(nil, locations.first)
     }
-
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        if let completionBlock = completionBlock {
-            // bacause the description of the default error isn't great...
-            let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("CANNOT_FIND_CURRENT_LOCATION", comment: "")]
-            let finalError = NSError(domain: error.domain, code: error.code, userInfo: userInfo)
-            completionBlock(finalError, nil)
-        }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        // bacause the description of the default error isn't great...
+        let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("CANNOT_FIND_CURRENT_LOCATION", comment: "")]
+        let finalError = NSError(domain: error._domain, code: error._code, userInfo: userInfo)
+        completionBlock?(finalError, nil)
     }
-
+    
 }

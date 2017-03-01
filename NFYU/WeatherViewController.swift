@@ -9,6 +9,31 @@
 import UIKit
 import CoreLocation
 
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+
 class WeatherViewController: BaseViewController, SettingsViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     enum SegueIdentifiers: String {
@@ -19,7 +44,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     var userDefaults: UserDefaults?
     var locationManager: UserLocationManager?
     
-    private(set) var locations: [Location] = [] {
+    fileprivate(set) var locations: [Location] = [] {
         didSet {
             pageControl.numberOfPages = collectionView(collectionView, numberOfItemsInSection: 0)
             collectionView.reloadData()
@@ -36,24 +61,24 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     // MARK: - View Lifecycle
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateLocations()
         setInitialViewState()
-        let notificationName = UIApplicationDidBecomeActiveNotification
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: notificationName, object: nil)
+        let notificationName = NSNotification.Name.UIApplicationDidBecomeActive
+        NotificationCenter.default.addObserver(self, selector: #selector(WeatherViewController.applicationDidBecomeActive), name: notificationName, object: nil)
     }
     
-    private func setInitialViewState() {
-        backgroundMessageLabel.hidden = true
-        initialSetupView.hidden = userDefaults?.didSetUpLocations ?? false
-        settingsButton.hidden = !initialSetupView.hidden
+    fileprivate func setInitialViewState() {
+        backgroundMessageLabel.isHidden = true
+        initialSetupView.isHidden = userDefaults?.didSetUpLocations ?? false
+        settingsButton.isHidden = !initialSetupView.isHidden
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateCurrentLocationIfPossible()
         loadForecastsForAllLocations()
@@ -69,16 +94,16 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     // MARK: - Location Updates
     
-    private func updateLocations() {
+    fileprivate func updateLocations() {
         let currentLocation = self.currentLocation()
         var newLocations = userDefaults?.favouriteLocations ?? []
         if let currentLocation = currentLocation {
-            newLocations.insert(currentLocation, atIndex: 0)
+            newLocations.insert(currentLocation, at: 0)
         }
         locations = newLocations
     }
     
-    private func currentLocation() -> Location? {
+    fileprivate func currentLocation() -> Location? {
         guard locationManager?.locationServicesEnabled == true else { return nil }
         guard userDefaults?.didSetUpLocations == true else { return nil }
         var location = locations.filter({ (location) -> Bool in
@@ -100,18 +125,18 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
                 self?.activityIndicator.stopAnimating()
                 if let error = error {
                     self?.backgroundMessageLabel.text = error.localizedDescription
-                    self?.backgroundMessageLabel.hidden = false
+                    self?.backgroundMessageLabel.isHidden = false
                 }
                 else if let userLocation = location {
                     var currentLocation = self?.currentLocation()
                     if let currentLocation = currentLocation {
                         if self?.locations.contains(currentLocation) == true {
-                            self?.locations.removeAtIndex(self!.locations.indexOf(currentLocation)!)
+                            self?.locations.remove(at: self!.locations.index(of: currentLocation)!)
                         }
                     }
                     currentLocation = Location(coordinate: userLocation.coordinate)
                     currentLocation!.isUserLocation = true
-                    self?.locations.insert(currentLocation!, atIndex: 0)
+                    self?.locations.insert(currentLocation!, at: 0)
                     self?.loadForecastsForAllLocations()
                 }
             }
@@ -123,8 +148,8 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     func didSetupLocations() {
         userDefaults?.didSetUpLocations = true
-        initialSetupView.hidden = true
-        settingsButton.hidden = false
+        initialSetupView.isHidden = true
+        settingsButton.isHidden = false
     }
     
     // MARK: - Fetching Forecasts
@@ -135,7 +160,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         }
     }
     
-    func fetchForecastsForLocation(location: Location) {
+    func fetchForecastsForLocation(_ location: Location) {
         // TODO: don't load if last successful update is < 4h ago
         guard !(location.isUserLocation && location.coordinate == CLLocationCoordinate2D()) else { return }
         apiClient?.fetchForecastsForLocationWithCoordinate(location.coordinate) { [weak self] (error, forecasts, locationInfo) -> () in
@@ -161,44 +186,44 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     @IBAction func useCurrentLocation() {
         didSetupLocations()
-        locationManager?.requestUserAuthorizationForUsingLocationServices { [weak self] () -> () in
+        let _ = locationManager?.requestUserAuthorizationForUsingLocationServices { [weak self] () -> () in
             self?.updateCurrentLocationIfPossible()
         }
     }
     
     @IBAction func selectCities() {
-        settingsButton.hidden = false
-        initialSetupView.hidden = true
-        performSegueWithIdentifier(SegueIdentifiers.Settings.rawValue, sender: initialSetupView)
+        settingsButton.isHidden = false
+        initialSetupView.isHidden = true
+        performSegue(withIdentifier: SegueIdentifiers.Settings.rawValue, sender: initialSetupView)
     }
     
     @IBAction func showSettings() {
-        performSegueWithIdentifier(SegueIdentifiers.Settings.rawValue, sender: settingsButton)
+        performSegue(withIdentifier: SegueIdentifiers.Settings.rawValue, sender: settingsButton)
     }
     
     // MARK: SettingsViewControllerDelegate
     
-    func settingsViewControllerDidFinish(viewController: SettingsViewController) {
+    func settingsViewControllerDidFinish(_ viewController: SettingsViewController) {
         var hasValidData = hasCities()
         if let locationManager = locationManager {
             hasValidData = hasValidData || locationManager.locationServicesEnabled
         }
         userDefaults?.didSetUpLocations = hasValidData
         if hasValidData {
-            initialSetupView.hidden = true
-            dismissViewControllerAnimated(true, completion: nil)
+            initialSetupView.isHidden = true
+            dismiss(animated: true, completion: nil)
         }
         updateLocations()
     }
     
     // MARK: UICollectionViewDataSource
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard userDefaults?.didSetUpLocations == true else { return 0 }
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let canUseLocationServices = locationManager?.locationServicesEnabled ?? false
         let numberOfFavouriteCities = userDefaults?.favouriteLocations.count ?? 0
         if canUseLocationServices {
@@ -207,7 +232,7 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
         return numberOfFavouriteCities
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let location = locations[indexPath.item]
         let viewModel = LocationViewModel(userDefaults: userDefaults)
         return viewModel.collectionViewCellForLocation(location, collectionView: collectionView, indexPath: indexPath)
@@ -215,20 +240,20 @@ class WeatherViewController: BaseViewController, SettingsViewControllerDelegate,
     
     // MARK: UICollectionViewDelegateFlowLayout
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let currentPage = Int(scrollView.contentOffset.x / scrollView.bounds.width)
         pageControl.currentPage = currentPage
     }
     
     // MARK: Segues
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == SegueIdentifiers.Settings.rawValue {
-            let destinationViewController = segue.destinationViewController as? UINavigationController
+            let destinationViewController = segue.destination as? UINavigationController
             let settingsViewController = destinationViewController?.topViewController as? SettingsViewController
             settingsViewController?.locationManager = locationManager
             settingsViewController?.userDefaults = userDefaults
